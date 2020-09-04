@@ -2,39 +2,38 @@
 	import type { IDeck } from "./models/interfaces/deck.interface";
 	import type { ICard } from "./models/interfaces/card.interface";
 	import type { FaceCard } from "./models/types/face-card.type";
-	import type { IDeckResponse } from "./models/api/deck-reponse.interface";
-	import type { IDrawResponse } from "./models/api/draw-response.interface";
-	import type { ICardResponse } from "./models/api/card-response.interface";
+	import type { IDeckData } from "./models/api/deck-data.interface";
+	import type { IDrawData } from "./models/api/draw-data.interface";
+	import type { ICardData } from "./models/api/card-data.interface";
 	import Hand from "./Hand.svelte";
+import { onMount } from "svelte";
 
 	let deck: IDeck | undefined;
 	let cards: ICard[] = [];
 	$: cardsTotal = cards.reduce((total, card) => total + card.point, 0);
 	$: console.log(cardsTotal);
 
-	fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6")
-		.then(response => response.json())
-		.then((result: IDeckResponse) => {
-			deck = {
-				id: result.deck_id,
-				remaining: result.remaining,
-			};
-		});
-	
-	function dealHand(): void {
+	onMount(async () => {
+		const response = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6");
+		const data: IDeckData = await response.json();
+		deck = {
+			id: data.deck_id,
+			remaining: data.remaining,
+		};
+	});
+
+	async function dealHand(): Promise<void> {
 		if (!deck) {
 			return;
 		}
-		fetch(`https://deckofcardsapi.com/api/deck/${deck.id}/draw/?count=2`)
-			.then(response => response.json())
-			.then((result: IDrawResponse) => {
-				const newCards: ICard[] = result.cards.map(cardResponse => {
-					const { image, value, suit, code }: ICardResponse = cardResponse;
-					const point = getCardPoint(value);
-					return { image, value, point, suit, code };
-				});
-				cards = [...cards, ...newCards]
-			});
+		const response = await fetch(`https://deckofcardsapi.com/api/deck/${deck.id}/draw/?count=2`);
+		const data: IDrawData = await response.json();
+		const newCards: ICard[] = data.cards.map(cardResponse => {
+			const { image, value, suit, code }: ICardData = cardResponse;
+			const point = getCardPoint(value);
+			return { image, value, point, suit, code };
+		});
+		cards = [...cards, ...newCards];
 	}
 
 	function getCardPoint(value: FaceCard | string): number {
