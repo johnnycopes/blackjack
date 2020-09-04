@@ -1,8 +1,8 @@
-import type { ICard } from "../interfaces/card.interface";
+import type { ICardResponse } from "./card-response.interface";
 
 export interface IDrawResponse {
 	success: boolean;
 	deck_id: string;
-	cards: ICard[];
+	cards: ICardResponse[];
 	remaining: number;
 }

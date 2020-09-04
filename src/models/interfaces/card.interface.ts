@@ -1,9 +1,11 @@
-import type { FaceCardValue } from "../types/face-card-value.type";
+import type { FaceCard } from "../types/face-card.type";
 import type { Suit } from "../types/suit.type";
+import type { CardCode } from "../types/card-code.type";
 
 export interface ICard {
 	image: string;
-	value: FaceCardValue | number;
+	value: FaceCard | string;
+	point: number;
 	suit: Suit;
-	code: string;
+	code: CardCode;
 }

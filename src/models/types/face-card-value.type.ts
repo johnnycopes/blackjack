@@ -1,1 +1,0 @@
-export type FaceCardValue = "ACE" | "KING" | "QUEEN" | "JACK";
