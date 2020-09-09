@@ -14,11 +14,22 @@
 	}
 
 	let playing: boolean = false;
+	let playerBust: boolean = false;
 	let deck: IDeck | undefined;
 	let playerCards: ICard[] = [];
 	let dealerCards: ICard[] = [];
-	$: playerTotal = getHandTotal(playerCards);
-	$: dealerTotal = getHandTotal(dealerCards);
+	let playerTotal: number = 0;
+	let dealerTotal: number = 0;
+	$: {
+		playerTotal = getHandTotal(playerCards);
+		playerBust = playerTotal > 21;
+		if (playing && playerBust) {
+			playing = false;
+		}
+	};
+	$: {
+		dealerTotal = getHandTotal(dealerCards);
+	}
 
 	onMount(async () => {
 		const response = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6");
@@ -30,13 +41,11 @@
 	});
 
 	async function dealHand(): Promise<void> {
-		playing = true;
-		const response = await fetch(`https://deckofcardsapi.com/api/deck/${deck.id}/draw/?count=4`);
+		resetState();
+		const response = await fetch(`https://deckofcardsapi.com/api/deck/${deck?.id}/draw/?count=4`);
 		const data: IDrawData = await response.json();
 		const newCards: IDealtCards = data.cards.reduce((accum, cardResponse, index) => {
-			const { image, value, suit, code }: ICardData = cardResponse;
-			const point = getCardPoint(value);
-			const newCard = { image, value, point, suit, code };
+			const newCard = createCard(cardResponse);
 			if ((index + 1) % 2 === 0) {
 				accum.dealer.push(newCard);
 			} else {
@@ -46,6 +55,13 @@
 		}, { player: [] as ICard[], dealer: [] as ICard[] });
 		playerCards = [...playerCards, ...newCards.player];
 		dealerCards = [...dealerCards, ...newCards.dealer];
+	}
+
+	async function hit(): Promise<void> {
+		const response = await fetch(`https://deckofcardsapi.com/api/deck/${deck?.id}/draw/?count=1`);
+		const data: IDrawData = await response.json();
+		const newCard: ICard = createCard(data.cards[0]);
+		playerCards = [...playerCards, newCard];
 	}
 
 	function getCardPoint(value: FaceCard | string): number {
@@ -61,6 +77,22 @@
 	function getHandTotal(cards: ICard[]): number {
 		return cards.reduce((total, card) => total + card.point, 0);
 	}
+
+	function createCard(cardResponse: ICardData): ICard {
+		const { image, value, suit, code }: ICardData = cardResponse;
+		const point = getCardPoint(value);
+		const newCard = { image, value, point, suit, code };
+		return newCard;
+	}
+
+	function resetState(): void {
+		playerCards = [];
+		dealerCards = [];
+		playerTotal = 0;
+		dealerTotal = 0;
+		playing = true;
+		playerBust = false;
+	}
 </script>
 
 <main class="app">
@@ -72,6 +104,12 @@
 		>
 			Deal
 		</button>
+		<button
+			disabled={!playing}
+			on:click={hit}
+		>
+			Hit
+		</button>
 	{/if}
 	<div class="table">
 		<Hand
@@ -82,6 +120,9 @@
 			cards={playerCards}
 			total={playerTotal}
 		/>
+		{#if playerBust}
+			<p>Player busts</p>
+		{/if}
 	</div>
 </main>
 
