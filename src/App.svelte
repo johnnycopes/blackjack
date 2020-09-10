@@ -5,8 +5,10 @@
 	import type { IDeckData } from "./models/api/deck-data.interface";
 	import type { IDrawData } from "./models/api/draw-data.interface";
 	import type { ICardData } from "./models/api/card-data.interface";
+	import { EOutcome } from "./models/enums/outcome.enum";
 	import Hand from "./Hand.svelte";
 	import { onMount } from "svelte";
+	import { wait } from "./utility/wait";
 
 	interface IDealtCards {
 		player: ICard[];
@@ -14,21 +16,23 @@
 	}
 
 	let playing: boolean = false;
-	let playerBust: boolean = false;
+	let outcome: EOutcome | undefined;
 	let deck: IDeck | undefined;
-	let playerCards: ICard[] = [];
-	let dealerCards: ICard[] = [];
+	let playerHand: ICard[] = [];
+	let dealerHand: ICard[] = [];
 	let playerTotal: number = 0;
 	let dealerTotal: number = 0;
 	$: {
-		playerTotal = getHandTotal(playerCards);
-		playerBust = playerTotal > 21;
-		if (playing && playerBust) {
-			playing = false;
+		playerTotal = getHandTotal(playerHand);
+		dealerTotal = getHandTotal(dealerHand);
+		if (playerTotal > 21) {
+			outcome = EOutcome.PlayerBusts;
 		}
 	};
 	$: {
-		dealerTotal = getHandTotal(dealerCards);
+		if (playing && outcome) {
+			playing = false;
+		}
 	}
 
 	onMount(async () => {
@@ -53,15 +57,34 @@
 			}
 			return accum;
 		}, { player: [] as ICard[], dealer: [] as ICard[] });
-		playerCards = [...playerCards, ...newCards.player];
-		dealerCards = [...dealerCards, ...newCards.dealer];
+		playerHand = [...playerHand, ...newCards.player];
+		dealerHand = [...dealerHand, ...newCards.dealer];
 	}
 
 	async function hit(): Promise<void> {
-		const response = await fetch(`https://deckofcardsapi.com/api/deck/${deck?.id}/draw/?count=1`);
-		const data: IDrawData = await response.json();
-		const newCard: ICard = createCard(data.cards[0]);
-		playerCards = [...playerCards, newCard];
+		const newCard = await drawCard();
+		playerHand = [...playerHand, newCard];
+	}
+
+	async function stay(): Promise<void> {
+		while (dealerTotal <= 17) {
+			const newCard = await drawCard();
+			dealerHand = [...dealerHand, newCard];
+			await wait(700);
+		}
+		evaluateOutcome();
+	}
+
+	function evaluateOutcome(): void {
+		if (dealerTotal > 21) {
+			outcome = EOutcome.DealerBusts
+		} else if (playerTotal > dealerTotal) {
+			outcome = EOutcome.PlayerWins;
+		} else if (playerTotal < dealerTotal) {
+			outcome = EOutcome.DealerWins;
+		} else {
+			outcome = EOutcome.Push;
+		}
 	}
 
 	function getCardPoint(value: FaceCard | string): number {
@@ -78,6 +101,12 @@
 		return cards.reduce((total, card) => total + card.point, 0);
 	}
 
+	async function drawCard(): Promise<ICard> {
+		const response = await fetch(`https://deckofcardsapi.com/api/deck/${deck?.id}/draw/?count=1`);
+		const data: IDrawData = await response.json();
+		return createCard(data.cards[0]);
+	}
+
 	function createCard(cardResponse: ICardData): ICard {
 		const { image, value, suit, code }: ICardData = cardResponse;
 		const point = getCardPoint(value);
@@ -86,17 +115,16 @@
 	}
 
 	function resetState(): void {
-		playerCards = [];
-		dealerCards = [];
+		outcome = undefined;
+		playerHand = [];
+		dealerHand = [];
 		playerTotal = 0;
 		dealerTotal = 0;
 		playing = true;
-		playerBust = false;
 	}
 </script>
 
 <main class="app">
-	<h1>Blackjack</h1>
 	{#if deck}
 		<button
 			disabled={playing}
@@ -110,18 +138,24 @@
 		>
 			Hit
 		</button>
+		<button
+			disabled={!playing}
+			on:click={stay}
+		>
+			Stay
+		</button>
 	{/if}
 	<div class="table">
 		<Hand
-			cards={dealerCards}
+			cards={dealerHand}
 			total={dealerTotal}
 		/>
 		<Hand
-			cards={playerCards}
+			cards={playerHand}
 			total={playerTotal}
 		/>
-		{#if playerBust}
-			<p>Player busts</p>
+		{#if outcome}
+			<p>{outcome}</p>
 		{/if}
 	</div>
 </main>
