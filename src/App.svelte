@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { IDeck } from "./models/interfaces/deck.interface";
+	import type { IHand } from "./models/interfaces/hand.interface";
 	import type { ICard } from "./models/interfaces/card.interface";
 	import type { FaceCard } from "./models/types/face-card.type";
 	import type { IDeckData } from "./models/api/deck-data.interface";
@@ -18,19 +19,15 @@
 	let playing: boolean = false;
 	let outcome: EOutcome | undefined;
 	let deck: IDeck | undefined;
-	let playerHand: ICard[] = [];
-	let dealerHand: ICard[] = [];
-	let playerTotal: number = 0;
-	let dealerTotal: number = 0;
+	let playerHand: IHand = createHand();
+	let dealerHand: IHand = createHand();
 
-	// Hand size changes
+	// Current game starts
 	$: {
-		playerTotal = getHandTotal(playerHand);
-		dealerTotal = getHandTotal(dealerHand);
-		if (playerHand.length === 2 && dealerHand.length === 2) {
+		if (playerHand.cards.length === 2 && dealerHand.cards.length === 2) {
 			checkForBlackjack();
 		}
-		if (playerTotal > 21) {
+		if (playerHand.total > 21) {
 			outcome = EOutcome.PlayerBusts;
 		}
 	};
@@ -65,25 +62,27 @@
 			}
 			return accum;
 		}, { player: [] as ICard[], dealer: [] as ICard[] });
-		playerHand = [...playerHand, ...newCards.player];
-		dealerHand = [...dealerHand, ...newCards.dealer];
+		dealerHand = addCardsToHand(dealerHand, newCards.dealer);
+		playerHand = addCardsToHand(playerHand, newCards.player);
 	}
 
 	async function hit(): Promise<void> {
-		const newCard = await drawCard();
-		playerHand = [...playerHand, newCard];
+		const newCard = await drawCardFromDeck();
+		playerHand = addCardsToHand(playerHand, [newCard]);
 	}
 
 	async function stay(): Promise<void> {
-		while (dealerTotal <= 17) {
-			const newCard = await drawCard();
-			dealerHand = [...dealerHand, newCard];
+		while (dealerHand.total <= 17) {
+			const newCard = await drawCardFromDeck();
+			dealerHand = addCardsToHand(dealerHand, [newCard]);
 			await wait(700);
 		}
 		evaluateOutcome();
 	}
 
 	function checkForBlackjack(): void {
+		const playerTotal = playerHand.total;
+		const dealerTotal = dealerHand.total;
 		if (playerTotal === 21 && dealerTotal === 21) {
 			outcome = EOutcome.Push;
 		} else if (playerTotal === 21) {
@@ -94,6 +93,8 @@
 	}
 
 	function evaluateOutcome(): void {
+		const playerTotal = playerHand.total;
+		const dealerTotal = dealerHand.total;
 		if (dealerTotal > 21) {
 			outcome = EOutcome.DealerBusts
 		} else if (playerTotal > dealerTotal) {
@@ -115,21 +116,32 @@
 		}
 	}
 
-	function getHandTotal(cards: ICard[]): number {
-		const numberOfAces = cards.filter(card => card.value === "ACE").length;
+	function addCardsToHand(hand: IHand, newCards: ICard[]): IHand {
+		const cards = [...hand.cards, ...newCards];
+		let numberOfAces = cards.filter(card => card.value === "ACE").length;
 		let total = cards.reduce((total, card) => total + card.point, 0);
-		for (let i = 0; i < numberOfAces; i++) {
-			if (total > 21) {
-				total -= 10;
-			}
+		console.log(total, numberOfAces);
+		while (total > 21 && numberOfAces > 0) {
+			total -= 10;
+			numberOfAces--;
 		}
-		return total;
+		console.log(total, numberOfAces);
+		const soft = !!numberOfAces;
+		return { cards, total, soft };
 	}
 
-	async function drawCard(): Promise<ICard> {
+	async function drawCardFromDeck(): Promise<ICard> {
 		const response = await fetch(`https://deckofcardsapi.com/api/deck/${deck?.id}/draw/?count=1`);
 		const data: IDrawData = await response.json();
 		return createCard(data.cards[0]);
+	}
+
+	function createHand(): IHand {
+		return {
+			cards: [],
+			total: 0,
+			soft: false,
+		};
 	}
 
 	function createCard(cardResponse: ICardData): ICard {
@@ -141,10 +153,8 @@
 
 	function resetState(): void {
 		outcome = undefined;
-		playerHand = [];
-		dealerHand = [];
-		playerTotal = 0;
-		dealerTotal = 0;
+		playerHand = createHand();
+		dealerHand = createHand();
 		playing = true;
 	}
 </script>
@@ -171,16 +181,12 @@
 		</button>
 	{/if}
 	<div class="table">
-		<Hand
-			cards={dealerHand}
-			total={dealerTotal}
-		/>
-		<Hand
-			cards={playerHand}
-			total={playerTotal}
-		/>
+		<Hand {...dealerHand} />
+		<Hand {...playerHand} />
 		{#if outcome}
-			<p>{outcome}</p>
+			<h2 class="outcome">
+				{outcome}
+			</h2>
 		{/if}
 	</div>
 </main>
@@ -200,5 +206,9 @@
 		width: 90%;
 		margin: 0 auto;
 		padding-top: 24px;
+	}
+
+	.outcome {
+		margin-top: 16px;
 	}
 </style>
