@@ -120,12 +120,10 @@
 		const cards = [...hand.cards, ...newCards];
 		let numberOfAces = cards.filter(card => card.value === "ACE").length;
 		let total = cards.reduce((total, card) => total + card.point, 0);
-		console.log(total, numberOfAces);
 		while (total > 21 && numberOfAces > 0) {
 			total -= 10;
 			numberOfAces--;
 		}
-		console.log(total, numberOfAces);
 		const soft = !!numberOfAces;
 		return { cards, total, soft };
 	}

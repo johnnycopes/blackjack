@@ -1,10 +1,21 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
-
   "include": ["src/**/*"],
-	"exclude": ["node_modules/*", "__sapper__/*", "public/*"],
+	"exclude": [
+		"node_modules/*",
+		"__sapper__/*",
+		"public/*", 
+		"**/*.spec.ts"
+	],
 	"compilerOptions": {
 		"noImplicitAny": true,
 		"strictNullChecks": true,
-	}
+		"types": [
+			"jest"
+		],
+		"typeRoots": [
+			"./types",
+			"./node_modules/@types"
+		]
+	},
 }
