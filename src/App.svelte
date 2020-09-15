@@ -22,13 +22,20 @@
 	let dealerHand: ICard[] = [];
 	let playerTotal: number = 0;
 	let dealerTotal: number = 0;
+
+	// Hand size changes
 	$: {
 		playerTotal = getHandTotal(playerHand);
 		dealerTotal = getHandTotal(dealerHand);
+		if (playerHand.length === 2 && dealerHand.length === 2) {
+			checkForBlackjack();
+		}
 		if (playerTotal > 21) {
 			outcome = EOutcome.PlayerBusts;
 		}
 	};
+
+	// Current game ends
 	$: {
 		if (playing && outcome) {
 			playing = false;
@@ -37,6 +44,7 @@
 
 	onMount(async () => {
 		const response = await fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6");
+		// const response = await fetch(`https://deckofcardsapi.com/api/deck/new/?cards=AS,8S,AD,8D,AC,7C,6C,5C,4C,4D,3H`);
 		const data: IDeckData = await response.json();
 		deck = {
 			id: data.deck_id,
@@ -75,6 +83,16 @@
 		evaluateOutcome();
 	}
 
+	function checkForBlackjack(): void {
+		if (playerTotal === 21 && dealerTotal === 21) {
+			outcome = EOutcome.Push;
+		} else if (playerTotal === 21) {
+			outcome = EOutcome.Blackjack;
+		} else if (dealerTotal === 21) {
+			outcome = EOutcome.DealerWins;
+		}
+	}
+
 	function evaluateOutcome(): void {
 		if (dealerTotal > 21) {
 			outcome = EOutcome.DealerBusts
@@ -98,7 +116,14 @@
 	}
 
 	function getHandTotal(cards: ICard[]): number {
-		return cards.reduce((total, card) => total + card.point, 0);
+		const numberOfAces = cards.filter(card => card.value === "ACE").length;
+		let total = cards.reduce((total, card) => total + card.point, 0);
+		for (let i = 0; i < numberOfAces; i++) {
+			if (total > 21) {
+				total -= 10;
+			}
+		}
+		return total;
 	}
 
 	async function drawCard(): Promise<ICard> {
