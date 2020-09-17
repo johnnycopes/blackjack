@@ -6,7 +6,7 @@
   "dev": "rollup -c -w",
   "start": "sirv public",
   "validate": "svelte-check",
-  "test": "jest src",
+  "test": "jest tests",
   "test:watch": "npm run test -- --watch"
  },
  "jest": {
