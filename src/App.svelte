@@ -18,8 +18,8 @@
 	let playing: boolean;
 	let outcome: EOutcome | undefined;
 	let deck: IDeck | undefined;
-	let playerHand: IHand = createHand();
-	let dealerHand: IHand = createHand();
+	let playerHand: IHand = createHand(false);
+	let dealerHand: IHand = createHand(true);
 
 	// Current game starts
 	$: {
@@ -28,6 +28,7 @@
 		}
 		if (playerHand.total > 21) {
 			outcome = EOutcome.PlayerBusts;
+			revealDealerHand();
 		}
 	};
 
@@ -55,19 +56,25 @@
 	}
 
 	async function stay(): Promise<void> {
+		revealDealerHand();
+		await wait(1000);
 		while (dealerHand.total <= 17) {
 			const newCard = await drawCardFromDeck(deck?.id);
 			dealerHand = addCardsToHand(dealerHand, [newCard]);
-			await wait(700);
+			await wait(1000);
 		}
 		outcome = evaluateOutcome(playerHand.total, dealerHand.total);
 	}
 
 	function resetState(): void {
 		outcome = undefined;
-		playerHand = createHand();
-		dealerHand = createHand();
+		playerHand = createHand(false);
+		dealerHand = createHand(true);
 		playing = true;
+	}
+
+	function revealDealerHand(): void {
+		dealerHand.hidden = false;
 	}
 </script>
 

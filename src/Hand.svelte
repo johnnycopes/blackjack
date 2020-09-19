@@ -4,23 +4,25 @@
 
 	export let cards: ICard[];
 	export let total: number;
+	export let hidden: boolean;
 	export let soft: boolean;
 </script>
 
 {#if total > 0}
 	<h3 class="total">
-		{total}
-		{#if soft}
+		{hidden ? cards[1].point : total}
+		{#if soft && !hidden}
 		/ {total - 10}
 		{/if}
 	</h3>
 {/if}
 <ul class="cards">
-	{#each cards as card}
-	<li class="card">
+	{#each cards as card, i}
+	<li style="transform: translateX({i * -80}%);">
 		<Card
 			image={card.image}
 			code={card.code}
+			hidden={i === 0 && hidden}
 		/>
 	</li>
 	{/each}
@@ -34,8 +36,5 @@
 	.cards {
 		display: flex;
 	}
-
-	.card {
-		margin-right: 8px;
-	}
+	
 </style>

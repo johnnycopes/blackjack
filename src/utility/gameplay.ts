@@ -14,10 +14,11 @@ interface IDealtCards {
 
 const apiUrl = "https://deckofcardsapi.com/api/deck";
 
-export function createHand(): IHand {
+export function createHand(hidden: boolean): IHand {
 	return {
 		cards: [],
 		total: 0,
+		hidden,
 		soft: false,
 	};
 }
@@ -68,7 +69,8 @@ export function addCardsToHand(hand: IHand, newCards: ICard[]): IHand {
 		numberOfAces--;
 	}
 	const soft = !!numberOfAces;
-	return { cards, total, soft };
+	const hidden = hand.hidden;
+	return { cards, total, hidden, soft };
 }
 
 export function checkForBlackjacks(playerTotal: number, dealerTotal: number): EOutcome | undefined {
