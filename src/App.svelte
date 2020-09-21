@@ -1,8 +1,10 @@
-<script lang="typescript">
+<script lang="ts">
 	import type { IDeck } from "./models/interfaces/deck.interface";
 	import type { IHand } from "./models/interfaces/hand.interface";
+	import type { IMoney } from "./models/interfaces/money.interface";
 	import { EOutcome } from "./models/enums/outcome.enum";
 	import Hand from "./Hand.svelte";
+	import Money from "./Money.svelte";
 	import { onMount } from "svelte";
 	import { wait } from "./utility/wait";
 	import {
@@ -13,6 +15,7 @@
 		addCardsToHand,
 		checkForBlackjacks,
 		evaluateOutcome,
+		updateMoney
 	} from "./utility/gameplay";
 
 	let playing: boolean;
@@ -20,10 +23,14 @@
 	let deck: IDeck | undefined;
 	let playerHand: IHand = createHand(false);
 	let dealerHand: IHand = createHand(true);
+	let money: IMoney = {
+		bet: 0,
+		total: 100, 
+	};
 
 	// Current game starts
 	$: {
-		if (playerHand.cards.length === 2 && dealerHand.cards.length === 2) {
+		if (playerHand.cards.length === 2) {
 			outcome = checkForBlackjacks(playerHand.total, dealerHand.total);
 		}
 		if (playerHand.total > 21) {
@@ -36,6 +43,8 @@
 	$: {
 		if (playing && outcome) {
 			playing = false;
+			money = updateMoney(money, outcome);
+			// TOOD: add modal saying playe is out of money
 		}
 	}
 
@@ -80,24 +89,34 @@
 
 <main class="app">
 	{#if deck}
-		<button
+		<Money
+			bet={money.bet}
+			total={money.total}
 			disabled={playing}
-			on:click={deal}
-		>
-			Deal
-		</button>
-		<button
-			disabled={!playing}
-			on:click={hit}
-		>
-			Hit
-		</button>
-		<button
-			disabled={!playing}
-			on:click={stay}
-		>
-			Stay
-		</button>
+			on:betChange={e => 
+				money = { ...e.detail }
+			}
+		/>
+		<div class="controls">
+			<button
+				disabled={playing}
+				on:click={deal}
+			>
+				Deal
+			</button>
+			<button
+				disabled={!playing}
+				on:click={hit}
+			>
+				Hit
+			</button>
+			<button
+				disabled={!playing}
+				on:click={stay}
+			>
+				Stay
+			</button>
+		</div>
 	{/if}
 	<div class="table">
 		<Hand {...dealerHand} />
@@ -111,20 +130,21 @@
 </main>
 
 <style>
-	:global(body) {
-		min-height: 100%;
-	}
-
-	:global(html, body, h1, h2, h3, h4, h5, h6, ul, ol, li, p) {
-		margin: 0;
-		padding: 0;
-	}
-
 	.app {
 		max-width: 1200px;
 		width: 90%;
 		margin: 0 auto;
 		padding-top: 24px;
+	}
+
+	.controls {
+		display: flex;
+		align-items: center;
+		margin-bottom: 8px;
+	}
+
+	.controls > * {
+		margin-right: 4px;
 	}
 
 	.outcome {

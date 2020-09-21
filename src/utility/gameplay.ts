@@ -5,6 +5,7 @@ import type { IDeck } from "../models/interfaces/deck.interface";
 import type { IHand } from "../models/interfaces/hand.interface";
 import type { ICard } from "../models/interfaces/card.interface";
 import type { FaceCard } from "../models/types/face-card.type";
+import type { IMoney } from "../models/interfaces/money.interface";
 import { EOutcome } from "../models/enums/outcome.enum";
 
 interface IDealtCards {
@@ -95,6 +96,24 @@ export function evaluateOutcome(playerTotal: number, dealerTotal: number): EOutc
 	} else {
 		return EOutcome.Push;
 	}
+}
+
+export function updateMoney(money: IMoney, outcome: EOutcome): IMoney {
+	const { bet, total } = money;
+	if (outcome === EOutcome.Blackjack) {
+		return { bet: 0, total: total + (bet * 1.5) };
+	} else if (
+		outcome === EOutcome.PlayerWins ||
+		outcome === EOutcome.DealerBusts
+	) {
+		return { bet: 0, total: total + bet };
+	} else if (
+		outcome === EOutcome.PlayerBusts ||
+		outcome === EOutcome.DealerWins
+	) {
+		return { bet: 0, total: total - bet };
+	}
+	return { bet, total };
 }
 
 function createCard(cardResponse: ICardData): ICard {
