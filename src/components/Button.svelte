@@ -1,3 +1,5 @@
+<!-- NOTE: this is a test component and is not being used anywhere in the app -->
+
 <script>
 	export let name;
 

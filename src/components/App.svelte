@@ -32,21 +32,25 @@
 		total: 100,
 	};
 
-	// Current game starts
+	// Game starts
 	$: {
-		if (playerHand.cards.length === 2 && dealerHand.cards.length === 2) {
+		if (playerHand.cards.length === 2 && dealerHand.cards.length === 2 && !outcome) {
 			outcome = checkForBlackjacks(playerHand.total, dealerHand.total);
 			if (outcome === EOutcome.Push || outcome === EOutcome.DealerBlackjack) {
 				revealDealerHand();
 			}
 		}
+	};
+
+	// Player hits
+	$: {
 		if (playerHand.total > 21) {
 			outcome = EOutcome.PlayerBusts;
 			revealDealerHand();
 		}
-	};
+	}
 
-	// Current game ends
+	// Game ends
 	$: {
 		if (playing && outcome) {
 			playing = false;
@@ -62,8 +66,8 @@
 
 	onMount(async () => {
 		// const config: IOrderedDeckConfig = {
-		// 	player: ["AS", "AD"],
-		// 	dealer: ["AC", "AH"],
+		// 	player: ["9S", "JS"],
+		// 	dealer: ["0C", "JC"],
 		// 	others: ["3H", "4H", "5H", "6H"],
 		// };
 		// deck = await fetchOrderedDeck(config);
@@ -84,6 +88,7 @@
 
 	async function stay(): Promise<void> {
 		revealDealerHand();
+		// TODO: address bug where player can still hit/stay after clicking stay
 		await wait(1000);
 		while (dealerHand.total <= 17) {
 			const newCard = await drawCardFromDeck(deck?.id);
