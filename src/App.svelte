@@ -5,6 +5,7 @@
 	import { EOutcome } from "./models/enums/outcome.enum";
 	import Hand from "./Hand.svelte";
 	import Money from "./Money.svelte";
+	import Outcome from "./Outcome.svelte";
 	import { onMount } from "svelte";
 	import { wait } from "./utility/wait";
 	import {
@@ -25,7 +26,7 @@
 	let dealerHand: IHand = createHand(true);
 	let money: IMoney = {
 		bet: 0,
-		total: 100, 
+		total: 100,
 	};
 
 	// Current game starts
@@ -44,7 +45,7 @@
 		if (playing && outcome) {
 			playing = false;
 			money = updateMoney(money, outcome);
-			// TOOD: add modal saying playe is out of money
+			// TOOD: add modal saying player is out of money
 		}
 	}
 
@@ -122,9 +123,7 @@
 		<Hand {...dealerHand} />
 		<Hand {...playerHand} />
 		{#if outcome}
-			<h2 class="outcome">
-				{outcome}
-			</h2>
+			<Outcome {outcome} />
 		{/if}
 	</div>
 </main>
@@ -145,9 +144,5 @@
 
 	.controls > * {
 		margin-right: 4px;
-	}
-
-	.outcome {
-		margin-top: 16px;
 	}
 </style>

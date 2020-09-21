@@ -34,7 +34,7 @@ export async function fetchDeck(): Promise<IDeck> {
 	};
 }
 
-export async function dealCardsFromDeck(deckId: string | undefined) {
+export async function dealCardsFromDeck(deckId: string | undefined): Promise<IDealtCards> {
 	if (deckId === undefined) {
 		throw new Error("deckId is undefined");
 	}
@@ -100,20 +100,18 @@ export function evaluateOutcome(playerTotal: number, dealerTotal: number): EOutc
 
 export function updateMoney(money: IMoney, outcome: EOutcome): IMoney {
 	const { bet, total } = money;
-	if (outcome === EOutcome.Blackjack) {
-		return { bet: 0, total: total + (bet * 1.5) };
-	} else if (
-		outcome === EOutcome.PlayerWins ||
-		outcome === EOutcome.DealerBusts
-	) {
-		return { bet: 0, total: total + bet };
-	} else if (
-		outcome === EOutcome.PlayerBusts ||
-		outcome === EOutcome.DealerWins
-	) {
-		return { bet: 0, total: total - bet };
+	switch (outcome) {
+		case (EOutcome.Blackjack):
+			return { bet: 0, total: total + (bet * 1.5) };
+		case (EOutcome.PlayerWins):
+		case (EOutcome.DealerBusts):
+			return { bet: 0, total: total + bet };
+		case (EOutcome.PlayerBusts):
+		case (EOutcome.DealerWins):
+			return { bet: 0, total: total - bet };
+		default:
+			return { bet, total };
 	}
-	return { bet, total };
 }
 
 function createCard(cardResponse: ICardData): ICard {
