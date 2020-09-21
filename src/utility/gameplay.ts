@@ -4,16 +4,15 @@ import type { ICardData } from "../models/api/card-data.interface";
 import type { IDeck } from "../models/interfaces/deck.interface";
 import type { IHand } from "../models/interfaces/hand.interface";
 import type { ICard } from "../models/interfaces/card.interface";
-import type { FaceCard } from "../models/types/face-card.type";
+import type { CardValue } from "../models/types/card-value";
 import type { IMoney } from "../models/interfaces/money.interface";
 import { EOutcome } from "../models/enums/outcome.enum";
+import { API_URL } from "../models/constants";
 
 interface IDealtCards {
 	player: ICard[];
 	dealer: ICard[];
 }
-
-const apiUrl = "https://deckofcardsapi.com/api/deck";
 
 export function createHand(hidden: boolean): IHand {
 	return {
@@ -25,8 +24,7 @@ export function createHand(hidden: boolean): IHand {
 }
 
 export async function fetchDeck(): Promise<IDeck> {
-	const response = await fetch(`${apiUrl}/new/shuffle/?deck_count=6`);
-	// const response = await fetch(`${apiUrl}/new/?cards=AS,AD,3D,0C`);
+	const response = await fetch(`${API_URL}/new/shuffle/?deck_count=6`);
 	const data: IDeckData = await response.json();
 	return {
 		id: data.deck_id,
@@ -38,9 +36,9 @@ export async function dealCardsFromDeck(deckId: string | undefined): Promise<IDe
 	if (deckId === undefined) {
 		throw new Error("deckId is undefined");
 	}
-	const response = await fetch(`${apiUrl}/${deckId}/draw/?count=4`);
+	const response = await fetch(`${API_URL}/${deckId}/draw/?count=4`);
 	const data: IDrawData = await response.json();
-	const newCards: IDealtCards = data.cards.reduce((accum, cardResponse, index) => {
+	return data.cards.reduce((accum, cardResponse, index) => {
 		const newCard = createCard(cardResponse);
 		if ((index + 1) % 2 === 0) {
 			accum.dealer.push(newCard);
@@ -49,14 +47,13 @@ export async function dealCardsFromDeck(deckId: string | undefined): Promise<IDe
 		}
 		return accum;
 	}, { player: [] as ICard[], dealer: [] as ICard[] });
-	return newCards;
 }
 
 export async function drawCardFromDeck(deckId: string | undefined): Promise<ICard> {
 	if (deckId === undefined) {
 		throw new Error("deckId is undefined");
 	}
-	const response = await fetch(`${apiUrl}/${deckId}/draw/?count=1`);
+	const response = await fetch(`${API_URL}/${deckId}/draw/?count=1`);
 	const data: IDrawData = await response.json();
 	return createCard(data.cards[0]);
 }
@@ -122,7 +119,7 @@ function createCard(cardResponse: ICardData): ICard {
 	return newCard;
 }
 
-function getCardPoint(value: FaceCard | string): number {
+function getCardPoint(value: CardValue): number {
 	if (value === "ACE") {
 		return 11;
 	} else if (value === "KING" || value === "QUEEN" || value === "JACK") {

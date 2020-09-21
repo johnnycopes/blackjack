@@ -19,6 +19,8 @@
 		evaluateOutcome,
 		updateMoney
 	} from "../utility/gameplay";
+	import { fetchOrderedDeck } from "../utility/debugging";
+	import type { IOrderedDeckConfig } from "../utility/debugging";
 
 	let playing: boolean;
 	let outcome: EOutcome | undefined;
@@ -59,13 +61,18 @@
 	}
 
 	onMount(async () => {
+		// const config: IOrderedDeckConfig = {
+		// 	player: ["AS", "AD"],
+		// 	dealer: ["AC", "AH"],
+		// 	others: ["3H", "4H", "5H", "6H"],
+		// };
+		// deck = await fetchOrderedDeck(config);
 		deck = await fetchDeck();
 	});
 
 	async function deal(): Promise<void> {
 		resetState();
 		const dealtCards = await dealCardsFromDeck(deck?.id);
-		console.log(dealtCards);
 		dealerHand = addCardsToHand(dealerHand, dealtCards.dealer);
 		playerHand = addCardsToHand(playerHand, dealtCards.player);
 	}
