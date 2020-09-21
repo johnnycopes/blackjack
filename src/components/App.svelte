@@ -94,36 +94,55 @@
 </script>
 
 <main class="app">
-	{#if deck}
-		<Money
-			bet={money.bet}
-			total={money.total}
-			disabled={playing}
-			on:betChange={e => 
-				money = { ...e.detail }
-			}
-		/>
-		<Controls
-			playing={playing}
-			on:deal={deal}
-			on:hit={hit}
-			on:stay={stay}
-		/>
-	{/if}
+	<Outcome {outcome} />
 	<div class="table">
 		<Hand {...dealerHand} />
 		<Hand {...playerHand} />
-		{#if outcome}
-			<Outcome {outcome} />
+	</div>
+	<div class="actions">
+		{#if deck}
+			<Money
+				bet={money.bet}
+				total={money.total}
+				disabled={playing}
+				on:betChange={(e) => 
+					money = { ...e.detail }
+				}
+			/>
+			<!-- is there a way to type the event dispatcher? -->
+			<Controls
+				playing={playing}
+				on:deal={deal}
+				on:hit={hit}
+				on:stay={stay}
+			/>
 		{/if}
 	</div>
 </main>
 
 <style>
 	.app {
-		max-width: 1200px;
+		display: flex;
+		flex-direction: column;
+		min-height: 100%;
+		max-width: 1024px;
 		width: 90%;
 		margin: 0 auto;
-		padding-top: 24px;
+		padding: 48px 0;
+	}
+
+	.table {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
+		align-items: center;
+	}
+
+	.actions {
+		display: flex;
+		height: 64px;
+		justify-content: space-between;
+		align-items: center;
 	}
 </style>

@@ -30,7 +30,6 @@
 	.controls {
 		display: flex;
 		align-items: center;
-		margin-bottom: 8px;
 	}
 
 	.controls > * {

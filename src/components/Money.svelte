@@ -47,7 +47,6 @@
 	.money {
 		display: flex;
 		align-items: center;
-		margin-bottom: 8px;
 	}
 
 	.money > * {

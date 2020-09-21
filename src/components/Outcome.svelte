@@ -2,9 +2,9 @@
 	import { EOutcome } from "../models/enums/outcome.enum";
 
 	export let outcome: EOutcome;
-	$: message = getOutcomeMessage(outcome);
+	$: message = getMessage(outcome);
 
-	function getOutcomeMessage(outcome: EOutcome): string {
+	function getMessage(outcome: EOutcome): string {
 		switch (outcome) {
 			case (EOutcome.PlayerBlackjack):
 				return "Blackjack!";
@@ -29,6 +29,9 @@
 
 <style>
 	.message {
-		margin-top: 16px;
+		height: 64px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>
