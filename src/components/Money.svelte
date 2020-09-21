@@ -5,6 +5,16 @@
 	export let total: number;
 	export let disabled: boolean;
 	const betDispatch = createEventDispatcher();
+	let prevTotal: number;
+	let totalDiff: number;
+
+	$: {
+		if (prevTotal) {
+			totalDiff = total - prevTotal;
+		}
+		prevTotal = total;
+	}
+	
 
 	$: minBetReached = bet - 10 < 0;
 	$: maxBetReached = bet + 10 > total;
@@ -41,6 +51,13 @@
 		<p>${bet} (current bet)</p>
 		<p>${total} (total money)</p>
 	</div>
+	{#if !disabled && totalDiff}
+		<p class="change"
+			style="color: {totalDiff > 0 ? "limegreen" : "crimson"};"
+		>
+			{totalDiff > 0 ? "+" : "-"}${Math.abs(totalDiff)}
+		</p>
+	{/if}
 </div>
 
 <style>
@@ -51,5 +68,9 @@
 
 	.money > * {
 		margin-right: 4px;
+	}
+
+	.change {
+		font-weight: 700;
 	}
 </style>

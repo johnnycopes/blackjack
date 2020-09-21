@@ -49,7 +49,12 @@
 		if (playing && outcome) {
 			playing = false;
 			money = updateMoney(money, outcome);
-			// TOOD: add modal saying player is out of money
+			if (!money.total) {
+				// TODO: Can I do this without a setTimeout?
+				setTimeout(() => {
+					alert("You're out of money :(\nRefresh the page to play again.");
+				});
+			}
 		}
 	}
 
@@ -101,6 +106,7 @@
 	</div>
 	<div class="actions">
 		{#if deck}
+			<!-- TODO: is there a way to type the event dispatcher? -->
 			<Money
 				bet={money.bet}
 				total={money.total}
@@ -109,13 +115,14 @@
 					money = { ...e.detail }
 				}
 			/>
-			<!-- is there a way to type the event dispatcher? -->
-			<Controls
-				playing={playing}
-				on:deal={deal}
-				on:hit={hit}
-				on:stay={stay}
-			/>
+			{#if money.bet > 0}
+				<Controls
+					playing={playing}
+					on:deal={deal}
+					on:hit={hit}
+					on:stay={stay}
+				/>
+			{/if}
 		{/if}
 	</div>
 </main>
