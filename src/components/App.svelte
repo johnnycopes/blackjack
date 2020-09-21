@@ -32,7 +32,7 @@
 
 	// Current game starts
 	$: {
-		if (playerHand.cards.length === 2) {
+		if (playerHand.cards.length === 2 && dealerHand.cards.length === 2) {
 			outcome = checkForBlackjacks(playerHand.total, dealerHand.total);
 			if (outcome === EOutcome.Push || outcome === EOutcome.DealerBlackjack) {
 				revealDealerHand();
