@@ -26,7 +26,7 @@ export function createHand(hidden: boolean): IHand {
 
 export async function fetchDeck(): Promise<IDeck> {
 	const response = await fetch(`${apiUrl}/new/shuffle/?deck_count=6`);
-	// const response = await fetch(`${apiUrl}/new/?cards=AS,8S,AD,8D,AC,7C,6C,5C,4C,4D,3H`);
+	// const response = await fetch(`${apiUrl}/new/?cards=AS,AD,3D,0C`);
 	const data: IDeckData = await response.json();
 	return {
 		id: data.deck_id,
@@ -78,9 +78,9 @@ export function checkForBlackjacks(playerTotal: number, dealerTotal: number): EO
 	if (playerTotal === 21 && dealerTotal === 21) {
 		return EOutcome.Push;
 	} else if (playerTotal === 21) {
-		return EOutcome.Blackjack;
+		return EOutcome.PlayerBlackjack;
 	} else if (dealerTotal === 21) {
-		return EOutcome.DealerWins;
+		return EOutcome.DealerBlackjack;
 	} else {
 		return undefined;
 	}
@@ -101,12 +101,13 @@ export function evaluateOutcome(playerTotal: number, dealerTotal: number): EOutc
 export function updateMoney(money: IMoney, outcome: EOutcome): IMoney {
 	const { bet, total } = money;
 	switch (outcome) {
-		case (EOutcome.Blackjack):
+		case (EOutcome.PlayerBlackjack):
 			return { bet: 0, total: total + (bet * 1.5) };
 		case (EOutcome.PlayerWins):
 		case (EOutcome.DealerBusts):
 			return { bet: 0, total: total + bet };
 		case (EOutcome.PlayerBusts):
+		case (EOutcome.DealerBlackjack):
 		case (EOutcome.DealerWins):
 			return { bet: 0, total: total - bet };
 		default:

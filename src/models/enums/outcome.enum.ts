@@ -1,5 +1,6 @@
 export enum EOutcome {
-	Blackjack = 1,
+	PlayerBlackjack = 1,
+	DealerBlackjack,
 	PlayerWins,
 	DealerWins,
 	PlayerBusts,

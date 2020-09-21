@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CardCode } from "./models/types/card-code.type";
+	import type { CardCode } from "../models/types/card-code.type";
 
 	export let image: string;
 	export let code: CardCode;

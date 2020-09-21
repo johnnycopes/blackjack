@@ -1,17 +1,18 @@
 <script lang="ts">
-	import { EOutcome } from "./models/enums/outcome.enum";
+	import { EOutcome } from "../models/enums/outcome.enum";
 
 	export let outcome: EOutcome;
 	$: message = getOutcomeMessage(outcome);
 
 	function getOutcomeMessage(outcome: EOutcome): string {
 		switch (outcome) {
-			case (EOutcome.Blackjack):
+			case (EOutcome.PlayerBlackjack):
 				return "Blackjack!";
 			case (EOutcome.PlayerWins):
 			case (EOutcome.DealerBusts):
 				return "Player wins";
 			case (EOutcome.PlayerBusts):
+			case (EOutcome.DealerBlackjack):
 			case (EOutcome.DealerWins):
 				return "Dealer wins";
 			case (EOutcome.Push):

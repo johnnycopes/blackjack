@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ICard } from "./models/interfaces/card.interface";
+	import type { ICard } from "../models/interfaces/card.interface";
 	import Card from "./Card.svelte";
 
 	export let cards: ICard[];

@@ -1,13 +1,14 @@
 <script lang="ts">
-	import type { IDeck } from "./models/interfaces/deck.interface";
-	import type { IHand } from "./models/interfaces/hand.interface";
-	import type { IMoney } from "./models/interfaces/money.interface";
-	import { EOutcome } from "./models/enums/outcome.enum";
+	import { onMount } from "svelte";
 	import Hand from "./Hand.svelte";
 	import Money from "./Money.svelte";
+	import Controls from "./Controls.svelte";
 	import Outcome from "./Outcome.svelte";
-	import { onMount } from "svelte";
-	import { wait } from "./utility/wait";
+	import type { IDeck } from "../models/interfaces/deck.interface";
+	import type { IHand } from "../models/interfaces/hand.interface";
+	import type { IMoney } from "../models/interfaces/money.interface";
+	import { EOutcome } from "../models/enums/outcome.enum";
+	import { wait } from "../utility/wait";
 	import {
 		createHand,
 		fetchDeck,
@@ -17,7 +18,7 @@
 		checkForBlackjacks,
 		evaluateOutcome,
 		updateMoney
-	} from "./utility/gameplay";
+	} from "../utility/gameplay";
 
 	let playing: boolean;
 	let outcome: EOutcome | undefined;
@@ -33,6 +34,9 @@
 	$: {
 		if (playerHand.cards.length === 2) {
 			outcome = checkForBlackjacks(playerHand.total, dealerHand.total);
+			if (outcome === EOutcome.Push || outcome === EOutcome.DealerBlackjack) {
+				revealDealerHand();
+			}
 		}
 		if (playerHand.total > 21) {
 			outcome = EOutcome.PlayerBusts;
@@ -56,6 +60,7 @@
 	async function deal(): Promise<void> {
 		resetState();
 		const dealtCards = await dealCardsFromDeck(deck?.id);
+		console.log(dealtCards);
 		dealerHand = addCardsToHand(dealerHand, dealtCards.dealer);
 		playerHand = addCardsToHand(playerHand, dealtCards.player);
 	}
@@ -98,26 +103,12 @@
 				money = { ...e.detail }
 			}
 		/>
-		<div class="controls">
-			<button
-				disabled={playing}
-				on:click={deal}
-			>
-				Deal
-			</button>
-			<button
-				disabled={!playing}
-				on:click={hit}
-			>
-				Hit
-			</button>
-			<button
-				disabled={!playing}
-				on:click={stay}
-			>
-				Stay
-			</button>
-		</div>
+		<Controls
+			playing={playing}
+			on:deal={deal}
+			on:hit={hit}
+			on:stay={stay}
+		/>
 	{/if}
 	<div class="table">
 		<Hand {...dealerHand} />
@@ -134,15 +125,5 @@
 		width: 90%;
 		margin: 0 auto;
 		padding-top: 24px;
-	}
-
-	.controls {
-		display: flex;
-		align-items: center;
-		margin-bottom: 8px;
-	}
-
-	.controls > * {
-		margin-right: 4px;
 	}
 </style>
