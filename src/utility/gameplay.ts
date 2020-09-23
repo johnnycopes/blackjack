@@ -113,14 +113,14 @@ export function updateMoney(money: IMoney, outcome: EOutcome): IMoney {
 	}
 }
 
-function createCard(cardResponse: ICardData): ICard {
+export function createCard(cardResponse: ICardData): ICard {
 	const { image, value, suit, code }: ICardData = cardResponse;
 	const point = getCardPoint(value);
 	const newCard = { image, value, point, suit, code };
 	return newCard;
 }
 
-function getCardPoint(value: CardValue): number {
+export function getCardPoint(value: CardValue): number {
 	if (value === "ACE") {
 		return 11;
 	} else if (value === "KING" || value === "QUEEN" || value === "JACK") {
