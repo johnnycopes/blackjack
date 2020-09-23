@@ -26,7 +26,12 @@
   ],
   "setupFilesAfterEnv": [
    "@testing-library/jest-dom/extend-expect"
-  ]
+  ],
+  "globals": {
+   "ts-jest": {
+    "tsConfig": "<rootDir>/tests/tsconfig.spec.json"
+   }
+  }
  },
  "devDependencies": {
   "@rollup/plugin-commonjs": "^14.0.0",

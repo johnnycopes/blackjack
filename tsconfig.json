@@ -1,6 +1,5 @@
 {
 	"extends": "@tsconfig/svelte/tsconfig.json",
-	
   "include": ["src/**/*"],
 	"exclude": [
 		"node_modules/*",
@@ -10,13 +9,6 @@
 	],
 	"compilerOptions": {
 		"noImplicitAny": true,
-		"strictNullChecks": true,
-		// "types": [
-		// 	"jest"
-		// ],
-		// "typeRoots": [
-		// 	"./types",
-		// 	"./node_modules/@types"
-		// ]
+		"strictNullChecks": true
 	},
 }

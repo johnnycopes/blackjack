@@ -1,0 +1,12 @@
+{
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"types": [
+			"jest"
+		],
+		"typeRoots": [
+			"../types",
+			"../node_modules/@types"
+		]
+	},
+}

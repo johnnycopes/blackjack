@@ -38,15 +38,16 @@ export async function dealCardsFromDeck(deckId: string | undefined): Promise<IDe
 	}
 	const response = await fetch(`${API_URL}/${deckId}/draw/?count=4`);
 	const data: IDrawData = await response.json();
-	return data.cards.reduce((accum, cardResponse, index) => {
+	const dealtCards: IDealtCards = { player: [], dealer: [] };
+	data.cards.forEach((cardResponse, index) => {
 		const newCard = createCard(cardResponse);
 		if ((index + 1) % 2 === 0) {
-			accum.dealer.push(newCard);
+			dealtCards.dealer.push(newCard);
 		} else {
-			accum.player.push(newCard);
+			dealtCards.player.push(newCard);
 		}
-		return accum;
-	}, { player: [] as ICard[], dealer: [] as ICard[] });
+	});
+	return dealtCards;
 }
 
 export async function drawCardFromDeck(deckId: string | undefined): Promise<ICard> {
