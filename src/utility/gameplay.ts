@@ -109,7 +109,7 @@ export function updateMoney(money: IMoney, outcome: EOutcome): IMoney {
 		case (EOutcome.DealerWins):
 			return { bet: 0, total: total - bet };
 		default:
-			return { bet, total };
+			return { bet: 0, total };
 	}
 }
 
