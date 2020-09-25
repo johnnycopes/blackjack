@@ -3,36 +3,40 @@
  "version": "1.0.0",
  "scripts": {
   "build": "rollup -c",
-	"dev": "rollup -c -w",
-	"dev-win": "start cmd /k \"npm run dev\"",
+  "dev": "rollup -c -w",
+  "dev-win": "start cmd /k \"npm run dev\"",
   "start": "sirv public",
   "validate": "svelte-check",
   "test": "jest tests",
-	"test:watch": "npm run test -- --watch",
-	"test:watch-win": "start cmd /k \"npm run test:watch\""
+  "test:watch": "npm run test -- --watch",
+  "test:watch-win": "start cmd /k \"npm run test:watch\""
  },
  "jest": {
-  "transform": {
-   "^.+\\.svelte$": [
-    "svelte-jester",
-    {
-     "preprocess": true
-    }
-   ],
-   "^.+\\.ts$": "ts-jest"
-  },
+	"automock": false,
+	"transform": {
+  	"^.+\\.svelte$": [
+			"svelte-jester",
+			{
+				"preprocess": true
+			}
+		],
+		"^.+\\.ts$": "ts-jest"
+	},
   "moduleFileExtensions": [
    "js",
    "ts",
    "svelte"
-  ],
+	],
+	"setupFiles": [
+		"./setupJest.js"
+	],
   "setupFilesAfterEnv": [
-   "@testing-library/jest-dom/extend-expect"
+  	"@testing-library/jest-dom/extend-expect"
   ],
   "globals": {
-   "ts-jest": {
-    "tsConfig": "<rootDir>/tests/tsconfig.spec.json"
-   }
+		"ts-jest": {
+			"tsConfig": "<rootDir>/tests/tsconfig.spec.json"
+		}
   }
  },
  "devDependencies": {
@@ -43,6 +47,7 @@
   "@testing-library/svelte": "^3.0.0",
   "@tsconfig/svelte": "^1.0.0",
   "jest": "^26.4.2",
+  "jest-fetch-mock": "^3.0.3",
   "rollup": "^2.3.4",
   "rollup-plugin-livereload": "^2.0.0",
   "rollup-plugin-svelte": "^6.0.0",

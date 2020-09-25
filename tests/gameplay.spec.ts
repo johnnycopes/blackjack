@@ -3,21 +3,49 @@ import {
 	createCard,
 	createHand,
 	getCardPoint,
-  fetchDeck,
-  dealCardsFromDeck,
-  drawCardFromDeck,
-  addCardsToHand,
-  checkForBlackjacks,
-  evaluateOutcome,
-  updateMoney,
+	fetchDeck,
+	dealCardsFromDeck,
+	drawCardFromDeck,
+	addCardsToHand,
+	checkForBlackjacks,
+	evaluateOutcome,
+	updateMoney,
 } from "../src/utility/gameplay";
 import {
-  ACE_CARD_RESPONSE_DATA,
-  FACE_CARD_RESPONSE_DATA,
-  NUMBER_CARD_3_RESPONSE_DATA,
-  NUMBER_CARD_8_RESPONSE_DATA,
-  MONEY,
+	ACE_CARD_RESPONSE_DATA,
+	FACE_CARD_RESPONSE_DATA,
+	NUMBER_CARD_3_RESPONSE_DATA,
+	NUMBER_CARD_8_RESPONSE_DATA,
+	MONEY,
 } from "./constants";
+import fetchMock from "jest-fetch-mock";
+
+describe("getCardPoint", () => {
+	test("is ace", () => {
+		const pointValue = getCardPoint("ACE");
+		expect(pointValue).toEqual(11);
+	});
+
+	test("is king", () => {
+		const pointValue = getCardPoint("KING");
+		expect(pointValue).toEqual(10);
+	});
+
+	test("is queen", () => {
+		const pointValue = getCardPoint("QUEEN");
+		expect(pointValue).toEqual(10);
+	});
+
+	test("is jack", () => {
+		const pointValue = getCardPoint("JACK");
+		expect(pointValue).toEqual(10);
+	});
+
+	test("is number", () => {
+		const pointValue = getCardPoint("7");
+		expect(pointValue).toEqual(7);
+	});
+});
 
 describe("createCard", () => {
 	test("creates new number card object", () => {
@@ -79,31 +107,26 @@ describe("createHand", () => {
 	});
 });
 
-describe("getCardPoint", () => {
-  test("is ace", () => {
-    const pointValue = getCardPoint("ACE");
-    expect(pointValue).toEqual(11);
-  });
+describe("fetchDeck", () => {
+	beforeEach(() => {
+    fetchMock.resetMocks();
+	});
+	
+	const mockResponseData = {
+    deck_id: "77cikknyaadb",
+    remaining: 312,
+    shuffled: true,
+    success: true,
+	};
 
-  test("is king", () => {
-    const pointValue = getCardPoint("KING");
-    expect(pointValue).toEqual(10);
-  });
-
-  test("is queen", () => {
-    const pointValue = getCardPoint("QUEEN");
-    expect(pointValue).toEqual(10);
-  });
-
-  test("is jack", () => {
-    const pointValue = getCardPoint("JACK");
-    expect(pointValue).toEqual(10);
-  });
-
-  test("is number", () => {
-    const pointValue = getCardPoint("7");
-    expect(pointValue).toEqual(7);
-  });
+	test("returns a new, unshuffled deck", async () => {
+		fetchMock.mockResponseOnce(JSON.stringify(mockResponseData));
+		const deck = await fetchDeck();
+		expect(deck).toEqual({
+			id: "77cikknyaadb",
+			remaining: 312,
+    });
+	});
 });
 
 describe("addCardsToHand", () => {
@@ -167,6 +190,28 @@ describe("addCardsToHand", () => {
 	});
 });
 
+describe("checkForBlackjacks", () => {
+  test("player and dealer both get blackjack", () => {
+    const outcome = checkForBlackjacks(21, 21);
+    expect(outcome).toEqual(EOutcome.Push);
+  });
+
+  test("player gets blackjack", () => {
+    const outcome = checkForBlackjacks(21, 19);
+    expect(outcome).toEqual(EOutcome.PlayerBlackjack);
+  });
+
+  test("dealer gets blackjack", () => {
+    const outcome = checkForBlackjacks(15, 21);
+    expect(outcome).toEqual(EOutcome.DealerBlackjack);
+  });
+
+  test("no blackjacks dealt", () => {
+    const outcome = checkForBlackjacks(10, 13);
+    expect(outcome).toEqual(undefined);
+  });
+});
+
 describe("evaluateOutcome", () => {
 	test("dealer busts", () => {
 		const outcome = evaluateOutcome(18, 22);
@@ -186,28 +231,6 @@ describe("evaluateOutcome", () => {
 	test("push", () => {
 		const outcome = evaluateOutcome(21, 21);
 		expect(outcome).toEqual(EOutcome.Push);
-	});
-});
-
-describe("checkForBlackjacks", () => {
-	test("player and dealer both get blackjack", () => {
-		const outcome = checkForBlackjacks(21, 21);
-		expect(outcome).toEqual(EOutcome.Push);
-	});
-
-	test("player gets blackjack", () => {
-		const outcome = checkForBlackjacks(21, 19);
-		expect(outcome).toEqual(EOutcome.PlayerBlackjack);
-	});
-
-	test("dealer gets blackjack", () => {
-		const outcome = checkForBlackjacks(15, 21);
-		expect(outcome).toEqual(EOutcome.DealerBlackjack);
-	});
-
-	test("no blackjacks dealt", () => {
-		const outcome = checkForBlackjacks(10, 13);
-		expect(outcome).toEqual(undefined);
 	});
 });
 
@@ -244,6 +267,6 @@ describe("updateMoney", () => {
 
 	test("push", () => {
 		const updatedMoney = updateMoney(MONEY, EOutcome.Push);
-    expect(updatedMoney).toEqual({ bet: 0, total: 1000 });
+		expect(updatedMoney).toEqual({ bet: 0, total: 1000 });
 	});
 });
