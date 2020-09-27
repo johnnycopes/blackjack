@@ -1,13 +1,12 @@
 import type { IDrawData } from "../models/api/draw-data.interface";
 import type { IDeckData } from "../models/api/deck-data.interface";
-import type { ICardData } from "../models/api/card-data.interface";
 import type { IDeck } from "../models/interfaces/deck.interface";
 import type { IHand } from "../models/interfaces/hand.interface";
 import type { ICard } from "../models/interfaces/card.interface";
-import type { CardValue } from "../models/types/card-value";
 import type { IMoney } from "../models/interfaces/money.interface";
 import { EOutcome } from "../models/enums/outcome.enum";
 import { API_URL } from "../models/constants";
+import { createCard } from "./debugging";
 
 interface IDealtCards {
 	player: ICard[];
@@ -110,22 +109,5 @@ export function updateMoney(money: IMoney, outcome: EOutcome): IMoney {
 			return { bet: 0, total: total - bet };
 		default:
 			return { bet: 0, total };
-	}
-}
-
-export function createCard(cardResponse: ICardData): ICard {
-	const { image, value, suit, code }: ICardData = cardResponse;
-	const point = getCardPoint(value);
-	const newCard = { image, value, point, suit, code };
-	return newCard;
-}
-
-export function getCardPoint(value: CardValue): number {
-	if (value === "ACE") {
-		return 11;
-	} else if (value === "KING" || value === "QUEEN" || value === "JACK") {
-		return 10;
-	} else {
-		return Number(value);
 	}
 }

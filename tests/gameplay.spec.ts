@@ -3,9 +3,7 @@ import type { IDeckData } from "../src/models/api/deck-data.interface";
 import type { IDrawData } from "../src/models/api/draw-data.interface";
 import type { IMoney } from "../src/models/interfaces/money.interface";
 import {
-createCard,
 createHand,
-getCardPoint,
 fetchDeck,
 dealCardsFromDeck,
 drawCardFromDeck,
@@ -14,7 +12,7 @@ checkForBlackjacks,
 evaluateOutcome,
 updateMoney,
 } from "../src/utility/gameplay";
-import { createCardData } from "../src/utility/debugging";
+import { createCard, createCardData } from "../src/utility/debugging";
 import fetchMock from "jest-fetch-mock";
 
 const card3Data = createCardData("3H");
@@ -25,71 +23,6 @@ const card3 = createCard(card3Data);
 const card8 = createCard(card8Data);
 const cardKing = createCard(cardKingData);
 const cardAce = createCard(cardAceData);
-
-describe("getCardPoint", () => {
-	test("is ace", () => {
-		const pointValue = getCardPoint("ACE");
-		expect(pointValue).toEqual(11);
-	});
-
-	test("is king", () => {
-		const pointValue = getCardPoint("KING");
-		expect(pointValue).toEqual(10);
-	});
-
-	test("is queen", () => {
-		const pointValue = getCardPoint("QUEEN");
-		expect(pointValue).toEqual(10);
-	});
-
-	test("is jack", () => {
-		const pointValue = getCardPoint("JACK");
-		expect(pointValue).toEqual(10);
-	});
-
-	test("is number", () => {
-		const pointValue = getCardPoint("7");
-		expect(pointValue).toEqual(7);
-	});
-});
-
-describe("createCard", () => {
-	test("creates new number card object", () => {
-		const cardResponse = card8Data;
-		const card = createCard(cardResponse);
-		expect(card).toEqual({
-			code: "8C",
-			image: "https://deckofcardsapi.com/static/img/8C.png",
-			point: 8,
-			suit: "CLUBS",
-			value: "8",
-		});
-	});
-
-	test("creates new face card object", () => {
-		const cardResponse = cardKingData;
-		const card = createCard(cardResponse);
-		expect(card).toEqual({
-			code: "KD",
-			image: "https://deckofcardsapi.com/static/img/KD.png",
-			point: 10,
-			suit: "DIAMONDS",
-			value: "KING",
-		});
-	});
-	
-	test("creates new ace card object", () => {
-		const cardResponse = cardAceData;
-		const card = createCard(cardResponse);
-		expect(card).toEqual({
-			code: "AS",
-			image: "https://deckofcardsapi.com/static/img/AS.png",
-			point: 11,
-			suit: "SPADES",
-			value: "ACE",
-		});
-	});
-});
 
 describe("createHand", () => {
 	test("creates new player hand object", () => {

@@ -19,8 +19,8 @@
 		evaluateOutcome,
 		updateMoney
 	} from "../utility/gameplay";
-	import { fetchOrderedDeck } from "../utility/debugging";
-	import type { IOrderedDeckConfig } from "../utility/debugging";
+	// import { fetchOrderedDeck } from "../utility/debugging";
+	// import type { IOrderedDeckConfig } from "../utility/debugging";
 
 	let playing: boolean;
 	let outcome: EOutcome | undefined;
