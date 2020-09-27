@@ -182,57 +182,72 @@ describe("drawCardFromDeck", () => {
 
 describe("addCardsToHand", () => {
 	const hand = createHand(false);
-	const dealtHand = addCardsToHand(hand, [card3, cardKing]);
 
-	test("adds 3 and king to empty hand", () => {
-		expect(dealtHand).toEqual({
-			cards: [card3, cardKing],
-			hidden: false,
-			soft: false,
-			total: 13
-		});
-	});
-
-	test("adds 8 to existing hand", () => {
+	describe("dealt hand has no aces", () => {
 		const dealtHand = addCardsToHand(hand, [card3, cardKing]);
-		const updatedHand = addCardsToHand(dealtHand, [card8]);
-		expect(updatedHand).toEqual({
-			cards: [card3, cardKing, card8],
-			hidden: false,
-			soft: false,
-			total: 21
+	
+		test("adds 3 and king to empty hand", () => {
+			expect(dealtHand).toEqual({
+				cards: [card3, cardKing],
+				hidden: false,
+				soft: false,
+				total: 13
+			});
+		});
+	
+		test("adds 8 to existing hand", () => {
+			const dealtHand = addCardsToHand(hand, [card3, cardKing]);
+			const updatedHand = addCardsToHand(dealtHand, [card8]);
+			expect(updatedHand).toEqual({
+				cards: [card3, cardKing, card8],
+				hidden: false,
+				soft: false,
+				total: 21
+			});
+		});
+	
+		test("adds ace to existing hand", () => {
+			const dealtHand = addCardsToHand(hand, [card3, cardKing]);
+			const updatedHand = addCardsToHand(dealtHand, [cardAce]);
+			expect(updatedHand).toEqual({
+				cards: [card3, cardKing, cardAce],
+				hidden: false,
+				soft: false,
+				total: 14
+			});
 		});
 	});
 
-	test("adds ace to existing hand", () => {
-		const dealtHand = addCardsToHand(hand, [card3, cardKing]);
-		const updatedHand = addCardsToHand(dealtHand, [cardAce]);
-		expect(updatedHand).toEqual({
-			cards: [card3, cardKing, cardAce],
-			hidden: false,
-			soft: false,
-			total: 14
-		});
-	});
-
-	test("adds 3 and ace to empty hand", () => {
+	describe("dealt hand has an ace", () => {
 		const dealtHand = addCardsToHand(hand, [card8, cardAce]);
-		expect(dealtHand).toEqual({
-			cards: [card8, cardAce],
-			hidden: false,
-			soft: true,
-			total: 19
-		});
-	});
 
-	test("adds king to existing hand", () => {
-		const dealtHand = addCardsToHand(hand, [card8, cardAce]);
-		const updatedHand = addCardsToHand(dealtHand, [cardKing]);
-		expect(updatedHand).toEqual({
-			cards: [card8, cardAce, cardKing],
-			hidden: false,
-			soft: false,
-			total: 19
+		test("adds 3 and ace to empty hand", () => {
+			expect(dealtHand).toEqual({
+				cards: [card8, cardAce],
+				hidden: false,
+				soft: true,
+				total: 19
+			});
+		});
+	
+		test("adds king to existing hand", () => {
+			const updatedHand = addCardsToHand(dealtHand, [cardKing]);
+			expect(updatedHand).toEqual({
+				cards: [card8, cardAce, cardKing],
+				hidden: false,
+				soft: false,
+				total: 19
+			});
+		});
+
+		test("adds ace to existing hand", () => {
+			const updatedHand = addCardsToHand(dealtHand, [cardAce]);
+			expect(updatedHand).toEqual({
+				cards: [card8, cardAce, cardAce],
+				hidden: false,
+				soft: true,
+				total: 20
+			});
 		});
 	});
 });

@@ -8,6 +8,7 @@
   "start": "sirv public",
   "validate": "svelte-check",
   "test": "jest tests",
+  "test-win": "start cmd /k \"jest tests\"",
   "test:watch": "npm run test -- --watch",
   "test:watch-win": "start cmd /k \"npm run test:watch\""
  },
