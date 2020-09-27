@@ -6,7 +6,7 @@ import type { ICard } from "../models/interfaces/card.interface";
 import type { IMoney } from "../models/interfaces/money.interface";
 import { EOutcome } from "../models/enums/outcome.enum";
 import { API_URL } from "../models/constants";
-import { createCard } from "./debugging";
+import { createCard } from "./card";
 
 interface IDealtCards {
 	player: ICard[];

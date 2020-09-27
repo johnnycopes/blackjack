@@ -3,26 +3,17 @@ import type { IDeckData } from "../src/models/api/deck-data.interface";
 import type { IDrawData } from "../src/models/api/draw-data.interface";
 import type { IMoney } from "../src/models/interfaces/money.interface";
 import {
-createHand,
-fetchDeck,
-dealCardsFromDeck,
-drawCardFromDeck,
-addCardsToHand,
-checkForBlackjacks,
-evaluateOutcome,
-updateMoney,
+	createHand,
+	fetchDeck,
+	dealCardsFromDeck,
+	drawCardFromDeck,
+	addCardsToHand,
+	checkForBlackjacks,
+	evaluateOutcome,
+	updateMoney,
 } from "../src/utility/gameplay";
-import { createCard, createCardData } from "../src/utility/debugging";
+import { createCard, createCardData } from "../src/utility/card";
 import fetchMock from "jest-fetch-mock";
-
-const card3Data = createCardData("3H");
-const card8Data = createCardData("8C");
-const cardKingData = createCardData("KD");
-const cardAceData = createCardData("AS");
-const card3 = createCard(card3Data);
-const card8 = createCard(card8Data);
-const cardKing = createCard(cardKingData);
-const cardAce = createCard(cardAceData);
 
 describe("createHand", () => {
 	test("creates new player hand object", () => {
@@ -47,16 +38,16 @@ describe("createHand", () => {
 });
 
 describe("fetchDeck", () => {
-	beforeEach(() => {
-		fetchMock.resetMocks();
-	});
-	
 	const mockResponseData: IDeckData = {
 		deck_id: "77cikknyaadb",
 		remaining: 312,
 		shuffled: true,
 		success: true,
 	};
+
+	beforeEach(() => {
+		fetchMock.resetMocks();
+	});
 
 	test("returns a new, unshuffled deck", async () => {
 		fetchMock.mockResponseOnce(JSON.stringify(mockResponseData));
@@ -69,10 +60,14 @@ describe("fetchDeck", () => {
 });
 
 describe("dealCardsFromDeck", () => {
-	beforeEach(() => {
-		fetchMock.resetMocks();
-	});
-
+	const card3Data = createCardData("3H");
+	const card8Data = createCardData("8C");
+	const cardKingData = createCardData("KD");
+	const cardAceData = createCardData("AS");
+	const card3 = createCard(card3Data);
+	const card8 = createCard(card8Data);
+	const cardKing = createCard(cardKingData);
+	const cardAce = createCard(cardAceData);
 	const mockResponseData: IDrawData = {
 		cards: [
 			cardKingData,
@@ -84,7 +79,12 @@ describe("dealCardsFromDeck", () => {
 		remaining: 308,
 		success: true
 	};
-	test("player and dealer are dealt two cards each from an existing deck", async () => {
+
+	beforeEach(() => {
+		fetchMock.resetMocks();
+	});
+
+	test("player and dealer are dealt two cards each", async () => {
 		fetchMock.mockResponseOnce(JSON.stringify(mockResponseData));
 		const dealtCards = await dealCardsFromDeck("77cikknyaadb");
 		expect(dealtCards).toEqual({
@@ -95,16 +95,18 @@ describe("dealCardsFromDeck", () => {
 });
 
 describe("drawCardFromDeck", () => {
-	beforeEach(() => {
-		fetchMock.resetMocks();
-	});
-
+	const card8Data = createCardData("8C");
+	const card8 = createCard(card8Data);
 	const mockResponseData: IDrawData = {
 		cards: [card8Data],
 		deck_id: "77cikknyaadb",
 		remaining: 311,
 		success: true
 	};
+
+	beforeEach(() => {
+		fetchMock.resetMocks();
+	});
 
 	test("draw a card from an existing deck", async () => {
 		fetchMock.mockResponseOnce(JSON.stringify(mockResponseData));
@@ -115,10 +117,17 @@ describe("drawCardFromDeck", () => {
 
 describe("addCardsToHand", () => {
 	const hand = createHand(false);
+	const card3Data = createCardData("3H");
+	const card8Data = createCardData("8C");
+	const cardKingData = createCardData("KD");
+	const cardAceData = createCardData("AS");
+	const card3 = createCard(card3Data);
+	const card8 = createCard(card8Data);
+	const cardKing = createCard(cardKingData);
+	const cardAce = createCard(cardAceData);
 
 	describe("dealt hand has no aces", () => {
 		const dealtHand = addCardsToHand(hand, [card3, cardKing]);
-	
 		test("adds 3 and king to empty hand", () => {
 			expect(dealtHand).toEqual({
 				cards: [card3, cardKing],
@@ -153,7 +162,6 @@ describe("addCardsToHand", () => {
 
 	describe("dealt hand has an ace", () => {
 		const dealtHand = addCardsToHand(hand, [card8, cardAce]);
-
 		test("adds 3 and ace to empty hand", () => {
 			expect(dealtHand).toEqual({
 				cards: [card8, cardAce],
@@ -234,6 +242,7 @@ describe("updateMoney", () => {
 		bet: 100,
 		total: 1000
 	};
+	
 	test("player gets blackjack", () => {
 		const updatedMoney = updateMoney(money, EOutcome.PlayerBlackjack);
 		expect(updatedMoney).toEqual({ bet: 0, total: 1150 });

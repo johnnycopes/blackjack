@@ -1,11 +1,11 @@
 import type { IDeckData } from "../models/api/deck-data.interface";
-import type { IDeck } from "../models/interfaces/deck.interface";
-import type { CardCode } from "../models/types/card-code.type";
-import { API_URL } from "../models/constants";
 import type { ICardData } from "../models/api/card-data.interface";
-import type { Suit } from "../models/types/suit.type";
-import type { CardValue } from "../models/types/card-value";
+import type { IDeck } from "../models/interfaces/deck.interface";
 import type { ICard } from "../models/interfaces/card.interface";
+import type { CardCode } from "../models/types/card-code.type";
+import type { CardValue } from "../models/types/card-value";
+import type { Suit } from "../models/types/suit.type";
+import { API_URL } from "../models/constants";
 
 export interface IOrderedDeckConfig {
 	player: CardCode[];
