@@ -151,7 +151,7 @@ describe("createCard", () => {
 			image: "https://deckofcardsapi.com/static/img/KD.png",
 			point: 10,
 			suit: "DIAMONDS",
-			value: "KINGG",
+			value: "KING",
 		});
 	});
 
