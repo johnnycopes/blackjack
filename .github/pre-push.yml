@@ -1,2 +1,0 @@
-name: pre-push
-on: [push]

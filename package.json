@@ -1,43 +1,48 @@
 {
- "name": "cool-blackjack",
- "version": "1.0.0",
- "scripts": {
-  "build": "rollup -c",
-  "dev": "rollup -c -w",
-  "dev-win": "start cmd /k \"npm run dev\"",
-  "start": "sirv public",
-  "validate": "svelte-check",
-  "test": "jest tests",
-  "test-win": "start cmd /k \"jest tests\"",
-  "test:watch": "npm run test -- --watch",
-  "test:watch-win": "start cmd /k \"npm run test:watch\""
- },
- "jest": {
-	"automock": false,
-	"transform": {
-  	"^.+\\.svelte$": [
-			"svelte-jester",
-			{
-				"preprocess": true
-			}
-		],
-		"^.+\\.ts$": "ts-jest"
+	"name": "cool-blackjack",
+	"version": "1.0.0",
+	"scripts": {
+		"build": "rollup -c",
+		"dev": "rollup -c -w",
+		"dev-win": "start cmd /k \"npm run dev\"",
+		"start": "sirv public",
+		"validate": "svelte-check",
+		"test": "jest tests",
+		"test-win": "start cmd /k \"jest tests\"",
+		"test:watch": "npm run test -- --watch",
+		"test:watch-win": "start cmd /k \"npm run test:watch\""
 	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "npm run test"
+		}
+	},
+ "jest": {
+  "automock": false,
+  "transform": {
+   "^.+\\.svelte$": [
+    "svelte-jester",
+    {
+     "preprocess": true
+    }
+   ],
+   "^.+\\.ts$": "ts-jest"
+  },
   "moduleFileExtensions": [
    "js",
    "ts",
    "svelte"
-	],
-	"setupFiles": [
-		"./setupJest.js"
-	],
+  ],
+  "setupFiles": [
+   "./setupJest.js"
+  ],
   "setupFilesAfterEnv": [
-  	"@testing-library/jest-dom/extend-expect"
+   "@testing-library/jest-dom/extend-expect"
   ],
   "globals": {
-		"ts-jest": {
-			"tsConfig": "<rootDir>/tests/tsconfig.spec.json"
-		}
+   "ts-jest": {
+    "tsConfig": "<rootDir>/tests/tsconfig.spec.json"
+   }
   }
  },
  "devDependencies": {
@@ -47,6 +52,7 @@
   "@testing-library/jest-dom": "^5.11.4",
   "@testing-library/svelte": "^3.0.0",
   "@tsconfig/svelte": "^1.0.0",
+  "husky": "^5.0.0-alpha.5",
   "jest": "^26.4.2",
   "jest-fetch-mock": "^3.0.3",
   "rollup": "^2.3.4",
