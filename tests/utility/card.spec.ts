@@ -1,4 +1,4 @@
-import { getValue, getSuit, getPoint, createCardData, createCard } from "../src/utility/card";
+import { getValue, getSuit, getPoint, createCardData, createCard } from "../../src/utility/card";
 
 describe("getValue", () => {
 	test("returns a single-digit number", () => {

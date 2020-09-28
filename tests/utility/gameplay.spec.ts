@@ -1,7 +1,7 @@
-import { EOutcome } from "../src/models/enums/outcome.enum";
-import type { IDeckData } from "../src/models/api/deck-data.interface";
-import type { IDrawData } from "../src/models/api/draw-data.interface";
-import type { IMoney } from "../src/models/interfaces/money.interface";
+import { EOutcome } from "../../src/models/enums/outcome.enum";
+import type { IDeckData } from "../../src/models/api/deck-data.interface";
+import type { IDrawData } from "../../src/models/api/draw-data.interface";
+import type { IMoney } from "../../src/models/interfaces/money.interface";
 import {
 	createHand,
 	fetchDeck,
@@ -11,8 +11,8 @@ import {
 	checkForBlackjacks,
 	evaluateOutcome,
 	updateMoney,
-} from "../src/utility/gameplay";
-import { createCard, createCardData } from "../src/utility/card";
+} from "../../src/utility/gameplay";
+import { createCard, createCardData } from "../../src/utility/card";
 import fetchMock from "jest-fetch-mock";
 
 describe("createHand", () => {

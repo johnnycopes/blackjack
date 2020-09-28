@@ -14,7 +14,6 @@
 		}
 		prevTotal = total;
 	}
-	
 
 	$: minBetReached = bet - 10 < 0;
 	$: maxBetReached = bet + 10 > total;

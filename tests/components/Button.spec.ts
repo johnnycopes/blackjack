@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render } from "@testing-library/svelte";
-import Button from "../src/components/Button.svelte";
+import Button from "../../src/components/Button.svelte";
 
 test("should render", () => {
 	const button = render(Button);
