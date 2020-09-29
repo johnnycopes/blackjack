@@ -12,7 +12,7 @@ import {
 	evaluateOutcome,
 	updateMoney,
 } from "../../src/utility/gameplay";
-import { createCard, createCardData } from "../../src/utility/card";
+import { createCard, createFakeCardData } from "../../src/utility/card";
 import fetchMock from "jest-fetch-mock";
 
 describe("createHand", () => {
@@ -60,10 +60,10 @@ describe("fetchDeck", () => {
 });
 
 describe("dealCardsFromDeck", () => {
-	const card3Data = createCardData("3H");
-	const card8Data = createCardData("8C");
-	const cardKingData = createCardData("KD");
-	const cardAceData = createCardData("AS");
+	const card3Data = createFakeCardData("3H");
+	const card8Data = createFakeCardData("8C");
+	const cardKingData = createFakeCardData("KD");
+	const cardAceData = createFakeCardData("AS");
 	const card3 = createCard(card3Data);
 	const card8 = createCard(card8Data);
 	const cardKing = createCard(cardKingData);
@@ -95,7 +95,7 @@ describe("dealCardsFromDeck", () => {
 });
 
 describe("drawCardFromDeck", () => {
-	const card8Data = createCardData("8C");
+	const card8Data = createFakeCardData("8C");
 	const card8 = createCard(card8Data);
 	const mockResponseData: IDrawData = {
 		cards: [card8Data],
@@ -117,10 +117,10 @@ describe("drawCardFromDeck", () => {
 
 describe("addCardsToHand", () => {
 	const hand = createHand(false);
-	const card3Data = createCardData("3H");
-	const card8Data = createCardData("8C");
-	const cardKingData = createCardData("KD");
-	const cardAceData = createCardData("AS");
+	const card3Data = createFakeCardData("3H");
+	const card8Data = createFakeCardData("8C");
+	const cardKingData = createFakeCardData("KD");
+	const cardAceData = createFakeCardData("AS");
 	const card3 = createCard(card3Data);
 	const card8 = createCard(card8Data);
 	const cardKing = createCard(cardKingData);

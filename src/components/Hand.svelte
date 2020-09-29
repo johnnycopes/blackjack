@@ -1,19 +1,35 @@
 <script lang="ts">
 	import type { ICard } from "../models/interfaces/card.interface";
+	import { addCardsToHand, createHand } from "../utility/gameplay";
 	import Card from "./Card.svelte";
 
 	export let cards: ICard[];
 	export let total: number;
 	export let hidden: boolean;
 	export let soft: boolean;
+	let visibleTotal: number;
+	let showFallbackTotal: boolean;
+
+	$: {
+		if (!hidden) {
+			visibleTotal = total;
+			showFallbackTotal = soft;
+		} else {
+			const visibleCards = cards.slice(1);
+			const visibleHand = createHand(false);
+			const { total, soft } = addCardsToHand(visibleHand, visibleCards);
+			visibleTotal = total;
+			showFallbackTotal = soft;
+		}
+	}
 </script>
 
 <div class="hand">
-	{#if total > 0}
+	{#if visibleTotal > 0}
 		<h3 class="total">
-			{hidden ? cards[1].point : total}
-			{#if soft && !hidden}
-			/ {total - 10}
+			{visibleTotal}
+			{#if showFallbackTotal}
+			/ {visibleTotal - 10}
 			{/if}
 		</h3>
 	{/if}

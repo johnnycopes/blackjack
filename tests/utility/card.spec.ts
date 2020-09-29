@@ -1,4 +1,11 @@
-import { getValue, getSuit, getPoint, createCardData, createCard } from "../../src/utility/card";
+import {
+	getValue,
+	getSuit,
+	getPoint,
+	createCard,
+	createFakeCardData,
+	createFakeCard
+} from "../../src/utility/card";
 
 describe("getValue", () => {
 	test("returns a single-digit number", () => {
@@ -86,9 +93,47 @@ describe("getPoint", () => {
 	});
 });
 
-describe("createCardData", () => {
+describe("createCard", () => {
+	test("creates number card object", () => {
+		const cardResponse = createFakeCardData("8C");
+		const card = createCard(cardResponse);
+		expect(card).toEqual({
+			code: "8C",
+			image: "https://deckofcardsapi.com/static/img/8C.png",
+			point: 8,
+			suit: "CLUBS",
+			value: "8",
+		});
+	});
+
+	test("creates face card object", () => {
+		const cardResponse = createFakeCardData("KD");
+		const card = createCard(cardResponse);
+		expect(card).toEqual({
+			code: "KD",
+			image: "https://deckofcardsapi.com/static/img/KD.png",
+			point: 10,
+			suit: "DIAMONDS",
+			value: "KING",
+		});
+	});
+
+	test("creates ace card object", () => {
+		const cardResponse = createFakeCardData("AS");
+		const card = createCard(cardResponse);
+		expect(card).toEqual({
+			code: "AS",
+			image: "https://deckofcardsapi.com/static/img/AS.png",
+			point: 11,
+			suit: "SPADES",
+			value: "ACE",
+		});
+	});
+});
+
+describe("createFakeCardData", () => {
 	test("creates number card data object", () => {
-		const cardData = createCardData("3H");
+		const cardData = createFakeCardData("3H");
 		expect(cardData).toEqual({
 			code: "3H",
 			image: "https://deckofcardsapi.com/static/img/3H.png",
@@ -102,7 +147,7 @@ describe("createCardData", () => {
 	});
 
 	test("creates face card data object", () => {
-		const cardData = createCardData("JC");
+		const cardData = createFakeCardData("JC");
 		expect(cardData).toEqual({
 			code: "JC",
 			image: "https://deckofcardsapi.com/static/img/JC.png",
@@ -116,7 +161,7 @@ describe("createCardData", () => {
 	});
 
 	test("creates ace card data object", () => {
-		const cardData = createCardData("AD");
+		const cardData = createFakeCardData("AD");
 		expect(cardData).toEqual({
 			code: "AD",
 			image: "https://deckofcardsapi.com/static/img/AD.png",
@@ -130,39 +175,36 @@ describe("createCardData", () => {
 	});
 });
 
-describe("createCard", () => {
+describe("createFakeCard", () => {
 	test("creates number card object", () => {
-		const cardResponse = createCardData("8C");
-		const card = createCard(cardResponse);
-		expect(card).toEqual({
-			code: "8C",
-			image: "https://deckofcardsapi.com/static/img/8C.png",
-			point: 8,
-			suit: "CLUBS",
-			value: "8",
+		const fakeCard = createFakeCard("2H");
+		expect(fakeCard).toEqual({
+			code: "2H",
+			image: "https://deckofcardsapi.com/static/img/2H.png",
+			point: 2,
+			suit: "HEARTS",
+			value: "2",
 		});
 	});
 
 	test("creates face card object", () => {
-		const cardResponse = createCardData("KD");
-		const card = createCard(cardResponse);
-		expect(card).toEqual({
-			code: "KD",
-			image: "https://deckofcardsapi.com/static/img/KD.png",
+		const fakeCard = createFakeCard("JD");
+		expect(fakeCard).toEqual({
+			code: "JD",
+			image: "https://deckofcardsapi.com/static/img/JD.png",
 			point: 10,
 			suit: "DIAMONDS",
-			value: "KING",
+			value: "JACK",
 		});
 	});
 
 	test("creates ace card object", () => {
-		const cardResponse = createCardData("AS");
-		const card = createCard(cardResponse);
-		expect(card).toEqual({
-			code: "AS",
-			image: "https://deckofcardsapi.com/static/img/AS.png",
+		const fakeCard = createFakeCard("AC");
+		expect(fakeCard).toEqual({
+			code: "AC",
+			image: "https://deckofcardsapi.com/static/img/AC.png",
 			point: 11,
-			suit: "SPADES",
+			suit: "CLUBS",
 			value: "ACE",
 		});
 	});

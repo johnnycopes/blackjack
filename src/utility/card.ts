@@ -76,11 +76,18 @@ export function getPoint(value: CardValue): number {
 	}
 }
 
+export function createCard(cardResponse: ICardData): ICard {
+	const { image, value, suit, code }: ICardData = cardResponse;
+	const point = getPoint(value);
+	const newCard = { image, value, point, suit, code };
+	return newCard;
+}
+
 /*
 	In the actual game, the ICardData objects will be returned by the API.
-	This  function is used in other tests to generate mock data
+	These functions are used in other tests to generate mock data
 */
-export function createCardData(cardCode: CardCode): ICardData {
+export function createFakeCardData(cardCode: CardCode): ICardData {
 	return {
 		code: cardCode,
 		suit: getSuit(cardCode),
@@ -93,9 +100,7 @@ export function createCardData(cardCode: CardCode): ICardData {
 	};
 }
 
-export function createCard(cardResponse: ICardData): ICard {
-	const { image, value, suit, code }: ICardData = cardResponse;
-	const point = getPoint(value);
-	const newCard = { image, value, point, suit, code };
-	return newCard;
+export function createFakeCard(cardCode: CardCode): ICard {
+	const fakeCardData = createFakeCardData(cardCode);
+	return createCard(fakeCardData);
 }
