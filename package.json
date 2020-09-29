@@ -1,23 +1,23 @@
 {
-	"name": "cool-blackjack",
-	"version": "1.0.0",
-	"scripts": {
-		"build": "rollup -c",
-		"dev": "rollup -c -w",
-		"dev-win": "start cmd /k \"npm run dev\"",
-		"start": "sirv public",
-		"validate": "svelte-check",
-		"test": "jest tests",
-		"test-win": "start cmd /k \"jest tests\"",
-		"test:watch": "npm run test -- --watch",
-		"test:watch-win": "start cmd /k \"npm run test:watch\""
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "npm run test",
-			"pre-push": "npm run test"
-		}
-	},
+ "name": "cool-blackjack",
+ "version": "1.0.0",
+ "scripts": {
+  "build": "rollup -c",
+  "dev": "rollup -c -w",
+  "dev-win": "start cmd /k \"npm run dev\"",
+  "start": "sirv public",
+  "validate": "svelte-check",
+  "test": "jest tests",
+  "test-win": "start cmd /k \"jest tests\"",
+  "test:watch": "npm run test -- --watch",
+  "test:watch-win": "start cmd /k \"npm run test:watch\""
+ },
+ "husky": {
+  "hooks": {
+   "pre-commit": "npm run test",
+   "pre-push": "npm run test"
+  }
+ },
  "jest": {
   "automock": false,
   "transform": {
@@ -52,6 +52,7 @@
   "@rollup/plugin-typescript": "^4.0.0",
   "@testing-library/jest-dom": "^5.11.4",
   "@testing-library/svelte": "^3.0.0",
+  "@testing-library/user-event": "^12.1.6",
   "@tsconfig/svelte": "^1.0.0",
   "husky": "^5.0.0-alpha.5",
   "jest": "^26.4.2",

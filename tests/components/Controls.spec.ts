@@ -1,27 +1,29 @@
-import { fireEvent, render } from "@testing-library/svelte";
+import { render } from "@testing-library/svelte";
+import userEvent from '@testing-library/user-event'
 import Controls from "../../src/components/Controls.svelte";
 
-describe("playing", () => {
-	test("fakeTest", () => {
-		expect(true);
-	});
-	// test("deal", async () => {
-	// 	const result = render(Controls, { props: { playing: true } });
-	// 	const deal = result.getByText("Deal");
-	// 	const mock = jest.fn();
-	// 	// console.log("playing, is disabled?", `-${deal.getAttribute("disabled")}-`);
-	// 	await fireEvent.click(deal, mock);
-	// 	expect(mock).not.toHaveBeenCalled();
-	// });
+const mockDeal = jest.fn();
+
+beforeEach(() => {
+	mockDeal.mockReset();
 });
 
-// describe("not playing", () => {
-	// test("deal", async () => {
-	// 	const result = render(Controls, { props: { playing: false } });
-	// 	const deal = result.getByText("Deal");
-	// 	const mock = jest.fn();
-	// 	// console.log("not playing, is disabled?", `-${deal.getAttribute("disabled")}-`);
-	// 	await fireEvent.click(deal, mock);
-	// 	expect(mock).toHaveBeenCalled(); // ultimately, should fire 1 time
-	// });
-// });
+describe("playing", () => {
+	test("deal", () => {
+		const result = render(Controls, { props: { playing: true, } });
+		result.component.$on("deal", mockDeal);
+		const deal = result.getByText("Deal");
+		userEvent.click(deal);
+		expect(mockDeal).not.toHaveBeenCalled(); // should not fire
+	});
+});
+
+describe("not playing", () => {
+	test("deal", () => {
+		const result = render(Controls, { props: { playing: false, } });
+		result.component.$on("deal", mockDeal);
+		const deal = result.getByText("Deal");
+		userEvent.click(deal);
+		expect(mockDeal).toHaveBeenCalled(); // should fire 1 time
+	});
+});

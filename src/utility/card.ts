@@ -84,8 +84,8 @@ export function createCard(cardResponse: ICardData): ICard {
 }
 
 /*
+	These functions are only used in other tests to generate mock data.
 	In the actual game, the ICardData objects will be returned by the API.
-	These functions are used in other tests to generate mock data
 */
 export function createFakeCardData(cardCode: CardCode): ICardData {
 	return {
