@@ -1,6 +1,6 @@
 import { render } from "@testing-library/svelte";
-import { createFakeCard } from "../../src/utility/card";
-import { addCardsToHand, createHand } from "../../src/utility/gameplay";
+import { createFakeCard } from "../../src/functions/card";
+import { addCardsToHand, createHand } from "../../src/functions/gameplay";
 import Hand from "../../src/components/Hand.svelte";
 
 const cardAce = createFakeCard("AH");

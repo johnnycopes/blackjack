@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ICard } from "../models/interfaces/card.interface";
-	import { addCardsToHand, createHand } from "../utility/gameplay";
+	import { addCardsToHand, createHand } from "../functions/gameplay";
 	import Card from "./Card.svelte";
 
 	export let cards: ICard[];

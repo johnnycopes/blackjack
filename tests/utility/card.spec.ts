@@ -5,7 +5,7 @@ import {
 	createCard,
 	createFakeCardData,
 	createFakeCard
-} from "../../src/utility/card";
+} from "../../src/functions/card";
 
 describe("getValue", () => {
 	test("returns a single-digit number", () => {

@@ -11,8 +11,8 @@ import {
 	checkForBlackjacks,
 	evaluateOutcome,
 	updateMoney,
-} from "../../src/utility/gameplay";
-import { createCard, createFakeCardData } from "../../src/utility/card";
+} from "../../src/functions/gameplay";
+import { createCard, createFakeCardData } from "../../src/functions/card";
 import fetchMock from "jest-fetch-mock";
 
 describe("createHand", () => {

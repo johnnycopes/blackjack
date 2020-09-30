@@ -8,7 +8,7 @@
 	import type { IHand } from "../models/interfaces/hand.interface";
 	import type { IMoney } from "../models/interfaces/money.interface";
 	import { EOutcome } from "../models/enums/outcome.enum";
-	import { wait } from "../utility/wait";
+	import { wait } from "../functions/wait";
 	import {
 		createHand,
 		fetchDeck,
@@ -18,9 +18,9 @@
 		checkForBlackjacks,
 		evaluateOutcome,
 		updateMoney
-	} from "../utility/gameplay";
-	// import { fetchOrderedDeck } from "../utility/debugging";
-	// import type { IOrderedDeckConfig } from "../utility/debugging";
+	} from "../functions/gameplay";
+	// import { fetchOrderedDeck } from "../functions/debugging";
+	// import type { IOrderedDeckConfig } from "../functions/debugging";
 
 	let playing: boolean;
 	let outcome: EOutcome | undefined;
