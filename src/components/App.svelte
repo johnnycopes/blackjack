@@ -8,7 +8,7 @@
 	import type { IHand } from "../models/interfaces/hand.interface";
 	import type { IMoney } from "../models/interfaces/money.interface";
 	import { EOutcome } from "../models/enums/outcome.enum";
-	import { wait } from "../functions/wait";
+	import { wait } from "../functions/utility";
 	import {
 		createHand,
 		fetchDeck,
