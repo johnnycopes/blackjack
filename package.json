@@ -4,18 +4,18 @@
  "scripts": {
   "build": "rollup -c",
   "dev": "rollup -c -w",
-  "dev-win": "start cmd /k \"npm run dev\"",
+	"dev-win": "start cmd /k \"npm run dev\"",
+	"lint-styles": "stylelint \"**/*.css\"",
   "start": "sirv public",
-  "validate": "svelte-check",
   "test": "jest tests",
   "test-win": "start cmd /k \"jest tests\"",
   "test:watch": "npm run test -- --watch",
-  "test:watch-win": "start cmd /k \"npm run test:watch\""
+  "test:watch-win": "start cmd /k \"npm run test:watch\"",
+  "validate": "svelte-check"
  },
  "husky": {
   "hooks": {
-   "pre-commit": "npm run test",
-   "pre-push": "npm run test"
+   "pre-commit": "npm run lint-styles && npm run test"
   }
  },
  "jest": {
@@ -57,10 +57,13 @@
   "husky": "^5.0.0-alpha.5",
   "jest": "^26.4.2",
   "jest-fetch-mock": "^3.0.3",
+  "lint-staged": "^10.4.0",
   "rollup": "^2.3.4",
   "rollup-plugin-livereload": "^2.0.0",
   "rollup-plugin-svelte": "^6.0.0",
   "rollup-plugin-terser": "^7.0.0",
+  "stylelint": "^13.7.2",
+  "stylelint-config-standard": "^20.0.0",
   "svelte": "^3.0.0",
   "svelte-check": "^1.0.0",
   "svelte-jester": "^1.1.5",

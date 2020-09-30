@@ -55,15 +55,11 @@
 	}
 
 	.cards {
+		display: flex;
 		width: 128px;
 	}
 
 	.total {
 		margin-bottom: 8px;
 	}
-
-	.cards {
-		display: flex;
-	}
-	
 </style>
