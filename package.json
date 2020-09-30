@@ -13,11 +13,6 @@
   "test:watch-win": "start cmd /k \"npm run test:watch\"",
   "validate": "svelte-check"
  },
- "husky": {
-  "hooks": {
-   "pre-commit": "npm run lint-styles && npm run test"
-  }
- },
  "jest": {
   "automock": false,
   "transform": {
