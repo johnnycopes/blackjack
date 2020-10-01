@@ -2,4 +2,4 @@
 . "$(dirname $0)/_/husky.sh"
 
 npm run lint-styles
-npm run tests
+npm run test

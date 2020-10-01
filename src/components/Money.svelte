@@ -52,7 +52,8 @@
 	</div>
 	{#if !disabled && totalDiff}
 		<p class="change"
-			style="color: {totalDiff > 0 ? "limegreen" : "crimson"};"
+			class:gain={totalDiff > 0}
+			class:loss={totalDiff < 0}
 		>
 			{totalDiff > 0 ? "+" : "-"}${Math.abs(totalDiff)}
 		</p>
@@ -71,5 +72,13 @@
 
 	.change {
 		font-weight: 700;
+	}
+
+	.gain {
+		color: limegreen;
+	}
+
+	.loss {
+		color: salmon;
 	}
 </style>

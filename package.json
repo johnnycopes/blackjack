@@ -5,7 +5,7 @@
   "build": "rollup -c",
   "dev": "rollup -c -w",
 	"dev-win": "start cmd /k \"npm run dev\"",
-	"lint-styles": "stylelint \"**/*.css\"",
+	"lint-styles": "stylelint \"public/build/global.css\" \"src/components/**/*.svelte\"",
   "start": "sirv public",
   "test": "jest tests",
   "test-win": "start cmd /k \"jest tests\"",
