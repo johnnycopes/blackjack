@@ -10,20 +10,20 @@ beforeEach(() => {
 
 describe("playing", () => {
 	test("deal", () => {
-		const result = render(Controls, { props: { playing: true, } });
+		const result = render(Controls, { playing: true });
 		result.component.$on("deal", mockDeal);
 		const deal = result.getByText("Deal");
 		userEvent.click(deal);
-		expect(mockDeal).not.toHaveBeenCalled(); // should not fire
+		expect(mockDeal).not.toHaveBeenCalled();
 	});
 });
 
 describe("not playing", () => {
 	test("deal", () => {
-		const result = render(Controls, { props: { playing: false, } });
+		const result = render(Controls, { playing: false });
 		result.component.$on("deal", mockDeal);
 		const deal = result.getByText("Deal");
 		userEvent.click(deal);
-		expect(mockDeal).toHaveBeenCalled(); // should fire 1 time
+		expect(mockDeal).toHaveBeenCalled();
 	});
 });
