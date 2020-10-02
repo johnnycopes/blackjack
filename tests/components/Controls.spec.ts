@@ -9,7 +9,7 @@ beforeEach(() => {
 });
 
 describe("while playing", () => {
-	test("can't deal", () => {
+	it("can't deal", () => {
 		const result = render(Controls, { playing: true });
 		result.component.$on("deal", mockFn);
 		const deal = result.getByText("Deal");
@@ -17,7 +17,7 @@ describe("while playing", () => {
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 	
-	test("can hit", () => {
+	it("can hit", () => {
 		const result = render(Controls, { playing: true });
 		result.component.$on("hit", mockFn);
 		const hit = result.getByText("Hit");
@@ -25,7 +25,7 @@ describe("while playing", () => {
 		expect(mockFn).toHaveBeenCalled();
 	});
 
-	test("can stay", () => {
+	it("can stay", () => {
 		const result = render(Controls, { playing: true });
 		result.component.$on("stay", mockFn);
 		const stay = result.getByText("Stay");
@@ -35,7 +35,7 @@ describe("while playing", () => {
 });
 
 describe("not playing", () => {
-	test("can deal", () => {
+	it("can deal", () => {
 		const result = render(Controls, { playing: false });
 		result.component.$on("deal", mockFn);
 		const deal = result.getByText("Deal");
@@ -43,7 +43,7 @@ describe("not playing", () => {
 		expect(mockFn).toHaveBeenCalled();
 	});
 
-	test("can't hit", () => {
+	it("can't hit", () => {
 		const result = render(Controls, { playing: false });
 		result.component.$on("hit", mockFn);
 		const hit = result.getByText("Hit");
@@ -51,7 +51,7 @@ describe("not playing", () => {
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 
-	test("can't stay", () => {
+	it("can't stay", () => {
 		const result = render(Controls, { playing: false });
 		result.component.$on("stay", mockFn);
 		const stay = result.getByText("Stay");

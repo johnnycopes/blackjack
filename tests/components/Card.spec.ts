@@ -1,7 +1,7 @@
 import { render } from "@testing-library/svelte";
 import Card from "../../src/components/Card.svelte";
 
-test("renders visible card", () => {
+it("renders visible card", () => {
 	const result = render(Card, {
 		hidden: false,
 		code: "6S",
@@ -10,7 +10,7 @@ test("renders visible card", () => {
 	expect(() => result.getByAltText("6S")).not.toThrow();
 });
 
-test("renders hidden card", () => {
+it("renders hidden card", () => {
 	const result = render(Card, {
 		hidden: true,
 		code: "6S",

@@ -16,7 +16,7 @@ import { createCard, createFakeCardData } from "../../src/functions/card";
 import fetchMock from "jest-fetch-mock";
 
 describe("createHand", () => {
-	test("creates new player hand object", () => {
+	it("creates new player hand object", () => {
 		const hand = createHand(false);
 		expect(hand).toEqual({
 			cards: [],
@@ -26,7 +26,7 @@ describe("createHand", () => {
 		});
 	});
 	
-	test("creates new dealer hand object", () => {
+	it("creates new dealer hand object", () => {
 		const hand = createHand(true);
 		expect(hand).toEqual({
 			cards: [],
@@ -49,7 +49,7 @@ describe("fetchDeck", () => {
 		fetchMock.resetMocks();
 	});
 
-	test("returns a new, unshuffled deck", async () => {
+	it("returns a new, unshuffled deck", async () => {
 		fetchMock.mockResponseOnce(JSON.stringify(mockResponseData));
 		const deck = await fetchDeck();
 		expect(deck).toEqual({
@@ -84,7 +84,7 @@ describe("dealCardsFromDeck", () => {
 		fetchMock.resetMocks();
 	});
 
-	test("deals two cards to both player and dealer", async () => {
+	it("deals two cards to both player and dealer", async () => {
 		fetchMock.mockResponseOnce(JSON.stringify(mockResponseData));
 		const dealtCards = await dealCardsFromDeck("77cikknyaadb");
 		expect(dealtCards).toEqual({
@@ -108,7 +108,7 @@ describe("drawCardFromDeck", () => {
 		fetchMock.resetMocks();
 	});
 
-	test("draws a card from an existing deck", async () => {
+	it("draws a card from an existing deck", async () => {
 		fetchMock.mockResponseOnce(JSON.stringify(mockResponseData));
 		const card = await drawCardFromDeck("77cikknyaadb");
 		expect(card).toEqual(card8);
@@ -128,7 +128,7 @@ describe("addCardsToHand", () => {
 
 	describe("dealt hand has no aces", () => {
 		const dealtHand = addCardsToHand(hand, [card3, cardKing]);
-		test("adds 3 and king to empty hand", () => {
+		it("adds 3 and king to empty hand", () => {
 			expect(dealtHand).toEqual({
 				cards: [card3, cardKing],
 				hidden: false,
@@ -137,7 +137,7 @@ describe("addCardsToHand", () => {
 			});
 		});
 	
-		test("adds 8 to existing hand", () => {
+		it("adds 8 to existing hand", () => {
 			const dealtHand = addCardsToHand(hand, [card3, cardKing]);
 			const updatedHand = addCardsToHand(dealtHand, [card8]);
 			expect(updatedHand).toEqual({
@@ -148,7 +148,7 @@ describe("addCardsToHand", () => {
 			});
 		});
 	
-		test("adds ace to existing hand", () => {
+		it("adds ace to existing hand", () => {
 			const dealtHand = addCardsToHand(hand, [card3, cardKing]);
 			const updatedHand = addCardsToHand(dealtHand, [cardAce]);
 			expect(updatedHand).toEqual({
@@ -162,7 +162,7 @@ describe("addCardsToHand", () => {
 
 	describe("dealt hand has an ace", () => {
 		const dealtHand = addCardsToHand(hand, [card8, cardAce]);
-		test("adds 3 and ace to empty hand", () => {
+		it("adds 3 and ace to empty hand", () => {
 			expect(dealtHand).toEqual({
 				cards: [card8, cardAce],
 				hidden: false,
@@ -171,7 +171,7 @@ describe("addCardsToHand", () => {
 			});
 		});
 	
-		test("adds king to existing hand", () => {
+		it("adds king to existing hand", () => {
 			const updatedHand = addCardsToHand(dealtHand, [cardKing]);
 			expect(updatedHand).toEqual({
 				cards: [card8, cardAce, cardKing],
@@ -181,7 +181,7 @@ describe("addCardsToHand", () => {
 			});
 		});
 
-		test("adds ace to existing hand", () => {
+		it("adds ace to existing hand", () => {
 			const updatedHand = addCardsToHand(dealtHand, [cardAce]);
 			expect(updatedHand).toEqual({
 				cards: [card8, cardAce, cardAce],
@@ -194,44 +194,44 @@ describe("addCardsToHand", () => {
 });
 
 describe("checkForBlackjacks", () => {
-	test("returns value if player and dealer both get blackjack", () => {
+	it("returns value if player and dealer both get blackjack", () => {
 		const outcome = checkForBlackjacks(21, 21);
 		expect(outcome).toEqual(EOutcome.Push);
 	});
 
-	test("returns value if only player gets blackjack", () => {
+	it("returns value if only player gets blackjack", () => {
 		const outcome = checkForBlackjacks(21, 19);
 		expect(outcome).toEqual(EOutcome.PlayerBlackjack);
 	});
 
-	test("returns value if only dealer gets blackjack", () => {
+	it("returns value if only dealer gets blackjack", () => {
 		const outcome = checkForBlackjacks(15, 21);
 		expect(outcome).toEqual(EOutcome.DealerBlackjack);
 	});
 
-	test("returns nothing if neither player gets blackjack", () => {
+	it("returns nothing if neither player gets blackjack", () => {
 		const outcome = checkForBlackjacks(10, 13);
 		expect(outcome).toEqual(undefined);
 	});
 });
 
 describe("evaluateOutcome", () => {
-	test("returns value if dealer busts", () => {
+	it("returns value if dealer busts", () => {
 		const outcome = evaluateOutcome(18, 22);
 		expect(outcome).toEqual(EOutcome.DealerBusts);
 	});
 
-	test("returns value if player wins", () => {
+	it("returns value if player wins", () => {
 		const outcome = evaluateOutcome(20, 19);
 		expect(outcome).toEqual(EOutcome.PlayerWins);
 	});
 
-	test("returns value if dealer wins", () => {
+	it("returns value if dealer wins", () => {
 		const outcome = evaluateOutcome(19, 20);
 		expect(outcome).toEqual(EOutcome.DealerWins);
 	});
 
-	test("returns value if there's a push", () => {
+	it("returns value if there's a push", () => {
 		const outcome = evaluateOutcome(21, 21);
 		expect(outcome).toEqual(EOutcome.Push);
 	});
@@ -243,37 +243,37 @@ describe("updateMoney", () => {
 		total: 1000
 	};
 	
-	test("adds 1.5x the bet amount to total if player gets blackjack", () => {
+	it("adds 1.5x the bet amount to total if player gets blackjack", () => {
 		const updatedMoney = updateMoney(money, EOutcome.PlayerBlackjack);
 		expect(updatedMoney).toEqual({ bet: 0, total: 1150 });
 	});
 
-	test("adds the bet amount to total if player wins", () => {
+	it("adds the bet amount to total if player wins", () => {
 		const updatedMoney = updateMoney(money, EOutcome.PlayerWins);
 		expect(updatedMoney).toEqual({ bet: 0, total: 1100 });
 	});
 
-	test("adds the bet amount to total if dealer busts", () => {
+	it("adds the bet amount to total if dealer busts", () => {
 		const updatedMoney = updateMoney(money, EOutcome.DealerBusts);
 		expect(updatedMoney).toEqual({ bet: 0, total: 1100 });
 	});
 
-	test("subtracts the bet amount from total if player busts", () => {
+	it("subtracts the bet amount from total if player busts", () => {
 		const updatedMoney = updateMoney(money, EOutcome.PlayerBusts);
 		expect(updatedMoney).toEqual({ bet: 0, total: 900 });
 	});
 
-	test("subtracts the bet amount from total if dealer wins", () => {
+	it("subtracts the bet amount from total if dealer wins", () => {
 		const updatedMoney = updateMoney(money, EOutcome.DealerWins);
 		expect(updatedMoney).toEqual({ bet: 0, total: 900 });
 	});
 
-	test("subtracts the bet amount from total if dealer gets blackjack", () => {
+	it("subtracts the bet amount from total if dealer gets blackjack", () => {
 		const updatedMoney = updateMoney(money, EOutcome.DealerBlackjack);
 		expect(updatedMoney).toEqual({ bet: 0, total: 900 });
 	});
 
-	test("doesn't change the total if there's a push", () => {
+	it("doesn't change the total if there's a push", () => {
 		const updatedMoney = updateMoney(money, EOutcome.Push);
 		expect(updatedMoney).toEqual({ bet: 0, total: 1000 });
 	});

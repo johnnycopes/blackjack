@@ -8,93 +8,93 @@ import {
 } from "../../src/functions/card";
 
 describe("getValue", () => {
-	test("returns a single-digit number", () => {
+	it("returns a single-digit number", () => {
 		const value = getValue("5S");
 		expect(value).toEqual("5");
 	})
 
-	test("returns 10", () => {
+	it("returns 10", () => {
 		const value = getValue("0S");
 		expect(value).toEqual("10");
 	});
 
-	test("returns jack", () => {
+	it("returns jack", () => {
 		const value = getValue("JS");
 		expect(value).toEqual("JACK");
 	});
 
-	test("returns queen", () => {
+	it("returns queen", () => {
 		const value = getValue("QS");
 		expect(value).toEqual("QUEEN");
 	});
 
-	test("returns king", () => {
+	it("returns king", () => {
 		const value = getValue("KS");
 		expect(value).toEqual("KING");
 	});
 
-	test("throws error on invalid argument", () => {
+	it("throws error on invalid argument", () => {
 		const suit = () => getValue("1S" as any);
 		expect(suit).toThrow(new Error("Invalid card code (not a valid value)"));
 	});
 });
 
 describe("getSuit", () => {
-	test("returns spades", () => {
+	it("returns spades", () => {
 		const suit = getSuit("9S");
 		expect(suit).toEqual("SPADES");
 	});
 
-	test("returns diamonds", () => {
+	it("returns diamonds", () => {
 		const suit = getSuit("9D");
 		expect(suit).toEqual("DIAMONDS");
 	});
 
-	test("returns clubs", () => {
+	it("returns clubs", () => {
 		const suit = getSuit("9C");
 		expect(suit).toEqual("CLUBS");
 	});
 
-	test("returns hearts", () => {
+	it("returns hearts", () => {
 		const suit = getSuit("9H");
 		expect(suit).toEqual("HEARTS");
 	});
 
-	test("throws error on invalid argument", () => {
+	it("throws error on invalid argument", () => {
 		const suit = () => getSuit("9R" as any);
 		expect(suit).toThrow(new Error("Invalid card code (not a valid suit)"));
 	});
 });
 
 describe("getPoint", () => {
-	test("returns ace", () => {
+	it("returns ace", () => {
 		const pointValue = getPoint("ACE");
 		expect(pointValue).toEqual(11);
 	});
 
-	test("returns king", () => {
+	it("returns king", () => {
 		const pointValue = getPoint("KING");
 		expect(pointValue).toEqual(10);
 	});
 
-	test("returns queen", () => {
+	it("returns queen", () => {
 		const pointValue = getPoint("QUEEN");
 		expect(pointValue).toEqual(10);
 	});
 
-	test("returns jack", () => {
+	it("returns jack", () => {
 		const pointValue = getPoint("JACK");
 		expect(pointValue).toEqual(10);
 	});
 
-	test("returns number", () => {
+	it("returns number", () => {
 		const pointValue = getPoint("7");
 		expect(pointValue).toEqual(7);
 	});
 });
 
 describe("createCard", () => {
-	test("creates number card object", () => {
+	it("creates number card object", () => {
 		const cardResponse = createFakeCardData("8C");
 		const card = createCard(cardResponse);
 		expect(card).toEqual({
@@ -106,7 +106,7 @@ describe("createCard", () => {
 		});
 	});
 
-	test("creates face card object", () => {
+	it("creates face card object", () => {
 		const cardResponse = createFakeCardData("KD");
 		const card = createCard(cardResponse);
 		expect(card).toEqual({
@@ -118,7 +118,7 @@ describe("createCard", () => {
 		});
 	});
 
-	test("creates ace card object", () => {
+	it("creates ace card object", () => {
 		const cardResponse = createFakeCardData("AS");
 		const card = createCard(cardResponse);
 		expect(card).toEqual({
@@ -132,7 +132,7 @@ describe("createCard", () => {
 });
 
 describe("createFakeCardData", () => {
-	test("creates number card data object", () => {
+	it("creates number card data object", () => {
 		const cardData = createFakeCardData("3H");
 		expect(cardData).toEqual({
 			code: "3H",
@@ -146,7 +146,7 @@ describe("createFakeCardData", () => {
 		});
 	});
 
-	test("creates face card data object", () => {
+	it("creates face card data object", () => {
 		const cardData = createFakeCardData("JC");
 		expect(cardData).toEqual({
 			code: "JC",
@@ -160,7 +160,7 @@ describe("createFakeCardData", () => {
 		});
 	});
 
-	test("creates ace card data object", () => {
+	it("creates ace card data object", () => {
 		const cardData = createFakeCardData("AD");
 		expect(cardData).toEqual({
 			code: "AD",
@@ -176,7 +176,7 @@ describe("createFakeCardData", () => {
 });
 
 describe("createFakeCard", () => {
-	test("creates number card object", () => {
+	it("creates number card object", () => {
 		const fakeCard = createFakeCard("2H");
 		expect(fakeCard).toEqual({
 			code: "2H",
@@ -187,7 +187,7 @@ describe("createFakeCard", () => {
 		});
 	});
 
-	test("creates face card object", () => {
+	it("creates face card object", () => {
 		const fakeCard = createFakeCard("JD");
 		expect(fakeCard).toEqual({
 			code: "JD",
@@ -198,7 +198,7 @@ describe("createFakeCard", () => {
 		});
 	});
 
-	test("creates ace card object", () => {
+	it("creates ace card object", () => {
 		const fakeCard = createFakeCard("AC");
 		expect(fakeCard).toEqual({
 			code: "AC",

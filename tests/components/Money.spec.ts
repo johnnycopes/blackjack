@@ -21,7 +21,7 @@ describe("on init", () => {
 		});
 	}
 
-	test("renders component correctly", () => {
+	it("renders component correctly", () => {
 		const result = render(Money, props);
 		expect(() => result.getByText("+")).not.toThrow();
 		expect(() => result.getByText("-")).not.toThrow();
@@ -32,7 +32,7 @@ describe("on init", () => {
 });
 
 describe("adjust bet functionality", () => {
-	test("can increase bet", () => {
+	it("can increase bet", () => {
 		const result = render(Money, props);
 		result.component.$on("betChange", mockBetChange);
 		const increaseBet = result.getByText("+");
@@ -40,7 +40,7 @@ describe("adjust bet functionality", () => {
 		expect(mockBetChange).toHaveBeenCalled();
 	});
 	
-	test("can't increase bet if bet equals total", () => {
+	it("can't increase bet if bet equals total", () => {
 		const result = render(Money, { ...props, bet: 100 });
 		result.component.$on("betChange", mockBetChange);
 		const increaseBet = result.getByText("+");
@@ -48,7 +48,7 @@ describe("adjust bet functionality", () => {
 		expect(mockBetChange).not.toHaveBeenCalled();
 	});
 	
-	test("can decrease bet", () => {
+	it("can decrease bet", () => {
 		const result = render(Money, { ...props, bet: 100 });
 		result.component.$on("betChange", mockBetChange);
 		const decreaseBet = result.getByText("-");
@@ -56,7 +56,7 @@ describe("adjust bet functionality", () => {
 		expect(mockBetChange).toHaveBeenCalled();
 	});
 	
-	test("can't decrease bet if bet equals total", () => {
+	it("can't decrease bet if bet equals total", () => {
 		const result = render(Money, props);
 		result.component.$on("betChange", mockBetChange);
 		const decreaseBet = result.getByText("-");
@@ -74,7 +74,7 @@ describe("game ends", () => {
 		});
 	}
 
-	test("displays gain when player wins", async () => {
+	it("displays gain when player wins", async () => {
 		const result = render(Money, {
 			bet: 20,
 			total: 100,
@@ -88,7 +88,7 @@ describe("game ends", () => {
 		expect(() => checkChange(result, 20)).not.toThrow();
 	});
 
-	test("displays loss when player loses", async () => {
+	it("displays loss when player loses", async () => {
 		const result = render(Money, {
 			bet: 40,
 			total: 100,
@@ -102,7 +102,7 @@ describe("game ends", () => {
 		expect(() => checkChange(result, -40)).not.toThrow();
 	});
 
-	test("displays nothing when there's a push", async () => {
+	it("displays nothing when there's a push", async () => {
 		const result = render(Money, {
 			bet: 50,
 			total: 100,
