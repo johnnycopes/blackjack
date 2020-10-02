@@ -122,7 +122,7 @@
 			<Money
 				bet={money.bet}
 				total={money.total}
-				disabled={playing}
+				playing={playing}
 				on:betChange={(e) => 
 					money = { ...e.detail }
 				}

@@ -1,31 +1,37 @@
-import { render, RenderResult } from "@testing-library/svelte";
+import { prettyDOM, render, RenderResult } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import Money from "../../src/components/Money.svelte";
-
-function getByMoney(result: RenderResult, money: number): HTMLElement {
-	return result.getByText("$" + money.toString(), { exact: false });
-}
 
 const mockBetChange = jest.fn();
 const props = {
 	bet: 0,
 	total: 100,
-	disabled: false
+	playing: false
 };
 
 beforeEach(() => {
 	mockBetChange.mockReset();
 });
 
-test("renders component", () => {
-	const result = render(Money, props);
-	expect(() => result.getByText("+")).not.toThrow();
-	expect(() => result.getByText("-")).not.toThrow();
-	expect(() => getByMoney(result, 0)).not.toThrow();
-	expect(() => getByMoney(result, 100)).not.toThrow();
+describe("on init", () => {
+	function checkMoney(result: RenderResult, money: number): HTMLElement {
+		return result.getByText("$" + money.toString(), {
+			selector: "p",
+			exact: false
+		});
+	}
+
+	test("renders component correctly", () => {
+		const result = render(Money, props);
+		expect(() => result.getByText("+")).not.toThrow();
+		expect(() => result.getByText("-")).not.toThrow();
+		expect(() => checkMoney(result, 0)).not.toThrow();
+		expect(() => checkMoney(result, 100)).not.toThrow();
+		expect(() => result.getByTestId("change")).toThrow();
+	});
 });
 
-describe("adjust bet", () => {
+describe("adjust bet functionality", () => {
 	test("can increase bet", () => {
 		const result = render(Money, props);
 		result.component.$on("betChange", mockBetChange);
@@ -57,4 +63,56 @@ describe("adjust bet", () => {
 		userEvent.click(decreaseBet);
 		expect(mockBetChange).not.toHaveBeenCalled();
 	});
-})
+});
+
+describe("game ends", () => {
+	function checkChange(result: RenderResult, change: number): HTMLElement {
+		const symbol = change > 0 ? "+" : "-";
+		const value = Math.abs(change).toString();
+		return result.getByText(symbol + "$" + value, {
+			selector: '[data-testid="change"]',
+		});
+	}
+
+	test("displays gain when player wins", async () => {
+		const result = render(Money, {
+			bet: 20,
+			total: 100,
+			playing: true
+		});
+		await result.component.$set({
+			bet: 0,
+			total: 120,
+			playing: false
+		});
+		expect(() => checkChange(result, 20)).not.toThrow();
+	});
+
+	test("displays loss when player loses", async () => {
+		const result = render(Money, {
+			bet: 40,
+			total: 100,
+			playing: true
+		});
+		await result.component.$set({
+			bet: 0,
+			total: 60,
+			playing: false
+		});
+		expect(() => checkChange(result, -40)).not.toThrow();
+	});
+
+	test("displays nothing when there's a push", async () => {
+		const result = render(Money, {
+			bet: 50,
+			total: 100,
+			playing: true
+		});
+		await result.component.$set({
+			bet: 0,
+			total: 100,
+			playing: false
+		});
+		expect(() => result.getByTestId("change")).toThrow();
+	});
+});

@@ -84,7 +84,7 @@ describe("dealCardsFromDeck", () => {
 		fetchMock.resetMocks();
 	});
 
-	test("player and dealer are dealt two cards each", async () => {
+	test("deals two cards to both player and dealer", async () => {
 		fetchMock.mockResponseOnce(JSON.stringify(mockResponseData));
 		const dealtCards = await dealCardsFromDeck("77cikknyaadb");
 		expect(dealtCards).toEqual({
@@ -108,7 +108,7 @@ describe("drawCardFromDeck", () => {
 		fetchMock.resetMocks();
 	});
 
-	test("draw a card from an existing deck", async () => {
+	test("draws a card from an existing deck", async () => {
 		fetchMock.mockResponseOnce(JSON.stringify(mockResponseData));
 		const card = await drawCardFromDeck("77cikknyaadb");
 		expect(card).toEqual(card8);
@@ -194,44 +194,44 @@ describe("addCardsToHand", () => {
 });
 
 describe("checkForBlackjacks", () => {
-	test("player and dealer both get blackjack", () => {
+	test("returns value if player and dealer both get blackjack", () => {
 		const outcome = checkForBlackjacks(21, 21);
 		expect(outcome).toEqual(EOutcome.Push);
 	});
 
-	test("player gets blackjack", () => {
+	test("returns value if only player gets blackjack", () => {
 		const outcome = checkForBlackjacks(21, 19);
 		expect(outcome).toEqual(EOutcome.PlayerBlackjack);
 	});
 
-	test("dealer gets blackjack", () => {
+	test("returns value if only dealer gets blackjack", () => {
 		const outcome = checkForBlackjacks(15, 21);
 		expect(outcome).toEqual(EOutcome.DealerBlackjack);
 	});
 
-	test("no blackjacks dealt", () => {
+	test("returns nothing if neither player gets blackjack", () => {
 		const outcome = checkForBlackjacks(10, 13);
 		expect(outcome).toEqual(undefined);
 	});
 });
 
 describe("evaluateOutcome", () => {
-	test("dealer busts", () => {
+	test("returns value if dealer busts", () => {
 		const outcome = evaluateOutcome(18, 22);
 		expect(outcome).toEqual(EOutcome.DealerBusts);
 	});
 
-	test("player wins", () => {
+	test("returns value if player wins", () => {
 		const outcome = evaluateOutcome(20, 19);
 		expect(outcome).toEqual(EOutcome.PlayerWins);
 	});
 
-	test("dealer wins", () => {
+	test("returns value if dealer wins", () => {
 		const outcome = evaluateOutcome(19, 20);
 		expect(outcome).toEqual(EOutcome.DealerWins);
 	});
 
-	test("push", () => {
+	test("returns value if there's a push", () => {
 		const outcome = evaluateOutcome(21, 21);
 		expect(outcome).toEqual(EOutcome.Push);
 	});
@@ -243,37 +243,37 @@ describe("updateMoney", () => {
 		total: 1000
 	};
 	
-	test("player gets blackjack", () => {
+	test("adds 1.5x the bet amount to total if player gets blackjack", () => {
 		const updatedMoney = updateMoney(money, EOutcome.PlayerBlackjack);
 		expect(updatedMoney).toEqual({ bet: 0, total: 1150 });
 	});
 
-	test("player wins", () => {
+	test("adds the bet amount to total if player wins", () => {
 		const updatedMoney = updateMoney(money, EOutcome.PlayerWins);
 		expect(updatedMoney).toEqual({ bet: 0, total: 1100 });
 	});
 
-	test("dealer busts", () => {
+	test("adds the bet amount to total if dealer busts", () => {
 		const updatedMoney = updateMoney(money, EOutcome.DealerBusts);
 		expect(updatedMoney).toEqual({ bet: 0, total: 1100 });
 	});
 
-	test("player busts", () => {
+	test("subtracts the bet amount from total if player busts", () => {
 		const updatedMoney = updateMoney(money, EOutcome.PlayerBusts);
 		expect(updatedMoney).toEqual({ bet: 0, total: 900 });
 	});
 
-	test("dealer wins", () => {
+	test("subtracts the bet amount from total if dealer wins", () => {
 		const updatedMoney = updateMoney(money, EOutcome.DealerWins);
 		expect(updatedMoney).toEqual({ bet: 0, total: 900 });
 	});
 
-	test("dealer gets blackjack", () => {
+	test("subtracts the bet amount from total if dealer gets blackjack", () => {
 		const updatedMoney = updateMoney(money, EOutcome.DealerBlackjack);
 		expect(updatedMoney).toEqual({ bet: 0, total: 900 });
 	});
 
-	test("push", () => {
+	test("doesn't change the total if there's a push", () => {
 		const updatedMoney = updateMoney(money, EOutcome.Push);
 		expect(updatedMoney).toEqual({ bet: 0, total: 1000 });
 	});

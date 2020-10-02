@@ -3,7 +3,7 @@
 
 	export let bet: number;
 	export let total: number;
-	export let disabled: boolean;
+	export let playing: boolean;
 	const betDispatch = createEventDispatcher();
 	let prevTotal: number;
 	let totalDiff: number;
@@ -35,13 +35,13 @@
 
 <div class="money">
 	<button
-		disabled={disabled || minBetReached}
+		disabled={playing || minBetReached}
 		on:click={decreaseBet}
 	>
 		-
 	</button>
 	<button
-		disabled={disabled || maxBetReached}
+		disabled={playing || maxBetReached}
 		on:click={increaseBet}
 	>
 		+
@@ -50,8 +50,9 @@
 		<p>${bet} (current bet)</p>
 		<p>${total} (total money)</p>
 	</div>
-	{#if !disabled && totalDiff}
+	{#if !playing && totalDiff}
 		<p class="change"
+			data-testid="change"
 			class:gain={totalDiff > 0}
 			class:loss={totalDiff < 0}
 		>
