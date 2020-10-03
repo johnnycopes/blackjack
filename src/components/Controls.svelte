@@ -9,7 +9,9 @@
 	}>();
 </script>
 
-<div class="controls">
+<div class="controls"
+	data-testid="controls"
+>
 	<button
 		disabled={playing}
 		on:click={() => dispatcher("deal")}
