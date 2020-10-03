@@ -6,7 +6,7 @@
 	import Outcome from "./Outcome.svelte";
 	import type { IHand } from "../models/interfaces/hand.interface";
 	import type { IMoney } from "../models/interfaces/money.interface";
-	import { ETurn } from "../models/enums/turn.enum";
+	import { EProgress } from "../models/enums/progress.enum";
 	import { EOutcome } from "../models/enums/outcome.enum";
 	import {
 		createHand,
@@ -19,23 +19,27 @@
 	const clickDispatch = createEventDispatcher();
 	export let playerHand: IHand = createHand(false);
 	export let dealerHand: IHand = createHand(true);
-	export let turn: ETurn;
+	export let progress: EProgress;
+	let playing: boolean;
 	let outcome: EOutcome | undefined;
 	let money: IMoney = {
 		bet: 0,
 		total: 100,
 	};
-	$: playing = turn === ETurn.Player || turn === ETurn.Dealer;
 
+	// Clear outcome variable on new games
 	$: {
-		if (turn === ETurn.New && !!outcome) {
+		if (progress === EProgress.NewGame && !!outcome) {
 			outcome = undefined;
 		}
 	}
 
+	// Enable/disable playing variable as game progresses
+	$: playing = progress === EProgress.PlayerTurn || progress === EProgress.DealerTurn;
+
 	// Cards are dealt
 	$: {
-		if (turn === ETurn.Blackjack && !outcome) {
+		if (progress === EProgress.BlackjackDealt && !outcome) {
 			outcome = evaluateBlackjack(playerHand.total, dealerHand.total);
 			money = updateMoney(money, outcome);
 			if (outcome === EOutcome.Push || outcome === EOutcome.DealerBlackjack) {
@@ -46,7 +50,7 @@
 
 	// Game ends
 	$: {
-		if (turn === ETurn.Finished && !outcome) {
+		if (progress === EProgress.GameOver && !outcome) {
 			outcome = evaluateOutcome(playerHand.total, dealerHand.total);
 			money = updateMoney(money, outcome);
 		}
@@ -75,6 +79,7 @@
 		clickDispatch("stay");
 	}
 
+	// TODO: should this be modified in the parent instead?
 	function revealDealerHand(): void {
 		dealerHand.hidden = false;
 	}

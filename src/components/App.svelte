@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import Game from "./Game.svelte";
-	import { ETurn } from "../models/enums/turn.enum";
+	import Table from "./Table.svelte";
+	import { EProgress } from "../models/enums/progress.enum";
 	import type { IDeck } from "../models/interfaces/deck.interface";
 	import type { IHand } from "../models/interfaces/hand.interface";
 	import {
@@ -16,23 +16,23 @@ import { wait } from "../functions/utility";
 	let deck: IDeck | undefined;
 	let playerHand: IHand = createHand(false);
 	let dealerHand: IHand = createHand(true);
-	let turn: ETurn = ETurn.New;
+	let progress: EProgress = EProgress.NewGame;
 
 	onMount(async () => {
 		deck = await fetchDeck();
 	});
 
 	async function deal(): Promise<void> {
-		turn = ETurn.New;
+		progress = EProgress.NewGame;
 		playerHand = createHand(false);
 		dealerHand = createHand(true);
 		const dealtCards = await dealCardsFromDeck(deck?.id);
 		dealerHand = addCardsToHand(dealerHand, dealtCards.dealer);
 		playerHand = addCardsToHand(playerHand, dealtCards.player);
 		if (playerHand.total === 21 || dealerHand.total === 21) {
-			turn = ETurn.Blackjack;
+			progress = EProgress.BlackjackDealt;
 		} else {
-			turn = ETurn.Player;
+			progress = EProgress.PlayerTurn;
 		}
 	}
 
@@ -40,27 +40,27 @@ import { wait } from "../functions/utility";
 		const newCard = await drawCardFromDeck(deck?.id);
 		playerHand = addCardsToHand(playerHand, [newCard]);
 		if (playerHand.total > 21) {
-			turn = ETurn.Finished;
+			progress = EProgress.GameOver;
 		}
 	}
 
 	async function stay(): Promise<void> {
-		turn = ETurn.Dealer;
+		progress = EProgress.DealerTurn;
 		await wait(1000);
 		while (dealerHand.total < 17) {
 			const newCard = await drawCardFromDeck(deck?.id);
 			dealerHand = addCardsToHand(dealerHand, [newCard]);
 			await wait(1000);
 		}
-		turn = ETurn.Finished;
+		progress = EProgress.GameOver;
 	}
 </script>
 
 <main class="app">
-	<Game
+	<Table
 		playerHand={playerHand}
 		dealerHand={dealerHand}
-		turn={turn}
+		progress={progress}
 		on:deal={deal}
 		on:hit={hit}
 		on:stay={stay}
