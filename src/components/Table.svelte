@@ -16,7 +16,11 @@
 	} from "../functions/gameplay";
 	import { wait } from "../functions/utility";
 
-	const clickDispatch = createEventDispatcher();
+	const dispatcher = createEventDispatcher<{
+		deal: void;
+		hit: void;
+		stay: void;
+	}>();
 	export let playerHand: IHand = createHand(false);
 	export let dealerHand: IHand = createHand(true);
 	export let progress: EProgress;
@@ -67,16 +71,16 @@
 	}
 
 	function deal(): void {
-		clickDispatch("deal");
+		dispatcher("deal");
 	}
 
 	function hit(): void {
-		clickDispatch("hit");
+		dispatcher("hit");
 	}
 
-	async function stay(): Promise<void> {
+	function stay(): void {
 		revealDealerHand();
-		clickDispatch("stay");
+		dispatcher("stay");
 	}
 
 	// TODO: should this be modified in the parent instead?
@@ -100,7 +104,6 @@
 		}
 	/>
 	{#if money.bet > 0}
-		<!-- TODO: type the event dispatcher -->
 		<Controls
 			playing={playing}
 			on:deal={deal}

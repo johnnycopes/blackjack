@@ -2,25 +2,29 @@
 	import { createEventDispatcher } from "svelte";
 
 	export let playing: boolean;
-	const clickDispatch = createEventDispatcher();
+	const dispatcher = createEventDispatcher<{
+		deal: void;
+		hit: void;
+		stay: void;
+	}>();
 </script>
 
 <div class="controls">
 	<button
 		disabled={playing}
-		on:click={() => clickDispatch("deal")}
+		on:click={() => dispatcher("deal")}
 		>
 		Deal
 	</button>
 	<button
 		disabled={!playing}
-		on:click={() => clickDispatch("hit")}
+		on:click={() => dispatcher("hit")}
 		>
 		Hit
 	</button>
 	<button
 		disabled={!playing}
-		on:click={() => clickDispatch("stay")}
+		on:click={() => dispatcher("stay")}
 		>
 		Stay
 	</button>

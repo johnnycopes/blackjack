@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
+	import type { IMoney } from "../models/interfaces/money.interface";
 
 	export let bet: number;
 	export let total: number;
 	export let playing: boolean;
-	const betDispatch = createEventDispatcher();
+	const dispatcher = createEventDispatcher<{
+		betChange: IMoney
+	}>();
 	let prevTotal: number;
 	let totalDiff: number;
 
@@ -19,14 +22,14 @@
 	$: maxBetReached = bet + 10 > total;
 
 	function increaseBet(): void {
-		betDispatch("betChange", {
+		dispatcher("betChange", {
 			bet: bet + 10,
 			total
 		});
 	}
 
 	function decreaseBet(): void {
-		betDispatch("betChange", {
+		dispatcher("betChange", {
 			bet: bet - 10,
 			total
 		});
