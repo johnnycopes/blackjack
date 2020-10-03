@@ -11,7 +11,7 @@
 		drawCardFromDeck,
 		addCardsToHand,
 	} from "../functions/gameplay";
-import { wait } from "../functions/utility";
+	import { wait } from "../functions/utility";
 
 	let deck: IDeck | undefined;
 	let playerHand: IHand = createHand(false);

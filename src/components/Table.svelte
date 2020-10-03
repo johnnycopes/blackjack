@@ -100,6 +100,7 @@
 		}
 	/>
 	{#if money.bet > 0}
+		<!-- TODO: type the event dispatcher -->
 		<Controls
 			playing={playing}
 			on:deal={deal}
