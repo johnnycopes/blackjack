@@ -14,8 +14,8 @@
 	import { wait } from "../functions/utility";
 
 	let deck: IDeck | undefined;
-	let playerHand: IHand = createHand(false);
-	let dealerHand: IHand = createHand(true);
+	let playerHand: IHand = createHand();
+	let dealerHand: IHand = createHand();
 	let progress: EProgress = EProgress.NewGame;
 
 	onMount(async () => {
@@ -24,8 +24,8 @@
 
 	async function deal(): Promise<void> {
 		progress = EProgress.NewGame;
-		playerHand = createHand(false);
-		dealerHand = createHand(true);
+		playerHand = createHand();
+		dealerHand = createHand();
 		const dealtCards = await dealCardsFromDeck(deck?.id);
 		dealerHand = addCardsToHand(dealerHand, dealtCards.dealer);
 		playerHand = addCardsToHand(playerHand, dealtCards.player);

@@ -13,11 +13,10 @@ interface IDealtCards {
 	dealer: ICard[];
 }
 
-export function createHand(hidden: boolean): IHand {
+export function createHand(): IHand {
 	return {
 		cards: [],
 		total: 0,
-		hidden,
 		soft: false,
 	};
 }
@@ -67,8 +66,7 @@ export function addCardsToHand(hand: IHand, newCards: ICard[]): IHand {
 		numberOfAces--;
 	}
 	const soft = !!numberOfAces;
-	const hidden = hand.hidden;
-	return { cards, total, hidden, soft };
+	return { cards, total, soft };
 }
 
 export function evaluateBlackjack(playerTotal: number, dealerTotal: number): EOutcome {

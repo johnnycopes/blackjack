@@ -10,8 +10,8 @@ let result: RenderResult;
 describe("before starting", () => {
 	beforeEach(() => {
 		result = render(Table, {
-			playerHand: createHand(false),
-			dealerHand: createHand(true),
+			playerHand: createHand(),
+			dealerHand: createHand(),
 			progress: EProgress.NewGame
 		});
 	})
@@ -32,11 +32,11 @@ describe("before starting", () => {
 describe("gameplay", () => {
 	it("either/both player or dealer is dealt 21", async() => {
 		const playerHand = addCardsToHand(
-			createHand(false),
+			createHand(),
 			[createFakeCard("AD"), createFakeCard("KC")],
 		);
 		const dealerHand = addCardsToHand(
-			createHand(true),
+			createHand(),
 			[createFakeCard("5C"), createFakeCard("5H")]
 		);
 		result = render(Table, {

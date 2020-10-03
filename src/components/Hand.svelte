@@ -5,18 +5,17 @@
 
 	export let cards: ICard[];
 	export let total: number;
-	export let hidden: boolean;
 	export let soft: boolean;
 	let visibleTotal: number;
 	let showFallbackTotal: boolean;
 
 	$: {
-		if (!hidden) {
+		if (true) {
 			visibleTotal = total;
 			showFallbackTotal = soft;
 		} else {
 			const visibleCards = cards.slice(1);
-			const visibleHand = createHand(false);
+			const visibleHand = createHand();
 			const { total, soft } = addCardsToHand(visibleHand, visibleCards);
 			visibleTotal = total;
 			showFallbackTotal = soft;
@@ -26,7 +25,9 @@
 
 <div class="hand">
 	{#if visibleTotal > 0}
-		<h3 class="total">
+		<h3 class="total"
+			data-testid="total"
+		>
 			{visibleTotal}
 			{#if showFallbackTotal}
 			/ {visibleTotal - 10}
@@ -39,8 +40,9 @@
 			<Card
 				image={card.image}
 				code={card.code}
-				hidden={i === 0 && hidden}
+				hidden={false}
 			/>
+				<!-- hidden={i === 0 && hidden} -->
 		</li>
 		{/each}
 	</ul>

@@ -12,25 +12,14 @@ import {
 	evaluateOutcome,
 	updateMoney,
 } from "../../src/functions/gameplay";
-import { createCard, createFakeCardData } from "../../src/functions/card";
+import { createCard, createFakeCard, createFakeCardData } from "../../src/functions/card";
 import fetchMock from "jest-fetch-mock";
 
 describe("createHand", () => {
-	it("creates new player hand object", () => {
-		const hand = createHand(false);
+	it("creates new hand object", () => {
+		const hand = createHand();
 		expect(hand).toEqual({
 			cards: [],
-			hidden: false,
-			soft: false,
-			total: 0
-		});
-	});
-	
-	it("creates new dealer hand object", () => {
-		const hand = createHand(true);
-		expect(hand).toEqual({
-			cards: [],
-			hidden: true,
 			soft: false,
 			total: 0
 		});
@@ -116,22 +105,17 @@ describe("drawCardFromDeck", () => {
 });
 
 describe("addCardsToHand", () => {
-	const hand = createHand(false);
-	const card3Data = createFakeCardData("3H");
-	const card8Data = createFakeCardData("8C");
-	const cardKingData = createFakeCardData("KD");
-	const cardAceData = createFakeCardData("AS");
-	const card3 = createCard(card3Data);
-	const card8 = createCard(card8Data);
-	const cardKing = createCard(cardKingData);
-	const cardAce = createCard(cardAceData);
+	const hand = createHand();
+	const card3 = createFakeCard("3H");
+	const card8 = createFakeCard("8C");
+	const cardKing = createFakeCard("KD");
+	const cardAce = createFakeCard("AS");
 
 	describe("dealt hand has no aces", () => {
 		const dealtHand = addCardsToHand(hand, [card3, cardKing]);
 		it("adds 3 and king to empty hand", () => {
 			expect(dealtHand).toEqual({
 				cards: [card3, cardKing],
-				hidden: false,
 				soft: false,
 				total: 13
 			});
@@ -142,7 +126,6 @@ describe("addCardsToHand", () => {
 			const updatedHand = addCardsToHand(dealtHand, [card8]);
 			expect(updatedHand).toEqual({
 				cards: [card3, cardKing, card8],
-				hidden: false,
 				soft: false,
 				total: 21
 			});
@@ -153,7 +136,6 @@ describe("addCardsToHand", () => {
 			const updatedHand = addCardsToHand(dealtHand, [cardAce]);
 			expect(updatedHand).toEqual({
 				cards: [card3, cardKing, cardAce],
-				hidden: false,
 				soft: false,
 				total: 14
 			});
@@ -165,7 +147,6 @@ describe("addCardsToHand", () => {
 		it("adds 3 and ace to empty hand", () => {
 			expect(dealtHand).toEqual({
 				cards: [card8, cardAce],
-				hidden: false,
 				soft: true,
 				total: 19
 			});
@@ -175,7 +156,6 @@ describe("addCardsToHand", () => {
 			const updatedHand = addCardsToHand(dealtHand, [cardKing]);
 			expect(updatedHand).toEqual({
 				cards: [card8, cardAce, cardKing],
-				hidden: false,
 				soft: false,
 				total: 19
 			});
@@ -185,7 +165,6 @@ describe("addCardsToHand", () => {
 			const updatedHand = addCardsToHand(dealtHand, [cardAce]);
 			expect(updatedHand).toEqual({
 				cards: [card8, cardAce, cardAce],
-				hidden: false,
 				soft: true,
 				total: 20
 			});
