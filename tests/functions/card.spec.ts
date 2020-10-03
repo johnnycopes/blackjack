@@ -35,7 +35,7 @@ describe("getValue", () => {
 
 	it("throws error on invalid argument", () => {
 		const suit = () => getValue("1S" as any);
-		expect(suit).toThrow(new Error("Invalid card code (not a valid value)"));
+		expect(suit).toThrow();
 	});
 });
 
@@ -62,7 +62,7 @@ describe("getSuit", () => {
 
 	it("throws error on invalid argument", () => {
 		const suit = () => getSuit("9R" as any);
-		expect(suit).toThrow(new Error("Invalid card code (not a valid suit)"));
+		expect(suit).toThrow();
 	});
 });
 

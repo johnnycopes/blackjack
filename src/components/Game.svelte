@@ -10,10 +10,11 @@
 	import { EOutcome } from "../models/enums/outcome.enum";
 	import {
 		createHand,
-		checkForBlackjacks,
 		evaluateOutcome,
-		updateMoney
+		evaluateBlackjack,
+		updateMoney,
 	} from "../functions/gameplay";
+	import { wait } from "../functions/utility";
 
 	const clickDispatch = createEventDispatcher();
 	export let playerHand: IHand = createHand(false);
@@ -27,68 +28,42 @@
 	$: playing = turn === ETurn.Player || turn === ETurn.Dealer;
 
 	$: {
-		if (turn === ETurn.Finished && !outcome) {
-			if (playerHand.cards.length === 2 && dealerHand.cards.length === 2) {
-				outcome = checkForBlackjacks(playerHand.total, dealerHand.total);
-			} else if (playerHand.total > 21) {
-				outcome = EOutcome.PlayerBusts;
-			} else {
-				outcome = evaluateOutcome(playerHand.total, dealerHand.total);
-			}
-			
-			if (outcome) {
-				money = updateMoney(money, outcome);
-				if (!money.total) {
-					// TODO: Can I do this without a setTimeout?
-					setTimeout(() => {
-						alert("You're out of money :(\nRefresh the page to play again.");
-					});
-				}
+		if (turn === ETurn.New && !!outcome) {
+			outcome = undefined;
+		}
+	}
+
+	// Cards are dealt
+	$: {
+		if (turn === ETurn.Blackjack && !outcome) {
+			outcome = evaluateBlackjack(playerHand.total, dealerHand.total);
+			money = updateMoney(money, outcome);
+			if (outcome === EOutcome.Push || outcome === EOutcome.DealerBlackjack) {
+				revealDealerHand();
 			}
 		}
 	}
 
-	// Game starts
-	// $: {
-	// 	if (playerHand.cards.length === 2 && dealerHand.cards.length === 2 && !outcome) {
-	// 		outcome = checkForBlackjacks(playerHand.total, dealerHand.total);
-	// 		if (outcome === EOutcome.Push || outcome === EOutcome.DealerBlackjack) {
-	// 			revealDealerHand();
-	// 		}
-	// 	}
-	// };
-
-	// Player hits
-	// $: {
-	// 	if (playerHand.total > 21) {
-	// 		outcome = EOutcome.PlayerBusts;
-	// 		revealDealerHand();
-	// 	}
-	// }
-
-	// Player stays
-	// $: {
-	// 	if (turn === ETurn.Nobody && dealerHand.total > 17) {
-	// 		outcome = evaluateOutcome(playerHand.total, dealerHand.total);
-	// 	}
-	// }
-
 	// Game ends
-	// $: {
-	// 	if (outcome) {
-	// 		money = updateMoney(money, outcome);
-	// 		if (!money.total) {
-	// 			// TODO: Can I do this without a setTimeout?
-	// 			setTimeout(() => {
-	// 				alert("You're out of money :(\nRefresh the page to play again.");
-	// 			});
-	// 		}
-	// 	}
-	// }
+	$: {
+		if (turn === ETurn.Finished && !outcome) {
+			outcome = evaluateOutcome(playerHand.total, dealerHand.total);
+			money = updateMoney(money, outcome);
+		}
+	}
+
+	// Show bankruptcy modal
+	$: {
+		if (!money.total) {
+			(async () => {
+				await wait(1000);
+				alert("You're out of money :(\nRefresh the page to play again.");
+			})();
+		}
+	}
 
 	function deal(): void {
 		clickDispatch("deal");
-		outcome = undefined;
 	}
 
 	function hit(): void {

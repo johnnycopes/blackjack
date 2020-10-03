@@ -24,14 +24,13 @@ import { wait } from "../functions/utility";
 
 	async function deal(): Promise<void> {
 		turn = ETurn.New;
-		console.log(turn);
 		playerHand = createHand(false);
 		dealerHand = createHand(true);
 		const dealtCards = await dealCardsFromDeck(deck?.id);
 		dealerHand = addCardsToHand(dealerHand, dealtCards.dealer);
 		playerHand = addCardsToHand(playerHand, dealtCards.player);
 		if (playerHand.total === 21 || dealerHand.total === 21) {
-			turn = ETurn.Finished;
+			turn = ETurn.Blackjack;
 		} else {
 			turn = ETurn.Player;
 		}
@@ -48,7 +47,7 @@ import { wait } from "../functions/utility";
 	async function stay(): Promise<void> {
 		turn = ETurn.Dealer;
 		await wait(1000);
-		while (dealerHand.total <= 17) {
+		while (dealerHand.total < 17) {
 			const newCard = await drawCardFromDeck(deck?.id);
 			dealerHand = addCardsToHand(dealerHand, [newCard]);
 			await wait(1000);

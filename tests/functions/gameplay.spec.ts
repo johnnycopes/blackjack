@@ -8,7 +8,7 @@ import {
 	dealCardsFromDeck,
 	drawCardFromDeck,
 	addCardsToHand,
-	checkForBlackjacks,
+	evaluateBlackjack,
 	evaluateOutcome,
 	updateMoney,
 } from "../../src/functions/gameplay";
@@ -193,29 +193,34 @@ describe("addCardsToHand", () => {
 	});
 });
 
-describe("checkForBlackjacks", () => {
-	it("returns value if player and dealer both get blackjack", () => {
-		const outcome = checkForBlackjacks(21, 21);
+describe("evaluateBlackjack", () => {
+	it("returns value if both player and dealer have 21", () => {
+		const outcome = evaluateBlackjack(21, 21);
 		expect(outcome).toEqual(EOutcome.Push);
 	});
 
-	it("returns value if only player gets blackjack", () => {
-		const outcome = checkForBlackjacks(21, 19);
+	it("returns value if only player has 21", () => {
+		const outcome = evaluateBlackjack(21, 19);
 		expect(outcome).toEqual(EOutcome.PlayerBlackjack);
 	});
 
-	it("returns value if only dealer gets blackjack", () => {
-		const outcome = checkForBlackjacks(15, 21);
+	it("returns value if only dealer has 21", () => {
+		const outcome = evaluateBlackjack(15, 21);
 		expect(outcome).toEqual(EOutcome.DealerBlackjack);
 	});
 
-	it("returns nothing if neither player gets blackjack", () => {
-		const outcome = checkForBlackjacks(10, 13);
-		expect(outcome).toEqual(undefined);
+	it("throws error if neither player nor dealer have 21", () => {
+		const outcome = () => evaluateBlackjack(17, 18);
+		expect(outcome).toThrow();
 	});
 });
 
 describe("evaluateOutcome", () => {
+	it("returns value if player busts", () => {
+		const outcome = evaluateOutcome(23, 14);
+		expect(outcome).toEqual(EOutcome.PlayerBusts);
+	});
+
 	it("returns value if dealer busts", () => {
 		const outcome = evaluateOutcome(18, 22);
 		expect(outcome).toEqual(EOutcome.DealerBusts);

@@ -71,20 +71,21 @@ export function addCardsToHand(hand: IHand, newCards: ICard[]): IHand {
 	return { cards, total, hidden, soft };
 }
 
-export function checkForBlackjacks(playerTotal: number, dealerTotal: number): EOutcome | undefined {
+export function evaluateBlackjack(playerTotal: number, dealerTotal: number): EOutcome {
 	if (playerTotal === 21 && dealerTotal === 21) {
 		return EOutcome.Push;
 	} else if (playerTotal === 21) {
 		return EOutcome.PlayerBlackjack;
 	} else if (dealerTotal === 21) {
 		return EOutcome.DealerBlackjack;
-	} else {
-		return undefined;
 	}
+	throw new Error("This function should only be called if either (or both) player/dealer are dealt 21");
 }
 
 export function evaluateOutcome(playerTotal: number, dealerTotal: number): EOutcome {
-	if (dealerTotal > 21) {
+	if (playerTotal > 21) {
+		return EOutcome.PlayerBusts;
+	} else if (dealerTotal > 21) {
 		return EOutcome.DealerBusts
 	} else if (playerTotal > dealerTotal) {
 		return EOutcome.PlayerWins;
