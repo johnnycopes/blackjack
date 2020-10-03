@@ -82,25 +82,3 @@ export function createCard(cardResponse: ICardData): ICard {
 	const newCard = { image, value, point, suit, code };
 	return newCard;
 }
-
-/*
-	These functions are only used in other tests to generate mock data.
-	In the actual game, the ICardData objects will be returned by the API.
-*/
-export function createFakeCardData(cardCode: CardCode): ICardData {
-	return {
-		code: cardCode,
-		suit: getSuit(cardCode),
-		value: getValue(cardCode),
-		image: `https://deckofcardsapi.com/static/img/${cardCode}.png`,
-		images: {
-			svg: `https://deckofcardsapi.com/static/img/${cardCode}.svg`,
-			png: `https://deckofcardsapi.com/static/img/${cardCode}.png`,
-		}
-	};
-}
-
-export function createFakeCard(cardCode: CardCode): ICard {
-	const fakeCardData = createFakeCardData(cardCode);
-	return createCard(fakeCardData);
-}

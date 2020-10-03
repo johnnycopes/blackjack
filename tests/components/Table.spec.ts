@@ -1,17 +1,16 @@
 import { prettyDOM, render, RenderResult } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
 import Table from "../../src/components/Table.svelte";
 import { EProgress } from "../../src/models/enums/progress.enum";
-import { addCardsToHand, createHand } from "../../src/functions/gameplay";
-import userEvent from "@testing-library/user-event";
-import { createFakeCard } from "../../src/functions/card";
+import { createFakeHand } from "../../src/functions/debugging";
 
 let result: RenderResult;
 
 describe("before starting", () => {
 	beforeEach(() => {
 		result = render(Table, {
-			playerHand: createHand(false),
-			dealerHand: createHand(true),
+			playerHand: createFakeHand(),
+			dealerHand: createFakeHand(),
 			progress: EProgress.NewGame
 		});
 	})
@@ -30,15 +29,9 @@ describe("before starting", () => {
 });
 
 describe("gameplay", () => {
-	it("either/both player or dealer is dealt 21", async() => {
-		const playerHand = addCardsToHand(
-			createHand(false),
-			[createFakeCard("AD"), createFakeCard("KC")],
-		);
-		const dealerHand = addCardsToHand(
-			createHand(true),
-			[createFakeCard("5C"), createFakeCard("5H")]
-		);
+	it("player, dealer, or both are dealt 21", async() => {
+		const playerHand = createFakeHand("AD", "KC");
+		const dealerHand = createFakeHand("5C", "5H");
 		result = render(Table, {
 			playerHand,
 			dealerHand,

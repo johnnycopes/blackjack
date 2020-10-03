@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
 	import Hand from "./Hand.svelte";
 	import Money from "./Money.svelte";
 	import Controls from "./Controls.svelte";
 	import Outcome from "./Outcome.svelte";
 	import type { IHand } from "../models/interfaces/hand.interface";
 	import type { IMoney } from "../models/interfaces/money.interface";
+	import type { EOutcome } from "../models/enums/outcome.enum";
 	import { EProgress } from "../models/enums/progress.enum";
-	import { EOutcome } from "../models/enums/outcome.enum";
 	import {
 		evaluateOutcome,
 		evaluateBlackjack,
@@ -15,16 +14,12 @@
 	} from "../functions/gameplay";
 	import { wait } from "../functions/utility";
 
-	const dispatcher = createEventDispatcher<{
-		deal: void;
-		hit: void;
-		stand: void;
-	}>();
 	export let playerHand: IHand;
 	export let dealerHand: IHand;
 	export let progress: EProgress;
 	let playing: boolean;
 	let outcome: EOutcome | undefined;
+	let dealerHandHidden: boolean;
 	let money: IMoney = {
 		bet: 0,
 		total: 100,
@@ -37,6 +32,9 @@
 		}
 	}
 
+	// Reveal the dealer's hole card when it's no longer the player's turn
+	$: dealerHandHidden = progress === EProgress.NewGame || progress === EProgress.PlayerTurn;
+
 	// Enable/disable playing variable as game progresses
 	$: playing = progress === EProgress.PlayerTurn || progress === EProgress.DealerTurn;
 
@@ -45,9 +43,6 @@
 		if (progress === EProgress.BlackjackDealt && !outcome) {
 			outcome = evaluateBlackjack(playerHand.total, dealerHand.total);
 			money = updateMoney(money, outcome);
-			if (outcome === EOutcome.Push || outcome === EOutcome.DealerBlackjack) {
-				revealDealerHand();
-			}
 		}
 	}
 
@@ -68,30 +63,18 @@
 			})();
 		}
 	}
-
-	function deal(): void {
-		dispatcher("deal");
-	}
-
-	function hit(): void {
-		dispatcher("hit");
-	}
-
-	function stand(): void {
-		revealDealerHand();
-		dispatcher("stand");
-	}
-
-	// TODO: should this be modified in the parent instead?
-	function revealDealerHand(): void {
-		dealerHand.hidden = false;
-	}
 </script>
 
 <Outcome {outcome} />
 <div class="table">
-	<Hand {...dealerHand} />
-	<Hand {...playerHand} />
+	<Hand
+		{...dealerHand}
+		hasHoleCard={dealerHandHidden}
+	/>
+	<Hand
+		{...playerHand}
+		hasHoleCard={false}
+	/>
 </div>
 <div class="actions">
 	<Money
@@ -105,9 +88,9 @@
 	{#if money.bet > 0}
 		<Controls
 			playing={playing}
-			on:deal={deal}
-			on:hit={hit}
-			on:stand={stand}
+			on:deal
+			on:hit
+			on:stand
 		/>
 	{/if}
 </div>
