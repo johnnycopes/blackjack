@@ -6,11 +6,12 @@
 	export let cards: ICard[];
 	export let total: number;
 	export let soft: boolean;
+	export let hasHoleCard: boolean;
 	let visibleTotal: number;
 	let showFallbackTotal: boolean;
 
 	$: {
-		if (true) {
+		if (!hasHoleCard) {
 			visibleTotal = total;
 			showFallbackTotal = soft;
 		} else {
@@ -40,9 +41,8 @@
 			<Card
 				image={card.image}
 				code={card.code}
-				hidden={false}
+				hidden={i === 0 && hasHoleCard}
 			/>
-				<!-- hidden={i === 0 && hidden} -->
 		</li>
 		{/each}
 	</ul>

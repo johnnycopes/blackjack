@@ -2,27 +2,72 @@ import { render } from "@testing-library/svelte";
 import { createFakeHand } from "../../src/functions/debugging";
 import Hand from "../../src/components/Hand.svelte";
 
-it("renders hand with no cards", () => {
-	const result = render(Hand, createFakeHand());
-	expect(() => result.getByTestId("total")).toThrow();
+describe("normal hand (no hole card)", () => {
+	it("renders hand with no cards", () => {
+		const props = { ...createFakeHand(), hasHoleCard: false };
+		const result = render(Hand, props);
+		expect(() => result.getByTestId("total")).toThrow();
+	})
+	
+	it("renders hand with no aces", () => {
+		const props = { ...createFakeHand("0D", "4C"), hasHoleCard: false };
+		const result = render(Hand, props);
+		expect(() => result.getByText("14")).not.toThrow();
+	});
+	
+	it("renders hand with one ace", () => {
+		const props = { ...createFakeHand("AH", "3S"), hasHoleCard: false };
+		const result = render(Hand, props);
+		expect(() => result.getByText("14 / 4")).not.toThrow();
+	});
+	
+	it("renders hand with multiple aces", () => {
+		const props = { ...createFakeHand("AC", "3H", "4H", "AS"), hasHoleCard: false };
+		const result = render(Hand, props);
+		expect(() => result.getByText("19 / 9")).not.toThrow();
+	});
+	
+	it("renders hand with all aces", () => {
+		const props = { ...createFakeHand("AS", "AD", "AH"), hasHoleCard: false };
+		const result = render(Hand, props);
+		expect(() => result.getByText("13 / 3")).not.toThrow();
+	});
 })
 
-it("renders hand with no aces", () => {
-	const result = render(Hand, createFakeHand("0D", "4C"));
-	expect(() => result.getByText("14")).not.toThrow();
-});
+describe("partially hidden hand (has hole card)", () => {
+	it("renders hand with no cards", () => {
+		const props = { ...createFakeHand(), hasHoleCard: true };
+		const result = render(Hand, props);
+		expect(() => result.getByTestId("total")).toThrow();
+	});
 
-it("renders hand with one ace", () => {
-	const result = render(Hand, createFakeHand("AH", "3S"));
-	expect(() => result.getByText("14 / 4")).not.toThrow();
-});
+	it("renders hand with no aces", () => {
+		const props = { ...createFakeHand("0D", "4C"), hasHoleCard: true };
+		const result = render(Hand, props);
+		expect(() => result.getByText("4")).not.toThrow();
+	});
 
-it("renders hand with multiple aces", () => {
-	const result = render(Hand, createFakeHand("AC", "3H", "4H", "AS"));
-	expect(() => result.getByText("19 / 9")).not.toThrow();
-});
+	it("renders hand with one ace visible", () => {
+		const props = { ...createFakeHand("AH", "3S"), hasHoleCard: true };
+		const result = render(Hand, props);
+		expect(() => result.getByText("3")).not.toThrow();
+	});
 
-it("renders hand with all aces", () => {
-	const result = render(Hand, createFakeHand("AS", "AD", "AH"));
-	expect(() => result.getByText("13 / 3")).not.toThrow();
+	it("renders hand with one ace hidden", () => {
+		const props = { ...createFakeHand("3S", "AH"), hasHoleCard: true };
+		const result = render(Hand, props);
+		expect(() => result.getByText("11 / 1")).not.toThrow();
+	});
+
+	it("renders hand with multiple aces", () => {
+		const props = { ...createFakeHand("AC", "3H", "4H", "AS"), hasHoleCard: true };
+		const result = render(Hand, props);
+		expect(() => result.getByText("18 / 8")).not.toThrow();
+	});
+
+	it("renders hand with all aces", () => {
+		const props = { ...createFakeHand("AS", "AD", "AH"), hasHoleCard: true };
+		const result = render(Hand, props);
+		expect(() => result.getByText("12 / 2")).not.toThrow();
+	});
 });
