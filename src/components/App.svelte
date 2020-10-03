@@ -44,7 +44,7 @@
 		}
 	}
 
-	async function stay(): Promise<void> {
+	async function stand(): Promise<void> {
 		progress = EProgress.DealerTurn;
 		await wait(1000);
 		while (dealerHand.total < 17) {
@@ -63,7 +63,7 @@
 		progress={progress}
 		on:deal={deal}
 		on:hit={hit}
-		on:stay={stay}
+		on:stand={stand}
 	/>
 </main>
 

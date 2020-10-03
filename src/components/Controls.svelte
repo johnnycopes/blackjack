@@ -5,7 +5,7 @@
 	const dispatcher = createEventDispatcher<{
 		deal: void;
 		hit: void;
-		stay: void;
+		stand: void;
 	}>();
 </script>
 
@@ -24,9 +24,9 @@
 	</button>
 	<button
 		disabled={!playing}
-		on:click={() => dispatcher("stay")}
+		on:click={() => dispatcher("stand")}
 		>
-		Stay
+		Stand
 	</button>
 </div>
 

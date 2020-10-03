@@ -9,7 +9,6 @@
 	import { EProgress } from "../models/enums/progress.enum";
 	import { EOutcome } from "../models/enums/outcome.enum";
 	import {
-		createHand,
 		evaluateOutcome,
 		evaluateBlackjack,
 		updateMoney,
@@ -19,10 +18,10 @@
 	const dispatcher = createEventDispatcher<{
 		deal: void;
 		hit: void;
-		stay: void;
+		stand: void;
 	}>();
-	export let playerHand: IHand = createHand(false);
-	export let dealerHand: IHand = createHand(true);
+	export let playerHand: IHand;
+	export let dealerHand: IHand;
 	export let progress: EProgress;
 	let playing: boolean;
 	let outcome: EOutcome | undefined;
@@ -78,9 +77,9 @@
 		dispatcher("hit");
 	}
 
-	function stay(): void {
+	function stand(): void {
 		revealDealerHand();
-		dispatcher("stay");
+		dispatcher("stand");
 	}
 
 	// TODO: should this be modified in the parent instead?
@@ -108,7 +107,7 @@
 			playing={playing}
 			on:deal={deal}
 			on:hit={hit}
-			on:stay={stay}
+			on:stand={stand}
 		/>
 	{/if}
 </div>

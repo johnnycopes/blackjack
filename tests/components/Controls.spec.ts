@@ -25,11 +25,11 @@ describe("while playing", () => {
 		expect(mockFn).toHaveBeenCalled();
 	});
 
-	it("can stay", () => {
+	it("can stand", () => {
 		const result = render(Controls, { playing: true });
-		result.component.$on("stay", mockFn);
-		const stay = result.getByText("Stay");
-		userEvent.click(stay);
+		result.component.$on("stand", mockFn);
+		const stand = result.getByText("Stand");
+		userEvent.click(stand);
 		expect(mockFn).toHaveBeenCalled();
 	});
 });
@@ -51,11 +51,11 @@ describe("not playing", () => {
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 
-	it("can't stay", () => {
+	it("can't stand", () => {
 		const result = render(Controls, { playing: false });
-		result.component.$on("stay", mockFn);
-		const stay = result.getByText("Stay");
-		userEvent.click(stay);
+		result.component.$on("stand", mockFn);
+		const stand = result.getByText("Stand");
+		userEvent.click(stand);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 });
