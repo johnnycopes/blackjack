@@ -80,6 +80,15 @@ describe("createFakeCard", () => {
 });
 
 describe("createFakeHand", () => {
+	it("creates hand object with no cards", () => {
+		const fakeHand = createFakeHand();
+		expect(fakeHand).toEqual({
+			cards: [],
+			total: 0,
+			soft: false
+		});
+	});
+
 	it("creates hand object with one card", () => {
 		const fakeHand = createFakeHand("6H");
 		expect(fakeHand).toEqual({
