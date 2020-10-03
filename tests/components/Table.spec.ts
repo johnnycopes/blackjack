@@ -1,9 +1,9 @@
 import { prettyDOM, render, RenderResult } from "@testing-library/svelte";
+import userEvent from "@testing-library/user-event";
 import Table from "../../src/components/Table.svelte";
 import { EProgress } from "../../src/models/enums/progress.enum";
 import { addCardsToHand, createHand } from "../../src/functions/gameplay";
-import userEvent from "@testing-library/user-event";
-import { createFakeCard } from "../../src/functions/card";
+import { createFakeCard } from "../../src/functions/debugging";
 
 let result: RenderResult;
 

@@ -12,7 +12,8 @@ import {
 	evaluateOutcome,
 	updateMoney,
 } from "../../src/functions/gameplay";
-import { createCard, createFakeCard, createFakeCardData } from "../../src/functions/card";
+import { createCard } from "../../src/functions/card";
+import { createFakeCard, createFakeCardData } from "../../src/functions/debugging";
 import fetchMock from "jest-fetch-mock";
 
 describe("createHand", () => {
