@@ -1,31 +1,55 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
+	import { EProgress } from "../models/enums/progress.enum";
 
-	export let playing: boolean;
+	export let progress: EProgress;
 	const dispatcher = createEventDispatcher<{
 		deal: void;
 		hit: void;
 		stand: void;
 	}>();
+	let canDeal: boolean;
+	let canHit: boolean;
+	let canStand: boolean;
+
+	// Game progress
+	$: {
+		switch (progress) {
+			case EProgress.PlayerTurn:
+				canDeal = false;
+				canHit = true;
+				canStand = true;
+				break;
+			case EProgress.DealerTurn:
+				canDeal = false;
+				canHit = false;
+				canStand = false;
+				break;
+			default:
+				canDeal = true;
+				canHit = false;
+				canStand = false;
+		}
+	}
 </script>
 
 <div class="controls"
 	data-testid="controls"
 >
 	<button
-		disabled={playing}
+		disabled={!canDeal}
 		on:click={() => dispatcher("deal")}
 		>
 		Deal
 	</button>
 	<button
-		disabled={!playing}
+		disabled={!canHit}
 		on:click={() => dispatcher("hit")}
 		>
 		Hit
 	</button>
 	<button
-		disabled={!playing}
+		disabled={!canStand}
 		on:click={() => dispatcher("stand")}
 		>
 		Stand

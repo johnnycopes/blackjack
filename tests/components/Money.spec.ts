@@ -1,17 +1,13 @@
-import { prettyDOM, render, RenderResult } from "@testing-library/svelte";
+import { render, RenderResult } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
+import { EProgress } from "../../src/models/enums/progress.enum";
 import Money from "../../src/components/Money.svelte";
 
-const mockBetChange = jest.fn();
 const props = {
 	bet: 0,
 	total: 100,
-	playing: false
+	progress: EProgress.NewGame
 };
-
-beforeEach(() => {
-	mockBetChange.mockReset();
-});
 
 describe("on init", () => {
 	function checkMoney(result: RenderResult, money: number): HTMLElement {
@@ -31,7 +27,12 @@ describe("on init", () => {
 	});
 });
 
-describe("adjust bet functionality", () => {
+describe("bet change functionality", () => {
+	const mockBetChange = jest.fn();
+	beforeEach(() => {
+		mockBetChange.mockReset();
+	});
+
 	it("can increase bet", () => {
 		const result = render(Money, props);
 		result.component.$on("betChange", mockBetChange);
@@ -65,7 +66,44 @@ describe("adjust bet functionality", () => {
 	});
 });
 
-describe("game ends", () => {
+describe("test bet change functionality at different stages of game progress", () => {
+	const mockBetChange = jest.fn();
+	beforeEach(() => {
+		mockBetChange.mockReset();
+	});
+
+	it("enables betting functionality while game is not in progress", async () => {
+		const result = render(Money, { ...props, progress: EProgress.NewGame });
+		result.component.$on("betChange", mockBetChange);
+		const increaseBet = result.getByText("+");
+
+		userEvent.click(increaseBet);
+		expect(mockBetChange).toHaveBeenCalledTimes(1);
+
+		await result.component.$set({ progress: EProgress.BlackjackDealt });
+		userEvent.click(increaseBet);
+		expect(mockBetChange).toHaveBeenCalledTimes(2);
+
+		await result.component.$set({ progress: EProgress.GameOver });
+		userEvent.click(increaseBet);
+		expect(mockBetChange).toHaveBeenCalledTimes(3);
+	});
+
+	it("disables betting functionality while game is in progress", async () => {
+		const result = render(Money, { ...props, progress: EProgress.PlayerTurn });
+		result.component.$on("betChange", mockBetChange);
+		const increaseBet = result.getByText("+");
+
+		userEvent.click(increaseBet);
+		expect(mockBetChange).not.toHaveBeenCalled();
+
+		await result.component.$set({ progress: EProgress.DealerTurn });
+		userEvent.click(increaseBet);
+		expect(mockBetChange).not.toHaveBeenCalled();
+	});
+});
+
+describe("display monetary result after game ends", () => {
 	function checkChange(result: RenderResult, change: number): HTMLElement {
 		const symbol = change > 0 ? "+" : "-";
 		const value = Math.abs(change).toString();
@@ -78,12 +116,12 @@ describe("game ends", () => {
 		const result = render(Money, {
 			bet: 20,
 			total: 100,
-			playing: true
+			progress: EProgress.PlayerTurn
 		});
 		await result.component.$set({
 			bet: 0,
 			total: 120,
-			playing: false
+			progress: EProgress.GameOver
 		});
 		expect(() => checkChange(result, 20)).not.toThrow();
 	});
@@ -92,12 +130,12 @@ describe("game ends", () => {
 		const result = render(Money, {
 			bet: 40,
 			total: 100,
-			playing: true
+			progress: EProgress.PlayerTurn
 		});
 		await result.component.$set({
 			bet: 0,
 			total: 60,
-			playing: false
+			progress: EProgress.GameOver
 		});
 		expect(() => checkChange(result, -40)).not.toThrow();
 	});
@@ -106,12 +144,12 @@ describe("game ends", () => {
 		const result = render(Money, {
 			bet: 50,
 			total: 100,
-			playing: true
+			progress: EProgress.PlayerTurn
 		});
 		await result.component.$set({
 			bet: 0,
 			total: 100,
-			playing: false
+			progress: EProgress.GameOver
 		});
 		expect(() => result.getByTestId("change")).toThrow();
 	});

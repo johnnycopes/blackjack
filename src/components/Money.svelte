@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
+	import { EProgress } from "../models/enums/progress.enum";
 	import type { IMoney } from "../models/interfaces/money.interface";
 
 	export let bet: number;
 	export let total: number;
-	export let playing: boolean;
-	const dispatcher = createEventDispatcher<{
-		betChange: IMoney
-	}>();
+	export let progress: EProgress;
+	const dispatcher = createEventDispatcher<{ betChange: IMoney }>();
 	let prevTotal: number;
 	let totalDiff: number;
+	$: canChangeBet =
+		progress === EProgress.NewGame ||
+		progress === EProgress.BlackjackDealt ||
+		progress === EProgress.GameOver;
 
 	$: {
 		if (prevTotal) {
@@ -38,13 +41,13 @@
 
 <div class="money">
 	<button
-		disabled={playing || minBetReached}
+		disabled={!canChangeBet || minBetReached}
 		on:click={decreaseBet}
 	>
 		-
 	</button>
 	<button
-		disabled={playing || maxBetReached}
+		disabled={!canChangeBet || maxBetReached}
 		on:click={increaseBet}
 	>
 		+
@@ -53,7 +56,7 @@
 		<p>${bet} (current bet)</p>
 		<p>${total} (total money)</p>
 	</div>
-	{#if !playing && totalDiff}
+	{#if canChangeBet && totalDiff}
 		<p class="change"
 			data-testid="change"
 			class:gain={totalDiff > 0}

@@ -17,13 +17,12 @@
 	export let playerHand: IHand;
 	export let dealerHand: IHand;
 	export let progress: EProgress;
-	let playing: boolean;
 	let outcome: EOutcome | undefined;
-	let dealerHandHidden: boolean;
 	let money: IMoney = {
 		bet: 0,
 		total: 100,
 	};
+	$: dealerHandHidden = progress === EProgress.NewGame || progress === EProgress.PlayerTurn;
 
 	// Clear outcome variable on new games
 	$: {
@@ -31,12 +30,6 @@
 			outcome = undefined;
 		}
 	}
-
-	// Reveal the dealer's hole card when it's no longer the player's turn
-	$: dealerHandHidden = progress === EProgress.NewGame || progress === EProgress.PlayerTurn;
-
-	// Enable/disable playing variable as game progresses
-	$: playing = progress === EProgress.PlayerTurn || progress === EProgress.DealerTurn;
 
 	// Cards are dealt
 	$: {
@@ -80,14 +73,14 @@
 	<Money
 		bet={money.bet}
 		total={money.total}
-		playing={playing}
+		progress={progress}
 		on:betChange={(e) => 
 			money = { ...e.detail }
 		}
 	/>
 	{#if money.bet > 0}
 		<Controls
-			playing={playing}
+			progress={progress}
 			on:deal
 			on:hit
 			on:stand
