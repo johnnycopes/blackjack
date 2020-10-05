@@ -12,16 +12,12 @@
 		evaluateBlackjack,
 		updateMoney,
 	} from "../functions/gameplay";
-	import { wait } from "../functions/utility";
 
 	export let playerHand: IHand;
 	export let dealerHand: IHand;
 	export let progress: EProgress;
 	let outcome: EOutcome | undefined;
-	let money: IMoney = {
-		bet: 0,
-		total: 100,
-	};
+	let betPlaced: boolean;
 	$: dealerHandHidden = progress === EProgress.NewGame || progress === EProgress.PlayerTurn;
 
 	// Clear outcome variable on new games
@@ -35,7 +31,6 @@
 	$: {
 		if (progress === EProgress.BlackjackDealt && !outcome) {
 			outcome = evaluateBlackjack(playerHand.total, dealerHand.total);
-			money = updateMoney(money, outcome);
 		}
 	}
 
@@ -43,17 +38,6 @@
 	$: {
 		if (progress === EProgress.GameOver && !outcome) {
 			outcome = evaluateOutcome(playerHand.total, dealerHand.total);
-			money = updateMoney(money, outcome);
-		}
-	}
-
-	// Show bankruptcy modal
-	$: {
-		if (!money.total) {
-			(async () => {
-				await wait(1000);
-				alert("You're out of money :(\nRefresh the page to play again.");
-			})();
 		}
 	}
 </script>
@@ -71,14 +55,11 @@
 </div>
 <div class="actions">
 	<Money
-		bet={money.bet}
-		total={money.total}
 		progress={progress}
-		on:betChange={(e) => 
-			money = { ...e.detail }
-		}
+		outcome={outcome}
+		on:betPlaced={(e) => betPlaced = e.detail}
 	/>
-	{#if money.bet > 0}
+	{#if betPlaced}
 		<Controls
 			progress={progress}
 			on:deal
