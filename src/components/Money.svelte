@@ -6,9 +6,9 @@
 
 	export let progress: EProgress;
 	export let outcome: EOutcome;
+	const dispatcher = createEventDispatcher<{ betPlaced: boolean }>();
 	let bet: number = 0;
 	let total: number = 100;
-	const dispatcher = createEventDispatcher<{ betPlaced: boolean }>();
 	let prevTotal: number;
 	let totalDiff: number;
 	let hasUpdatedTotal: boolean;
@@ -17,7 +17,7 @@
 		progress === EProgress.BlackjackDealt ||
 		progress === EProgress.GameOver;
 	$: displayMonetaryOutcome =
-		canChangeBet && totalDiff > 0 && outcome !== EOutcome.Push;
+		canChangeBet && totalDiff && outcome !== EOutcome.Push;
 	$: minBetReached = bet - 10 < 0;
 	$: maxBetReached = bet + 10 > total;
 

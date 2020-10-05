@@ -4,20 +4,15 @@
 	import Controls from "./Controls.svelte";
 	import Outcome from "./Outcome.svelte";
 	import type { IHand } from "../models/interfaces/hand.interface";
-	import type { IMoney } from "../models/interfaces/money.interface";
 	import type { EOutcome } from "../models/enums/outcome.enum";
 	import { EProgress } from "../models/enums/progress.enum";
-	import {
-		evaluateOutcome,
-		evaluateBlackjack,
-		updateMoney,
-	} from "../functions/gameplay";
+	import { evaluateOutcome, evaluateBlackjack } from "../functions/gameplay";
 
 	export let playerHand: IHand;
 	export let dealerHand: IHand;
 	export let progress: EProgress;
 	let outcome: EOutcome | undefined;
-	let betPlaced: boolean;
+	let hasPlacedBet: boolean;
 	$: dealerHandHidden = progress === EProgress.NewGame || progress === EProgress.PlayerTurn;
 
 	// Clear outcome variable on new games
@@ -57,9 +52,9 @@
 	<Money
 		progress={progress}
 		outcome={outcome}
-		on:betPlaced={(e) => betPlaced = e.detail}
+		on:betPlaced={(e) => hasPlacedBet = e.detail}
 	/>
-	{#if betPlaced}
+	{#if hasPlacedBet}
 		<Controls
 			progress={progress}
 			on:deal

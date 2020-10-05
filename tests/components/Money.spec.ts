@@ -2,186 +2,149 @@ import { prettyDOM, render, RenderResult } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { EProgress } from "../../src/models/enums/progress.enum";
 import Money from "../../src/components/Money.svelte";
+import { EOutcome } from "../../src/models/enums/outcome.enum";
 
-const props = {
-	bet: 0,
-	total: 100,
-	progress: EProgress.NewGame
-};
+let result: RenderResult;
+let increaseBet: HTMLElement;
+let decreaseBet: HTMLElement;
 
-describe("on init", () => {
-	// function checkMoney(result: RenderResult, money: number): HTMLElement {
-	// 	return result.getByText("$" + money.toString(), {
-	// 		selector: "p",
-	// 		exact: false
-	// 	});
-	// }
+beforeEach(async () => {
+	result = render(Money, {
+		progress: EProgress.NewGame,
+		outcome: undefined
+	});
+	increaseBet = result.getByText("+");
+	decreaseBet = result.getByText("-");
+});
 
-	
-	it("renders component correctly", () => {
-		expect(true).toEqual(true);
-	// 	const result = render(Money, props);
-	// 	expect(() => result.getByText("+")).not.toThrow();
-	// 	expect(() => result.getByText("-")).not.toThrow();
-	// 	expect(() => checkMoney(result, 0)).not.toThrow();
-	// 	expect(() => checkMoney(result, 100)).not.toThrow();
-	// 	expect(() => result.getByTestId("change")).toThrow();
+function checkMoney(result: RenderResult, money: number): HTMLElement {
+	return result.getByText("$" + money.toString(), {
+		selector: "p",
+		exact: false
+	});
+}
+
+function checkAllMoney(result: RenderResult, money: number): HTMLElement[] {
+	return result.getAllByText("$" + money.toString(), {
+		selector: "p",
+		exact: false
+	});
+}
+
+function checkChange(result: RenderResult, change?: number): HTMLElement {
+	if (change) {
+		const symbol = change > 0 ? "+" : "-";
+		const value = Math.abs(change).toString();
+		const strToFind = symbol + "$" + value;
+		return result.getByText(strToFind, {
+			selector: '[data-testid="change"]',
+		});
+	}
+	return result.getByTestId('[data-testid="change"');
+}
+
+describe("bet change functionality", () => {
+	const mockBetPlaced = jest.fn();
+	let betPlaced: boolean = false;
+
+	beforeEach(() => {
+		betPlaced = false;
+		mockBetPlaced.mockReset();
+	});
+
+	it("can increase bet if bet is less than total", async () => {
+		result.component.$on("betPlaced", e => betPlaced = e.detail);
+		await userEvent.click(increaseBet);
+		expect(betPlaced).toEqual(true);
+
+		for (let i = 0; i < 20; i++) {
+			await userEvent.click(increaseBet);
+		}
+		expect(checkAllMoney(result, 100)).toHaveLength(2);
+		expect(() => checkAllMoney(result, 100)).not.toThrow();
+	});
+
+	it("can decrease bet if bet is greater than 0", async () => {
+		result.component.$on("betPlaced", e => betPlaced = e.detail);
+		await userEvent.click(decreaseBet);
+		expect(betPlaced).toEqual(false);
+		expect(() => checkMoney(result, 0)).not.toThrow();
+
+		await userEvent.click(increaseBet);
+		await userEvent.click(increaseBet);
+		await userEvent.click(increaseBet);
+		await userEvent.click(decreaseBet);
+		expect(betPlaced).toEqual(true);
+		expect(() => checkMoney(result, 20)).not.toThrow();
 	});
 });
 
-// describe("bet change functionality", () => {
-// 	const mockBetChange = jest.fn();
-// 	beforeEach(() => {
-// 		mockBetChange.mockReset();
-// 	});
+describe("updates money depending on outcome", () => {
+	beforeEach(async () => {
+		userEvent.click(increaseBet);
+		userEvent.click(increaseBet);
+	});
 
-// 	it("can increase bet", () => {
-// 		const result = render(Money, props);
-// 		result.component.$on("betChange", mockBetChange);
-// 		const increaseBet = result.getByText("+");
-// 		userEvent.click(increaseBet);
-// 		expect(mockBetChange).toHaveBeenCalled();
-// 	});
-	
-// 	it("can't increase bet if bet equals total", () => {
-// 		const result = render(Money, { ...props, bet: 100 });
-// 		result.component.$on("betChange", mockBetChange);
-// 		const increaseBet = result.getByText("+");
-// 		userEvent.click(increaseBet);
-// 		expect(mockBetChange).not.toHaveBeenCalled();
-// 	});
-	
-// 	it("can decrease bet", () => {
-// 		const result = render(Money, { ...props, bet: 100 });
-// 		result.component.$on("betChange", mockBetChange);
-// 		const decreaseBet = result.getByText("-");
-// 		userEvent.click(decreaseBet);
-// 		expect(mockBetChange).toHaveBeenCalled();
-// 	});
-	
-// 	it("can't decrease bet if bet equals total", () => {
-// 		const result = render(Money, props);
-// 		result.component.$on("betChange", mockBetChange);
-// 		const decreaseBet = result.getByText("-");
-// 		userEvent.click(decreaseBet);
-// 		expect(mockBetChange).not.toHaveBeenCalled();
-// 	});
-// });
+	it("adds 1.5x the bet amount to total if player gets blackjack", async () => {
+		await result.component.$set({
+			progress: EProgress.BlackjackDealt,
+			outcome: EOutcome.PlayerBlackjack
+		});
+		expect(() => checkMoney(result, 130)).not.toThrow();
+		expect(() => checkChange(result, 30)).not.toThrow();
+	});
 
-// describe("test bet change functionality at different stages of game progress", () => {
-// 	const mockBetChange = jest.fn();
-// 	beforeEach(() => {
-// 		mockBetChange.mockReset();
-// 	});
+	it("subtracts the bet amount from total if dealer gets blackjack", async () => {
+		await result.component.$set({
+			progress: EProgress.BlackjackDealt,
+			outcome: EOutcome.DealerBlackjack
+		});
+		expect(() => checkMoney(result, 80)).not.toThrow();
+		expect(() => checkChange(result, -20)).not.toThrow();
+	});
 
-// 	it("enables betting functionality while game is not in progress", async () => {
-// 		const result = render(Money, { ...props, progress: EProgress.NewGame });
-// 		result.component.$on("betChange", mockBetChange);
-// 		const increaseBet = result.getByText("+");
+	it("adds the bet amount to total if player wins", async () => {
+		await result.component.$set({
+			progress: EProgress.GameOver,
+			outcome: EOutcome.PlayerWins
+		});
+		expect(() => checkMoney(result, 120)).not.toThrow();
+		expect(() => checkChange(result, 20)).not.toThrow();
+	});
 
-// 		userEvent.click(increaseBet);
-// 		expect(mockBetChange).toHaveBeenCalledTimes(1);
+	it("adds the bet amount to total if dealer busts", async () => {
+		await result.component.$set({
+			progress: EProgress.GameOver,
+			outcome: EOutcome.DealerBusts
+		});
+		expect(() => checkMoney(result, 120)).not.toThrow();
+		expect(() => checkChange(result, 20)).not.toThrow();
+	});
 
-// 		await result.component.$set({ progress: EProgress.BlackjackDealt });
-// 		userEvent.click(increaseBet);
-// 		expect(mockBetChange).toHaveBeenCalledTimes(2);
+	it("subtracts the bet amount from total if player busts", async () => {
+		await result.component.$set({
+			progress: EProgress.GameOver,
+			outcome: EOutcome.PlayerBusts
+		});
+		expect(() => checkMoney(result, 80)).not.toThrow();
+		expect(() => checkChange(result, -20)).not.toThrow();
+	});
 
-// 		await result.component.$set({ progress: EProgress.GameOver });
-// 		userEvent.click(increaseBet);
-// 		expect(mockBetChange).toHaveBeenCalledTimes(3);
-// 	});
+	it("subtracts the bet amount from total if dealer wins", async () => {
+		await result.component.$set({
+			progress: EProgress.GameOver,
+			outcome: EOutcome.DealerWins
+		});
+		expect(() => checkMoney(result, 80)).not.toThrow();
+		expect(() => checkChange(result, -20)).not.toThrow();
+	});
 
-// 	it("disables betting functionality while game is in progress", async () => {
-// 		const result = render(Money, { ...props, progress: EProgress.PlayerTurn });
-// 		result.component.$on("betChange", mockBetChange);
-// 		const increaseBet = result.getByText("+");
-
-// 		userEvent.click(increaseBet);
-// 		expect(mockBetChange).not.toHaveBeenCalled();
-
-// 		await result.component.$set({ progress: EProgress.DealerTurn });
-// 		userEvent.click(increaseBet);
-// 		expect(mockBetChange).not.toHaveBeenCalled();
-// 	});
-// });
-
-// describe("display monetary result after game ends", () => {
-// 	let result: RenderResult;
-// 	function checkChange(result: RenderResult, change: number): HTMLElement {
-// 		const symbol = change > 0 ? "+" : "-";
-// 		const value = Math.abs(change).toString();
-// 		return result.getByText(symbol + "$" + value, {
-// 			selector: '[data-testid="change"]',
-// 		});
-// 	}
-
-// 	beforeEach(async () => {
-// 		result = render(Money, {
-// 			bet: 20,
-// 			total: 100,
-// 			progress: EProgress.PlayerTurn
-// 		});
-// 		await result.component.$set({
-// 			bet: 0,
-// 			total: 120,
-// 			progress: EProgress.GameOver
-// 		});
-// 	});
-
-// 	it("displays gain when player wins", async () => {
-// 		result = render(Money, {
-// 			bet: 20,
-// 			total: 100,
-// 			progress: EProgress.PlayerTurn
-// 		});
-// 		await result.component.$set({
-// 			bet: 0,
-// 			total: 120,
-// 			progress: EProgress.GameOver
-// 		});
-// 		await result.component.$set({
-// 			bet: 30,
-// 			total: 120,
-// 			progress: EProgress.PlayerTurn
-// 		});
-// 		// console.log(prettyDOM(result.container));
-// 		await result.component.$set({ progress: EProgress.GameOver });
-// 		// console.log(prettyDOM(result.container));
-// 		expect(() => checkChange(result, 30)).not.toThrow();
-// 	});
-
-	// it("something", async () => {
-	// 	result = render(Money, {
-	// 		bet: 20,
-	// 		total: 100,
-	// 		progress: EProgress.PlayerTurn
-	// 	});
-	// 	await result.component.$set({ total: 120 });
-	// 	await result.component.$set({ total: 120 });
-	// 	await result.component.$set({ total: 120 });
-	// 	await result.component.$set({ total: 120 });
-	// 	await result.component.$set({ total: 120 });
-	// 	await result.component.$set({ total: 120 });
-	// 	await result.component.$set({ total: 140 });
-	// });
-
-	// it("displays loss when player loses", async () => {
-	// 	await result.component.$set({
-	// 		bet: 40,
-	// 		total: 120,
-	// 		progress: EProgress.PlayerTurn
-	// 	});
-	// 	await result.component.$set({ progress: EProgress.GameOver });
-	// 	expect(() => checkChange(result, -40)).not.toThrow();
-	// });
-
-	// it("displays nothing when there's a push", async () => {
-	// 	await result.component.$set({
-	// 		bet: 50,
-	// 		total: 120,
-	// 		progress: EProgress.PlayerTurn
-	// 	});
-	// 	await result.component.$set({ progress: EProgress.GameOver });
-	// 	expect(() => result.getByTestId("change")).toThrow();
-	// });
-// });
+	it("doesn't change the total if there's a push", async () => {
+		await result.component.$set({
+			progress: EProgress.GameOver,
+			outcome: EOutcome.Push
+		});
+		expect(() => checkMoney(result, 100)).not.toThrow();
+		expect(() => checkChange(result)).toThrow();
+	});
+});
