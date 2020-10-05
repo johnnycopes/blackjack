@@ -3,7 +3,6 @@ import type { IDeckData } from "../models/api/deck-data.interface";
 import type { IDeck } from "../models/interfaces/deck.interface";
 import type { IHand } from "../models/interfaces/hand.interface";
 import type { ICard } from "../models/interfaces/card.interface";
-import type { IMoney } from "../models/interfaces/money.interface";
 import { EOutcome } from "../models/enums/outcome.enum";
 import { API_URL } from "../models/constants";
 import { createCard } from "./card";
@@ -91,22 +90,5 @@ export function evaluateOutcome(playerTotal: number, dealerTotal: number): EOutc
 		return EOutcome.DealerWins;
 	} else {
 		return EOutcome.Push;
-	}
-}
-
-export function updateMoney(money: IMoney, outcome: EOutcome): IMoney {
-	const { bet, total } = money;
-	switch (outcome) {
-		case (EOutcome.PlayerBlackjack):
-			return { bet: 0, total: total + (bet * 1.5) };
-		case (EOutcome.PlayerWins):
-		case (EOutcome.DealerBusts):
-			return { bet: 0, total: total + bet };
-		case (EOutcome.PlayerBusts):
-		case (EOutcome.DealerBlackjack):
-		case (EOutcome.DealerWins):
-			return { bet: 0, total: total - bet };
-		default:
-			return { bet: 0, total };
 	}
 }

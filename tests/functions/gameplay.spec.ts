@@ -1,7 +1,6 @@
 import { EOutcome } from "../../src/models/enums/outcome.enum";
 import type { IDeckData } from "../../src/models/api/deck-data.interface";
 import type { IDrawData } from "../../src/models/api/draw-data.interface";
-import type { IMoney } from "../../src/models/interfaces/money.interface";
 import {
 	createHand,
 	fetchDeck,
@@ -9,8 +8,7 @@ import {
 	drawCardFromDeck,
 	addCardsToHand,
 	evaluateBlackjack,
-	evaluateOutcome,
-	updateMoney,
+	evaluateOutcome
 } from "../../src/functions/gameplay";
 import { createCard } from "../../src/functions/card";
 import { createFakeCard, createFakeCardData } from "../../src/functions/debugging";
@@ -219,47 +217,5 @@ describe("evaluateOutcome", () => {
 	it("returns value if there's a push", () => {
 		const outcome = evaluateOutcome(21, 21);
 		expect(outcome).toEqual(EOutcome.Push);
-	});
-});
-
-describe("updateMoney", () => {
-	const money: IMoney = {
-		bet: 100,
-		total: 1000
-	};
-	
-	it("adds 1.5x the bet amount to total if player gets blackjack", () => {
-		const updatedMoney = updateMoney(money, EOutcome.PlayerBlackjack);
-		expect(updatedMoney).toEqual({ bet: 0, total: 1150 });
-	});
-
-	it("adds the bet amount to total if player wins", () => {
-		const updatedMoney = updateMoney(money, EOutcome.PlayerWins);
-		expect(updatedMoney).toEqual({ bet: 0, total: 1100 });
-	});
-
-	it("adds the bet amount to total if dealer busts", () => {
-		const updatedMoney = updateMoney(money, EOutcome.DealerBusts);
-		expect(updatedMoney).toEqual({ bet: 0, total: 1100 });
-	});
-
-	it("subtracts the bet amount from total if player busts", () => {
-		const updatedMoney = updateMoney(money, EOutcome.PlayerBusts);
-		expect(updatedMoney).toEqual({ bet: 0, total: 900 });
-	});
-
-	it("subtracts the bet amount from total if dealer wins", () => {
-		const updatedMoney = updateMoney(money, EOutcome.DealerWins);
-		expect(updatedMoney).toEqual({ bet: 0, total: 900 });
-	});
-
-	it("subtracts the bet amount from total if dealer gets blackjack", () => {
-		const updatedMoney = updateMoney(money, EOutcome.DealerBlackjack);
-		expect(updatedMoney).toEqual({ bet: 0, total: 900 });
-	});
-
-	it("doesn't change the total if there's a push", () => {
-		const updatedMoney = updateMoney(money, EOutcome.Push);
-		expect(updatedMoney).toEqual({ bet: 0, total: 1000 });
 	});
 });
