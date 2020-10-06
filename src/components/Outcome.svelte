@@ -23,7 +23,9 @@
 	}
 </script>
 
-<h2 class="message">
+<h2 class="message"
+	data-testid="outcome"
+>
 	{message}
 </h2>
 
