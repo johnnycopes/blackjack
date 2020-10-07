@@ -7,7 +7,7 @@ it("renders visible card", () => {
 		code: "6S",
 		image: "https://deckofcardsapi.com/static/img/6S.png"
 	});
-	expect(() => result.getByAltText("6S")).not.toThrow();
+	expect(result.getByAltText("6S"));
 });
 
 it("renders hidden card", () => {
@@ -16,5 +16,5 @@ it("renders hidden card", () => {
 		code: "6S",
 		image: "https://deckofcardsapi.com/static/img/6S.png"
 	});
-	expect(() => result.getByAltText("Back of card")).not.toThrow();
+	expect(result.getByAltText("Back of card"));
 });
