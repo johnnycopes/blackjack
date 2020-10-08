@@ -37,7 +37,7 @@ describe("gameplay", () => {
 			dealerHand: createFakeHand("5C", "5H"),
 			progress: EProgress.BlackjackDealt
 		})
-		expect(result.getByTestId("outcome")).not.toBeEmptyDOMElement();
+		expect(result.getByTestId("outcome")).toHaveTextContent("Blackjack!");
 	});
 
 	it("doesn't show outcome when it's player's turn", async () => {
@@ -64,22 +64,36 @@ describe("gameplay", () => {
 			dealerHand: createFakeHand("5C", "5H"),
 			progress: EProgress.GameOver
 		});
-		expect(result.getByTestId("outcome")).not.toBeEmptyDOMElement();
+		expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
 	});
 
-	it("shows outcome when dealer's turn is over", async () => {
-		await result.component.$set({
-			playerHand: createFakeHand("0D", "KC"),
-			dealerHand: createFakeHand("JC", "7H"),
-			progress: EProgress.GameOver
+	describe("shows outcome when dealer's turn is over", () => {
+		it("player wins", async () => {
+			await result.component.$set({
+				playerHand: createFakeHand("JC", "KC"),
+				dealerHand: createFakeHand("JC", "7H"),
+				progress: EProgress.GameOver
+			});
+			expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
 		});
-		expect(result.getByTestId("outcome")).not.toBeEmptyDOMElement();
-
-		await result.component.$set({
-			playerHand: createFakeHand("0D", "8C"),
-			dealerHand: createFakeHand("JC", "9H"),
-			progress: EProgress.GameOver
+	
+		it("dealer wins", async () => {
+			await result.component.$set({
+				playerHand: createFakeHand("JC", "8C"),
+				dealerHand: createFakeHand("JC", "9H"),
+				progress: EProgress.GameOver
+			});
+			expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
 		});
-		expect(result.getByTestId("outcome")).not.toBeEmptyDOMElement();
+	
+		it("push", async () => {
+			await result.component.$set({
+				playerHand: createFakeHand("0D", "8C"),
+				dealerHand: createFakeHand("0D", "8C"),
+				progress: EProgress.GameOver
+			});
+			expect(result.getByTestId("outcome")).toHaveTextContent("Push");
+		});
 	});
+
 });
