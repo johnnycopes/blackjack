@@ -20,13 +20,17 @@ export function createHand(): IHand {
 	};
 }
 
-export async function fetchDeck(): Promise<IDeck> {
-	const response = await fetch(`${API_URL}/new/shuffle/?deck_count=6`);
-	const data: IDeckData = await response.json();
+export function createDeck(data: IDeckData): IDeck {
 	return {
 		id: data.deck_id,
 		remaining: data.remaining,
 	};
+}
+
+export async function fetchDeck(): Promise<IDeck> {
+	const response = await fetch(`${API_URL}/new/shuffle/?deck_count=6`);
+	const data: IDeckData = await response.json();
+	return createDeck(data);
 }
 
 export async function dealCardsFromDeck(deckId: string | undefined): Promise<IDealtCards> {

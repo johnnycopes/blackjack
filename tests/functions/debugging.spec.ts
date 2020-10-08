@@ -1,4 +1,12 @@
-import { createFakeCard, createFakeCardData, createFakeHand } from "../../src/functions/debugging";
+import type { IDeck } from "../../src/models/interfaces/deck.interface";
+import {
+	createFakeCard,
+	createFakeCardData,
+	createFakeDeck,
+	createFakeDeckData,
+	createFakeHand,
+	drawFromFakeDeck
+} from "../../src/functions/debugging";
 
 describe("createFakeCardData", () => {
 	it("creates number card data object", () => {
@@ -109,6 +117,97 @@ describe("createFakeHand", () => {
 			],
 			total: 19,
 			soft: false
+		});
+	});
+});
+
+describe("createFakeDeckData", () => {
+	it("creates deck data object when passed", () => {
+		const fakeDeckData = createFakeDeckData();
+		expect(fakeDeckData).toEqual({
+			deck_id: "77cikknyaadb",
+			remaining: 312,
+			shuffled: true,
+			success: true,
+		});
+	});
+});
+
+describe("createFakeDrawData", () => {
+	let fakeDeck: IDeck;
+
+	beforeEach(() => {
+		fakeDeck = createFakeDeck();
+	});
+
+	it("draws one card from deck", () => {
+		const fakeDrawData = drawFromFakeDeck(fakeDeck, ["AS"]);
+		expect(fakeDrawData).toEqual({
+			success: true,
+			deck_id: "77cikknyaadb",
+			cards: [ createFakeCardData("AS") ],
+			remaining: 311
+		});
+		expect(fakeDeck).toEqual({
+			id: "77cikknyaadb",
+			remaining: 311
+		});
+	});
+
+	it("draws multiple cards from deck at once", () => {
+		const fakeDrawData = drawFromFakeDeck(fakeDeck, ["AS", "5D", "0D", "5S"]);
+		expect(fakeDrawData).toEqual({
+			success: true,
+			deck_id: "77cikknyaadb",
+			cards: [
+				createFakeCardData("AS"),
+				createFakeCardData("5D"),
+				createFakeCardData("0D"),
+				createFakeCardData("5S"),
+			],
+			remaining: 308
+		});
+		expect(fakeDeck).toEqual({
+			id: "77cikknyaadb",
+			remaining: 308
+		});
+	});
+
+	it("draws multiple cards from deck over time", () => {
+		const fakeDrawData = drawFromFakeDeck(fakeDeck, ["AS", "5D"]);
+		expect(fakeDrawData).toEqual({
+			success: true,
+			deck_id: "77cikknyaadb",
+			cards: [ createFakeCardData("AS"), createFakeCardData("5D") ],
+			remaining: 310
+		});
+		expect(fakeDeck).toEqual({
+			id: "77cikknyaadb",
+			remaining: 310
+		});
+
+		const moreFakeDrawData = drawFromFakeDeck(fakeDeck, ["0D"]);
+		expect(moreFakeDrawData).toEqual({
+			success: true,
+			deck_id: "77cikknyaadb",
+			cards: [ createFakeCardData("0D") ],
+			remaining: 309
+		});
+		expect(fakeDeck).toEqual({
+			id: "77cikknyaadb",
+			remaining: 309
+		});
+
+		const evenMoreFakeDrawData = drawFromFakeDeck(fakeDeck, ["5S"]);
+		expect(evenMoreFakeDrawData).toEqual({
+			success: true,
+			deck_id: "77cikknyaadb",
+			cards: [ createFakeCardData("5S") ],
+			remaining: 308
+		});
+		expect(fakeDeck).toEqual({
+			id: "77cikknyaadb",
+			remaining: 308
 		});
 	});
 });

@@ -1,26 +1,38 @@
-import { EOutcome } from "../../src/models/enums/outcome.enum";
+import fetchMock from "jest-fetch-mock";
 import type { IDeckData } from "../../src/models/api/deck-data.interface";
 import type { IDrawData } from "../../src/models/api/draw-data.interface";
+import { EOutcome } from "../../src/models/enums/outcome.enum";
 import {
 	createHand,
+	createDeck,
 	fetchDeck,
 	dealCardsFromDeck,
 	drawCardFromDeck,
 	addCardsToHand,
 	evaluateBlackjack,
-	evaluateOutcome
+	evaluateOutcome,
 } from "../../src/functions/gameplay";
 import { createCard } from "../../src/functions/card";
-import { createFakeCard, createFakeCardData } from "../../src/functions/debugging";
-import fetchMock from "jest-fetch-mock";
+import { createFakeCard, createFakeCardData, createFakeDeckData } from "../../src/functions/debugging";
 
 describe("createHand", () => {
-	it("creates new hand object", () => {
+	it("creates hand object", () => {
 		const hand = createHand();
 		expect(hand).toEqual({
 			cards: [],
 			total: 0,
 			soft: false,
+		});
+	});
+});
+
+describe("createDeck", () => {
+	it("creates deck object", () => {
+		const deckData = createFakeDeckData();
+		const deck = createDeck(deckData);
+		expect(deck).toEqual({
+			id: "77cikknyaadb",
+			remaining: 312,
 		});
 	});
 });
