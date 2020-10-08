@@ -1,13 +1,19 @@
-import { prettyDOM, render, RenderResult } from "@testing-library/svelte";
+import { render, RenderResult } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import { EProgress } from "../../src/models/enums/progress.enum";
-import Money from "../../src/components/Money.svelte";
 import { EOutcome } from "../../src/models/enums/outcome.enum";
-import { getAllByMoney, getChange, getByMoney } from "../queries";
+import Money from "../../src/components/Money.svelte";
 
 let result: RenderResult;
 let increaseBet: HTMLElement;
 let decreaseBet: HTMLElement;
+
+function createRegExp(change: number): RegExp {
+	const symbol = change > 0 ? "\\+" : "-";
+	const value = Math.abs(change).toString();
+	const str = `^${symbol}\\\$${value}$`;
+	return new RegExp(str);
+}
 
 beforeEach(async () => {
 	result = render(Money, {
@@ -35,21 +41,22 @@ describe("bet change functionality", () => {
 		for (let i = 0; i < 20; i++) {
 			await userEvent.click(increaseBet);
 		}
-		expect(getAllByMoney(result, 100)).toHaveLength(2);
+		expect(result.getAllByText("$100", { exact: false})).toHaveLength(2);
 	});
 
 	it("can decrease bet if bet is greater than 0", async () => {
 		result.component.$on("betPlaced", e => betPlaced = e.detail);
 		await userEvent.click(decreaseBet);
 		expect(betPlaced).toEqual(false);
-		expect(getByMoney(result, 0));
+		expect(result.getByText("$0 (current bet)"));
 
 		await userEvent.click(increaseBet);
 		await userEvent.click(increaseBet);
 		await userEvent.click(increaseBet);
 		await userEvent.click(decreaseBet);
 		expect(betPlaced).toEqual(true);
-		expect(getByMoney(result, 20));
+		expect(result.getByText("$20 (current bet)"));
+		expect(() => result.getByTestId("change")).toThrow();
 	});
 });
 
@@ -64,8 +71,8 @@ describe("updates money depending on outcome", () => {
 			progress: EProgress.BlackjackDealt,
 			outcome: EOutcome.PlayerBlackjack
 		});
-		expect(getByMoney(result, 130));
-		expect(getChange(result, 30));
+		expect(result.getByText("$130 (total money)"));
+		expect(result.getByTestId("change")).toHaveTextContent(createRegExp(30));
 	});
 
 	it("subtracts the bet amount from total if dealer gets blackjack", async () => {
@@ -73,8 +80,8 @@ describe("updates money depending on outcome", () => {
 			progress: EProgress.BlackjackDealt,
 			outcome: EOutcome.DealerBlackjack
 		});
-		expect(getByMoney(result, 80));
-		expect(getChange(result, -20));
+		expect(result.getByText("$80 (total money)"));
+		expect(result.getByTestId("change")).toHaveTextContent(createRegExp(-20));
 	});
 
 	it("adds the bet amount to total if player wins", async () => {
@@ -82,8 +89,8 @@ describe("updates money depending on outcome", () => {
 			progress: EProgress.GameOver,
 			outcome: EOutcome.PlayerWins
 		});
-		expect(getByMoney(result, 120));
-		expect(getChange(result, 20));
+		expect(result.getByText("$120 (total money)"));
+		expect(result.getByTestId("change")).toHaveTextContent(createRegExp(20));
 	});
 
 	it("adds the bet amount to total if dealer busts", async () => {
@@ -91,8 +98,8 @@ describe("updates money depending on outcome", () => {
 			progress: EProgress.GameOver,
 			outcome: EOutcome.DealerBusts
 		});
-		expect(getByMoney(result, 120));
-		expect(getChange(result, 20));
+		expect(result.getByText("$120 (total money)"));
+		expect(result.getByTestId("change")).toHaveTextContent(createRegExp(20));
 	});
 
 	it("subtracts the bet amount from total if player busts", async () => {
@@ -100,8 +107,8 @@ describe("updates money depending on outcome", () => {
 			progress: EProgress.GameOver,
 			outcome: EOutcome.PlayerBusts
 		});
-		expect(getByMoney(result, 80));
-		expect(getChange(result, -20));
+		expect(result.getByText("$80 (total money)"));
+		expect(result.getByTestId("change")).toHaveTextContent(createRegExp(-20));
 	});
 
 	it("subtracts the bet amount from total if dealer wins", async () => {
@@ -109,8 +116,8 @@ describe("updates money depending on outcome", () => {
 			progress: EProgress.GameOver,
 			outcome: EOutcome.DealerWins
 		});
-		expect(getByMoney(result, 80));
-		expect(getChange(result, -20));
+		expect(result.getByText("$80 (total money)"));
+		expect(result.getByTestId("change")).toHaveTextContent(createRegExp(-20));
 	});
 
 	it("doesn't change the total if there's a push", async () => {
@@ -118,7 +125,7 @@ describe("updates money depending on outcome", () => {
 			progress: EProgress.GameOver,
 			outcome: EOutcome.Push
 		});
-		expect(getByMoney(result, 100));
-		expect(() => getChange(result)).toThrow();
+		expect(result.getByText("$100 (total money)"));
+		expect(() => result.getByTestId("change")).toThrow();
 	});
 });

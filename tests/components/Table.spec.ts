@@ -1,9 +1,8 @@
-import { prettyDOM, render, RenderResult, screen} from "@testing-library/svelte";
+import { render, RenderResult } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
-import Table from "../../src/components/Table.svelte";
 import { EProgress } from "../../src/models/enums/progress.enum";
 import { createFakeHand } from "../../src/functions/debugging";
-import { getControls, getOutcome } from "../queries";
+import Table from "../../src/components/Table.svelte";
 
 let result: RenderResult;
 
@@ -21,13 +20,13 @@ describe("before starting", () => {
 	it("renders table", () => {
 		expect(result.getByText("$10 (current bet)"));
 		expect(result.getByText("$100 (total money)"));
-		expect(getControls(result));
+		expect(result.getByTestId("controls"));
 	});
 
 	it("hides controls when no bet is placed", async () => {
 		const decreaseBtn = result.getByText("-");
 		await userEvent.click(decreaseBtn);
-		expect(() => getControls(result)).toThrow();
+		expect(() => result.getByTestId("controls")).toThrow();
 	});
 });
 
@@ -38,7 +37,7 @@ describe("gameplay", () => {
 			dealerHand: createFakeHand("5C", "5H"),
 			progress: EProgress.BlackjackDealt
 		})
-		expect(getOutcome(result)).not.toBeEmptyDOMElement();
+		expect(result.getByTestId("outcome")).not.toBeEmptyDOMElement();
 	});
 
 	it("doesn't show outcome when it's player's turn", async () => {
@@ -47,7 +46,7 @@ describe("gameplay", () => {
 			dealerHand: createFakeHand("5C", "5H"),
 			progress: EProgress.PlayerTurn
 		});
-		expect(getOutcome(result)).toBeEmptyDOMElement();
+		expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
 	});
 
 	it("doesn't show outcome when it's dealer's turn", async () => {
@@ -56,7 +55,7 @@ describe("gameplay", () => {
 			dealerHand: createFakeHand("5C", "5H"),
 			progress: EProgress.DealerTurn
 		});
-		expect(getOutcome(result)).toBeEmptyDOMElement();
+		expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
 	});
 
 	it("shows outcome when player busts", async () => {
@@ -65,7 +64,7 @@ describe("gameplay", () => {
 			dealerHand: createFakeHand("5C", "5H"),
 			progress: EProgress.GameOver
 		});
-		expect(getOutcome(result)).not.toBeEmptyDOMElement();
+		expect(result.getByTestId("outcome")).not.toBeEmptyDOMElement();
 	});
 
 	it("shows outcome when dealer's turn is over", async () => {
@@ -74,13 +73,13 @@ describe("gameplay", () => {
 			dealerHand: createFakeHand("JC", "7H"),
 			progress: EProgress.GameOver
 		});
-		expect(getOutcome(result)).not.toBeEmptyDOMElement();
+		expect(result.getByTestId("outcome")).not.toBeEmptyDOMElement();
 
 		await result.component.$set({
 			playerHand: createFakeHand("0D", "8C"),
 			dealerHand: createFakeHand("JC", "9H"),
 			progress: EProgress.GameOver
 		});
-		expect(getOutcome(result)).not.toBeEmptyDOMElement();
+		expect(result.getByTestId("outcome")).not.toBeEmptyDOMElement();
 	});
 });

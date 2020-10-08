@@ -1,13 +1,12 @@
 import { render } from "@testing-library/svelte";
 import { createFakeHand } from "../../src/functions/debugging";
 import Hand from "../../src/components/Hand.svelte";
-import { getControls } from "../queries";
 
 describe("normal hand (no hole card)", () => {
 	it("renders hand with no cards", () => {
 		const props = { ...createFakeHand(), hasHoleCard: false };
 		const result = render(Hand, props);
-		expect(() => getControls(result)).toThrow();
+		expect(() => result.getByTestId("controls")).toThrow();
 	})
 	
 	it("renders hand with no aces", () => {
@@ -39,7 +38,7 @@ describe("partially hidden hand (has hole card)", () => {
 	it("renders hand with no cards", () => {
 		const props = { ...createFakeHand(), hasHoleCard: true };
 		const result = render(Hand, props);
-		expect(() => getControls(result)).toThrow();
+		expect(() => result.getByTestId("controls")).toThrow();
 	});
 
 	it("renders hand with no aces", () => {
