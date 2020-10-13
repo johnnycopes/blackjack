@@ -12,6 +12,7 @@ describe("plays game", () => {
 	let mockDeck: IDeck;
 	let result: RenderResult;
 	let dealButton: HTMLElement;
+	let hitButton: HTMLElement;
 
 	beforeEach(async () => {
 		mockDeckData = createFakeDeckData();
@@ -22,12 +23,13 @@ describe("plays game", () => {
 		const increaseBet = result.getByText("+");
 		await userEvent.click(increaseBet);
 		dealButton = result.getByText("Deal");
+		hitButton = result.getByText("Hit");
 	});
 
 	describe("player gets blackjack", () => {
-		it("clicks the deal button", async () => {
-			const mockDrawData = drawFromFakeDeck(mockDeck, ["AS", "5D", "0D", "5S"]);
-			fetchMock.mockResponseOnce(JSON.stringify(mockDrawData));
+		it("clicks the deal button and game ends", async () => {
+			const mockDealData = drawFromFakeDeck(mockDeck, ["AS", "5D", "0D", "5S"]);
+			fetchMock.mockResponseOnce(JSON.stringify(mockDealData));
 			await userEvent.click(dealButton);
 			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Blackjack!");
@@ -35,12 +37,35 @@ describe("plays game", () => {
 	});
 
 	describe("dealer gets blackjack", () => {
-		it("clicks the deal button", async () => {
-			const mockDrawData = drawFromFakeDeck(mockDeck, ["5D", "AS", "5S", "0D"]);
-			fetchMock.mockResponseOnce(JSON.stringify(mockDrawData));
+		it("clicks the deal button and game ends", async () => {
+			const mockDealData = drawFromFakeDeck(mockDeck, ["5D", "AS", "5S", "0D"]);
+			fetchMock.mockResponseOnce(JSON.stringify(mockDealData));
 			await userEvent.click(dealButton);
 			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
+		});
+	});
+
+	describe("typical game", () => {
+		beforeEach(async () => {
+			const mockDealData = drawFromFakeDeck(mockDeck, ["KS", "0S", "6D", "0D"]);
+			fetchMock.mockResponseOnce(JSON.stringify(mockDealData));
+			await userEvent.click(dealButton);
+			await wait();
+		});
+
+		describe("player busts", () => {
+			it("clicks the deal button", async () => {
+				expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+			});
+	
+			it("clicks the hit button and game ends", async () => {
+				const mockHitData = drawFromFakeDeck(mockDeck, ["QC"]);
+				fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
+				await userEvent.click(hitButton);
+				await wait();
+				expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
+			});
 		});
 	});
 });
