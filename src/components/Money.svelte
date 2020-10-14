@@ -16,8 +16,7 @@
 		progress === EProgress.NewGame ||
 		progress === EProgress.BlackjackDealt ||
 		progress === EProgress.GameOver;
-	$: displayMonetaryOutcome =
-		canChangeBet && totalDiff && outcome !== EOutcome.Push;
+	$: displayMonetaryOutcome = canChangeBet && totalDiff && outcome !== EOutcome.Push;
 	$: minBetReached = bet - 10 < 0;
 	$: maxBetReached = bet + 10 > total;
 

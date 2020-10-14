@@ -86,6 +86,17 @@ describe("plays game", () => {
 			expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
 		});
 
+		it("player hits -> player stands -> push", async () => {
+			await dealCards(mockDeck, ["KS", "7D"], ["0S", "JD"]);
+			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+			const mockHitData = drawFromFakeDeck(mockDeck, ["3C"]);
+			fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
+			await userEvent.click(hitButton);
+			await userEvent.click(standButton);
+			await wait(1000);
+			expect(result.getByTestId("outcome")).toHaveTextContent("Push");
+		});
+
 		it("player stands -> dealer stands -> player wins", async () => {
 			await dealCards(mockDeck, ["0S", "JD"], ["KS", "7D"]);
 			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
@@ -100,6 +111,14 @@ describe("plays game", () => {
 			await userEvent.click(standButton);
 			await wait(1000);
 			expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
+		});
+
+		it("player stands -> dealer stands -> push", async () => {
+			await dealCards(mockDeck, ["KS", "0D"], ["0S", "JD"]);
+			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+			await userEvent.click(standButton);
+			await wait(1000);
+			expect(result.getByTestId("outcome")).toHaveTextContent("Push");
 		});
 
 		it("player stands -> dealer hits -> dealer busts", async () => {
@@ -130,6 +149,16 @@ describe("plays game", () => {
 			await userEvent.click(standButton);
 			await wait(3000);
 			expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
+		});
+
+		it("player stands -> dealer hits -> dealer stands -> push", async () => {
+			await dealCards(mockDeck, ["0S", "JD"], ["KS", "6D"]);
+			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+			const mockStandData = drawFromFakeDeck(mockDeck, ["4C"]);
+			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
+			await userEvent.click(standButton);
+			await wait(3000);
+			expect(result.getByTestId("outcome")).toHaveTextContent("Push");
 		});
 	});
 });
