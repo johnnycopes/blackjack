@@ -58,9 +58,9 @@
 
 <main class="app">
 	<Table
-		playerHand={playerHand}
-		dealerHand={dealerHand}
-		progress={progress}
+		{playerHand}
+		{dealerHand}
+		{progress}
 		on:deal={deal}
 		on:hit={hit}
 		on:stand={stand}

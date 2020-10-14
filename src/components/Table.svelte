@@ -50,13 +50,13 @@
 </div>
 <div class="actions">
 	<Money
-		progress={progress}
-		outcome={outcome}
+		{progress}
+		{outcome}
 		on:betPlaced={(e) => hasPlacedBet = e.detail}
 	/>
 	{#if hasPlacedBet}
 		<Controls
-			progress={progress}
+			{progress}
 			on:deal
 			on:hit
 			on:stand
