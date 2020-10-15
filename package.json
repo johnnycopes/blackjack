@@ -1,74 +1,82 @@
 {
- "name": "cool-blackjack",
- "version": "1.0.0",
- "scripts": {
-  "build": "rollup -c",
-  "dev": "rollup -c -w",
-  "dev-win": "start cmd /k \"npm run dev\"",
-  "lint-styles": "stylelint \"public/build/global.css\" \"src/components/**/*.svelte\"",
-  "start": "sirv public",
-  "test": "jest tests",
-  "test-win": "start cmd /k \"jest tests\"",
-  "test:watch": "npm run test -- --watch",
-  "test:watch-win": "start cmd /k \"npm run test:watch\"",
-  "validate": "svelte-check"
- },
- "jest": {
-  "automock": false,
-  "transform": {
-   "^.+\\.svelte$": [
-    "svelte-jester",
-    {
-     "preprocess": true
-    }
-   ],
-   "^.+\\.ts$": "ts-jest"
+  "name": "cool-blackjack",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "dev-win": "start cmd /k \"npm run dev\"",
+    "lint-styles": "stylelint \"public/build/global.css\" \"src/components/**/*.svelte\"",
+    "start": "sirv public",
+    "test": "jest tests",
+    "test-win": "start cmd /k \"jest tests\"",
+    "test:watch": "npm run test -- --watch",
+    "test:watch-win": "start cmd /k \"npm run test:watch\"",
+    "validate": "svelte-check"
   },
-  "moduleFileExtensions": [
-   "js",
-   "ts",
-   "svelte"
-  ],
-  "setupFiles": [
-   "./setupJest.js"
-  ],
-  "setupFilesAfterEnv": [
-   "@testing-library/jest-dom/extend-expect"
-  ],
-  "globals": {
-   "ts-jest": {
-    "tsConfig": "<rootDir>/tests/tsconfig.spec.json"
-   }
+  "husky": {
+    "hooks": {
+      "applypatch-msg": "echo \"[Husky] applypatch-msg\"",
+      "pre-applypatch": "echo \"[Husky] pre-applypatch\"",
+      "post-applypatch": "echo \"[Husky] post-applypatch\"",
+      "pre-commit": "echo \"[Husky] pre-commit\"",
+    }
+  },
+  "jest": {
+    "automock": false,
+    "transform": {
+      "^.+\\.svelte$": [
+        "svelte-jester",
+        {
+          "preprocess": true
+        }
+      ],
+      "^.+\\.ts$": "ts-jest"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "ts",
+      "svelte"
+    ],
+    "setupFiles": [
+      "./setupJest.js"
+    ],
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-dom/extend-expect"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "<rootDir>/tests/tsconfig.spec.json"
+      }
+    }
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-node-resolve": "^8.0.0",
+    "@rollup/plugin-typescript": "^4.0.0",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/svelte": "^3.0.0",
+    "@testing-library/user-event": "^12.1.7",
+    "@tsconfig/svelte": "^1.0.0",
+    "husky": "^4.3.0",
+    "jest": "^26.4.2",
+    "jest-fetch-mock": "^3.0.3",
+    "lint-staged": "^10.4.0",
+    "rollup": "^2.28.2",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-svelte": "^6.0.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "stylelint": "^13.7.2",
+    "stylelint-config-standard": "^20.0.0",
+    "svelte": "^3.29.0",
+    "svelte-check": "^1.0.55",
+    "svelte-jester": "^1.1.5",
+    "svelte-preprocess": "^4.3.2",
+    "ts-jest": "^26.4.1",
+    "tslib": "^2.0.0",
+    "typescript": "^3.9.3"
+  },
+  "dependencies": {
+    "@types/jest": "^26.0.14",
+    "sirv-cli": "^1.0.0"
   }
- },
- "devDependencies": {
-  "@rollup/plugin-commonjs": "^14.0.0",
-  "@rollup/plugin-node-resolve": "^8.0.0",
-  "@rollup/plugin-typescript": "^4.0.0",
-  "@testing-library/jest-dom": "^5.11.4",
-  "@testing-library/svelte": "^3.0.0",
-  "@testing-library/user-event": "^12.1.7",
-  "@tsconfig/svelte": "^1.0.0",
-  "husky": "^5.0.0-alpha.6",
-  "jest": "^26.4.2",
-  "jest-fetch-mock": "^3.0.3",
-  "lint-staged": "^10.4.0",
-  "rollup": "^2.28.2",
-  "rollup-plugin-livereload": "^2.0.0",
-  "rollup-plugin-svelte": "^6.0.1",
-  "rollup-plugin-terser": "^7.0.2",
-  "stylelint": "^13.7.2",
-  "stylelint-config-standard": "^20.0.0",
-  "svelte": "^3.29.0",
-  "svelte-check": "^1.0.55",
-  "svelte-jester": "^1.1.5",
-  "svelte-preprocess": "^4.3.2",
-  "ts-jest": "^26.4.1",
-  "tslib": "^2.0.0",
-  "typescript": "^3.9.3"
- },
- "dependencies": {
-  "@types/jest": "^26.0.14",
-  "sirv-cli": "^1.0.0"
- }
 }
