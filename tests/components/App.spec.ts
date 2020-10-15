@@ -1,4 +1,4 @@
-import { render, RenderResult } from "@testing-library/svelte";
+import { prettyDOM, render, RenderResult } from "@testing-library/svelte";
 import userEvent from "@testing-library/user-event";
 import fetchMock from "jest-fetch-mock";
 import type { IDeckData } from "../../src/models/api/deck-data.interface";
@@ -54,111 +54,135 @@ describe("plays game", () => {
 	});
 
 	describe("no blackjack(s) dealt", () => {
-		it("player hits -> player busts", async () => {
-			await dealCards(mockDeck, ["KS", "6D"], ["0S", "JD"]);
-			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
-			const mockHitData = drawFromFakeDeck(mockDeck, ["QC"]);
-			fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
-			await userEvent.click(hitButton);
-			await wait();
-			expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
-		});
+		// it("player hits -> player busts", async () => {
+		// 	await dealCards(mockDeck, ["KS", "6D"], ["0S", "JD"]);
+		// 	expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		// 	const mockHitData = drawFromFakeDeck(mockDeck, ["QC"]);
+		// 	fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
+		// 	await userEvent.click(hitButton);
+		// 	await wait();
+		// 	expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
+		// });
 
-		it("player hits -> player stands -> player wins", async () => {
-			await dealCards(mockDeck, ["KS", "6D"], ["0S", "JD"]);
-			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
-			const mockHitData = drawFromFakeDeck(mockDeck, ["5C"]);
-			fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
-			await userEvent.click(hitButton);
-			await userEvent.click(standButton);
-			await wait(1000);
-			expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
-		});
+		// it("player hits -> player stands -> player wins", async () => {
+		// 	await dealCards(mockDeck, ["KS", "6D"], ["0S", "JD"]);
+		// 	expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		// 	const mockHitData = drawFromFakeDeck(mockDeck, ["5C"]);
+		// 	fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
+		// 	jest.useFakeTimers();
+		// 	await userEvent.click(hitButton);
+		// 	await userEvent.click(standButton);
+		// 	jest.advanceTimersToNextTimer();
+		// 	jest.useRealTimers();
+		// 	await wait();
+		// 	expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
+		// });
 
-		it("player hits -> player stands -> dealer wins", async () => {
-			await dealCards(mockDeck, ["KS", "6D"], ["0S", "JD"]);
-			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
-			const mockHitData = drawFromFakeDeck(mockDeck, ["3C"]);
-			fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
-			await userEvent.click(hitButton);
-			await userEvent.click(standButton);
-			await wait(1000);
-			expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
-		});
+		// it("player hits -> player stands -> dealer wins", async () => {
+		// 	await dealCards(mockDeck, ["KS", "6D"], ["0S", "JD"]);
+		// 	expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		// 	const mockHitData = drawFromFakeDeck(mockDeck, ["3C"]);
+		// 	fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
+		// 	jest.useFakeTimers();
+		// 	await userEvent.click(hitButton);
+		// 	await userEvent.click(standButton);
+		// 	jest.advanceTimersToNextTimer();
+		// 	jest.useRealTimers();
+		// 	await wait();
+		// 	expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
+		// });
 
-		it("player hits -> player stands -> push", async () => {
-			await dealCards(mockDeck, ["KS", "7D"], ["0S", "JD"]);
-			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
-			const mockHitData = drawFromFakeDeck(mockDeck, ["3C"]);
-			fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
-			await userEvent.click(hitButton);
-			await userEvent.click(standButton);
-			await wait(1000);
-			expect(result.getByTestId("outcome")).toHaveTextContent("Push");
-		});
+		// it("player hits -> player stands -> push", async () => {
+		// 	await dealCards(mockDeck, ["KS", "7D"], ["0S", "JD"]);
+		// 	expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		// 	const mockHitData = drawFromFakeDeck(mockDeck, ["3C"]);
+		// 	fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
+		// 	jest.useFakeTimers();
+		// 	await userEvent.click(hitButton);
+		// 	await userEvent.click(standButton);
+		// 	jest.advanceTimersToNextTimer();
+		// 	jest.useRealTimers();
+		// 	await wait();
+		// 	expect(result.getByTestId("outcome")).toHaveTextContent("Push");
+		// });
 
-		it("player stands -> dealer stands -> player wins", async () => {
-			await dealCards(mockDeck, ["0S", "JD"], ["KS", "7D"]);
-			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
-			await userEvent.click(standButton);
-			await wait(1000);
-			expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
-		});
+		// it("player stands -> dealer stands -> player wins", async () => {
+		// 	await dealCards(mockDeck, ["0S", "JD"], ["KS", "7D"]);
+		// 	expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		// 	jest.useFakeTimers();
+		// 	await userEvent.click(standButton);
+		// 	jest.advanceTimersToNextTimer();
+		// 	jest.useRealTimers();
+		// 	await wait();
+		// 	expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
+		// });
 
-		it("player stands -> dealer stands -> dealer wins", async () => {
-			await dealCards(mockDeck, ["KS", "6D"], ["0S", "JD"]);
-			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
-			await userEvent.click(standButton);
-			await wait(1000);
-			expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
-		});
+		// it("player stands -> dealer stands -> dealer wins", async () => {
+		// 	await dealCards(mockDeck, ["KS", "6D"], ["0S", "JD"]);
+		// 	expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		// 	jest.useFakeTimers();
+		// 	await userEvent.click(standButton);
+		// 	jest.advanceTimersToNextTimer();
+		// 	jest.useRealTimers();
+		// 	await wait();
+		// 	expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
+		// });
 
-		it("player stands -> dealer stands -> push", async () => {
-			await dealCards(mockDeck, ["KS", "0D"], ["0S", "JD"]);
-			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
-			await userEvent.click(standButton);
-			await wait(1000);
-			expect(result.getByTestId("outcome")).toHaveTextContent("Push");
-		});
+		// it("player stands -> dealer stands -> push", async () => {
+		// 	await dealCards(mockDeck, ["KS", "0D"], ["0S", "JD"]);
+		// 	expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		// 	jest.useFakeTimers();
+		// 	await userEvent.click(standButton);
+		// 	jest.advanceTimersToNextTimer();
+		// 	jest.useRealTimers();
+		// 	await wait();
+		// 	expect(result.getByTestId("outcome")).toHaveTextContent("Push");
+		// });
 
 		it("player stands -> dealer hits -> dealer busts", async () => {
 			await dealCards(mockDeck, ["0S", "JD"], ["KS", "6D"]);
 			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
 			const mockStandData = drawFromFakeDeck(mockDeck, ["QC"]);
 			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
+			jest.useFakeTimers();
 			await userEvent.click(standButton);
-			await wait(3000);
+			jest.advanceTimersToNextTimer();
+			jest.useRealTimers();
+			// console.log(prettyDOM(result.container));
+			// await wait(3000);
+			await wait();
+			console.log(prettyDOM(result.container));
 			expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
 		});
 
-		it("player stands -> dealer hits -> dealer stands -> player wins", async () => {
-			await dealCards(mockDeck, ["0S", "JD"], ["KS", "6D"]);
-			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
-			const mockStandData = drawFromFakeDeck(mockDeck, ["3C"]);
-			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
-			await userEvent.click(standButton);
-			await wait(3000);
-			expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
-		});
+		// it("player stands -> dealer hits -> dealer stands -> player wins", async () => {
+		// 	await dealCards(mockDeck, ["0S", "JD"], ["KS", "6D"]);
+		// 	expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		// 	const mockStandData = drawFromFakeDeck(mockDeck, ["3C"]);
+		// 	fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
+		// 	await userEvent.click(standButton);
+		// 	await wait(3000);
+		// 	expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
+		// });
 
-		it("player stands -> dealer hits -> dealer stands -> dealer wins", async () => {
-			await dealCards(mockDeck, ["0S", "JD"], ["KS", "6D"]);
-			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
-			const mockStandData = drawFromFakeDeck(mockDeck, ["5C"]);
-			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
-			await userEvent.click(standButton);
-			await wait(3000);
-			expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
-		});
+		// it("player stands -> dealer hits -> dealer stands -> dealer wins", async () => {
+		// 	await dealCards(mockDeck, ["0S", "JD"], ["KS", "6D"]);
+		// 	expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		// 	const mockStandData = drawFromFakeDeck(mockDeck, ["5C"]);
+		// 	fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
+		// 	await userEvent.click(standButton);
+		// 	await wait(3000);
+		// 	expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
+		// });
 
-		it("player stands -> dealer hits -> dealer stands -> push", async () => {
-			await dealCards(mockDeck, ["0S", "JD"], ["KS", "6D"]);
-			expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
-			const mockStandData = drawFromFakeDeck(mockDeck, ["4C"]);
-			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
-			await userEvent.click(standButton);
-			await wait(3000);
-			expect(result.getByTestId("outcome")).toHaveTextContent("Push");
-		});
+		// it("player stands -> dealer hits -> dealer stands -> push", async () => {
+		// 	await dealCards(mockDeck, ["0S", "JD"], ["KS", "6D"]);
+		// 	expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		// 	const mockStandData = drawFromFakeDeck(mockDeck, ["4C"]);
+		// 	fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
+		// 	await userEvent.click(standButton);
+		// 	await wait(3000);
+		// 	expect(result.getByTestId("outcome")).toHaveTextContent("Push");
+		// });
 	});
 });
