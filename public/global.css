@@ -1,5 +1,7 @@
 :root {
-	--background: #fff;
+	--font: 'Mukta', Helvetica, 'Trebuchet MS', Arial, sans-serif;
+	--background: #800e13;
+	--color: #fcfee5;
 }
 
 *, *::before, *::after {
@@ -12,12 +14,13 @@ html, body {
 }
 
 body {
-	background: var(--background);
-	color: #333;
-	margin: 0;
 	padding: 8px;
-	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	background-color: var(--background);
+	background-image: url("./img/noise-overlay.png");
+	color: var(--color);
+	font-family: var(--font);
+	font-weight: 400;
+	font-size: 20px;
 }
 
 html, body, h1, h2, h3, h4, h5, h6, ul, ol, li, p {

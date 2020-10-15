@@ -37,9 +37,8 @@
 	{/if}
 	<ul class="cards">
 		{#each cards as card, i}
-		<li style="transform: translateX({i * -80}%);">
+		<li style="transform: translateX({i * -75}%);">
 			<Card
-				image={card.image}
 				code={card.code}
 				hidden={i === 0 && hasHoleCard}
 			/>
@@ -58,10 +57,11 @@
 
 	.cards {
 		display: flex;
-		width: 128px;
+		width: 192px;
 	}
 
 	.total {
+		font-size: 36px;
 		margin-bottom: 8px;
 	}
 </style>
