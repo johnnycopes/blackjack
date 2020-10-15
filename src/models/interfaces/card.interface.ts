@@ -3,7 +3,6 @@ import type { CardValue } from "../types/card-value";
 import type { CardCode } from "../types/card-code.type";
 
 export interface ICard {
-	image: string;
 	value: CardValue;
 	point: number;
 	suit: Suit;

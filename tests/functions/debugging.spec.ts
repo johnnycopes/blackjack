@@ -57,7 +57,6 @@ describe("createFakeCard", () => {
 		const fakeCard = createFakeCard("2H");
 		expect(fakeCard).toEqual({
 			code: "2H",
-			image: "https://deckofcardsapi.com/static/img/2H.png",
 			point: 2,
 			suit: "HEARTS",
 			value: "2",
@@ -68,7 +67,6 @@ describe("createFakeCard", () => {
 		const fakeCard = createFakeCard("JD");
 		expect(fakeCard).toEqual({
 			code: "JD",
-			image: "https://deckofcardsapi.com/static/img/JD.png",
 			point: 10,
 			suit: "DIAMONDS",
 			value: "JACK",
@@ -79,7 +77,6 @@ describe("createFakeCard", () => {
 		const fakeCard = createFakeCard("AC");
 		expect(fakeCard).toEqual({
 			code: "AC",
-			image: "https://deckofcardsapi.com/static/img/AC.png",
 			point: 11,
 			suit: "CLUBS",
 			value: "ACE",

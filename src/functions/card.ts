@@ -51,8 +51,8 @@ export function getPoint(value: CardValue): number {
 }
 
 export function createCard(cardResponse: ICardData): ICard {
-	const { image, value, suit, code }: ICardData = cardResponse;
+	const { value, suit, code }: ICardData = cardResponse;
 	const point = getPoint(value);
-	const newCard = { image, value, point, suit, code };
+	const newCard = { value, point, suit, code };
 	return newCard;
 }

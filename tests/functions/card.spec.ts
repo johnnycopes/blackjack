@@ -98,7 +98,6 @@ describe("createCard", () => {
 		const card = createCard(cardResponse);
 		expect(card).toEqual({
 			code: "8C",
-			image: "https://deckofcardsapi.com/static/img/8C.png",
 			point: 8,
 			suit: "CLUBS",
 			value: "8",
@@ -110,7 +109,6 @@ describe("createCard", () => {
 		const card = createCard(cardResponse);
 		expect(card).toEqual({
 			code: "KD",
-			image: "https://deckofcardsapi.com/static/img/KD.png",
 			point: 10,
 			suit: "DIAMONDS",
 			value: "KING",
@@ -122,7 +120,6 @@ describe("createCard", () => {
 		const card = createCard(cardResponse);
 		expect(card).toEqual({
 			code: "AS",
-			image: "https://deckofcardsapi.com/static/img/AS.png",
 			point: 11,
 			suit: "SPADES",
 			value: "ACE",
