@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 	import { EProgress } from "../models/enums/progress.enum";
+	import Button from "./Button.svelte";
 
 	export let progress: EProgress;
 	const dispatcher = createEventDispatcher<{
@@ -36,24 +37,24 @@
 <div class="controls"
 	data-testid="controls"
 >
-	<button
+	<Button
 		disabled={!canDeal}
-		on:click={() => dispatcher("deal")}
-		>
+		on:clicked={() => dispatcher("deal")}
+	>
 		Deal
-	</button>
-	<button
+	</Button>
+	<Button
 		disabled={!canHit}
-		on:click={() => dispatcher("hit")}
-		>
+		on:clicked={() => dispatcher("hit")}
+	>
 		Hit
-	</button>
-	<button
+	</Button>
+	<Button
 		disabled={!canStand}
-		on:click={() => dispatcher("stand")}
-		>
+		on:clicked={() => dispatcher("stand")}
+	>
 		Stand
-	</button>
+	</Button>
 </div>
 
 <style>
@@ -62,7 +63,7 @@
 		align-items: center;
 	}
 
-	.controls > * {
-		margin-right: 4px;
+	.controls :global(.button) {
+		margin-right: 8px;
 	}
 </style>

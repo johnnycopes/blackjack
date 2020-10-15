@@ -8,7 +8,7 @@ let result: RenderResult;
 let increaseBet: HTMLElement;
 let decreaseBet: HTMLElement;
 
-function createRegExp(change: number): RegExp {
+function moneyChangePattern(change: number): RegExp {
 	const symbol = change > 0 ? "\\+" : "-";
 	const value = Math.abs(change).toString();
 	const str = `^${symbol}\\\$${value}$`;
@@ -72,7 +72,7 @@ describe("updates money depending on outcome", () => {
 			outcome: EOutcome.PlayerBlackjack
 		});
 		expect(result.getByText("$130 (total money)"));
-		expect(result.getByTestId("change")).toHaveTextContent(createRegExp(30));
+		expect(result.getByTestId("change")).toHaveTextContent(moneyChangePattern(30));
 	});
 
 	it("subtracts the bet amount from total if dealer gets blackjack", async () => {
@@ -81,7 +81,7 @@ describe("updates money depending on outcome", () => {
 			outcome: EOutcome.DealerBlackjack
 		});
 		expect(result.getByText("$80 (total money)"));
-		expect(result.getByTestId("change")).toHaveTextContent(createRegExp(-20));
+		expect(result.getByTestId("change")).toHaveTextContent(moneyChangePattern(-20));
 	});
 
 	it("adds the bet amount to total if player wins", async () => {
@@ -90,7 +90,7 @@ describe("updates money depending on outcome", () => {
 			outcome: EOutcome.PlayerWins
 		});
 		expect(result.getByText("$120 (total money)"));
-		expect(result.getByTestId("change")).toHaveTextContent(createRegExp(20));
+		expect(result.getByTestId("change")).toHaveTextContent(moneyChangePattern(20));
 	});
 
 	it("adds the bet amount to total if dealer busts", async () => {
@@ -99,7 +99,7 @@ describe("updates money depending on outcome", () => {
 			outcome: EOutcome.DealerBusts
 		});
 		expect(result.getByText("$120 (total money)"));
-		expect(result.getByTestId("change")).toHaveTextContent(createRegExp(20));
+		expect(result.getByTestId("change")).toHaveTextContent(moneyChangePattern(20));
 	});
 
 	it("subtracts the bet amount from total if player busts", async () => {
@@ -108,7 +108,7 @@ describe("updates money depending on outcome", () => {
 			outcome: EOutcome.PlayerBusts
 		});
 		expect(result.getByText("$80 (total money)"));
-		expect(result.getByTestId("change")).toHaveTextContent(createRegExp(-20));
+		expect(result.getByTestId("change")).toHaveTextContent(moneyChangePattern(-20));
 	});
 
 	it("subtracts the bet amount from total if dealer wins", async () => {
@@ -117,7 +117,7 @@ describe("updates money depending on outcome", () => {
 			outcome: EOutcome.DealerWins
 		});
 		expect(result.getByText("$80 (total money)"));
-		expect(result.getByTestId("change")).toHaveTextContent(createRegExp(-20));
+		expect(result.getByTestId("change")).toHaveTextContent(moneyChangePattern(-20));
 	});
 
 	it("doesn't change the total if there's a push", async () => {

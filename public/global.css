@@ -1,7 +1,9 @@
 :root {
 	--font: 'Mukta', Helvetica, 'Trebuchet MS', Arial, sans-serif;
-	--background: #800e13;
-	--color: #fcfee5;
+	--red: #800e13;
+	--brown: #BA7619;
+	--white: #fcfee5;
+	--black: #060605;
 }
 
 *, *::before, *::after {
@@ -15,9 +17,9 @@ html, body {
 
 body {
 	padding: 8px;
-	background-color: var(--background);
+	background-color: var(--red);
 	background-image: url("./img/noise-overlay.png");
-	color: var(--color);
+	color: var(--white);
 	font-family: var(--font);
 	font-weight: 400;
 	font-size: 20px;
@@ -32,34 +34,6 @@ ul {
 	list-style: none;
 }
 
-input, button, select, textarea {
-	font-family: inherit;
-	font-size: inherit;
-	-webkit-padding: 0.4em 0;
-	padding: 0.4em;
-	box-sizing: border-box;
-	border: 1px solid #ccc;
-	border-radius: 2px;
-}
-
 input:disabled {
 	color: #ccc;
-}
-
-button {
-	color: #333;
-	background-color: #f4f4f4;
-	outline: none;
-}
-
-button:disabled {
-	color: #999;
-}
-
-button:not(:disabled):active {
-	background-color: #ddd;
-}
-
-button:focus {
-	border-color: #666;
 }
