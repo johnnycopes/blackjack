@@ -3,8 +3,18 @@
 
 	export let code: CardCode;
 	export let hidden: boolean;
-	$: image = `./img/${code}.svg`;
-	
+	let image: string;
+	/*
+		Static assets get blocked by the browser if they have the word "AD",'
+		so the Ace of diamonds SVG file needs to have a different name
+	*/
+	$: {
+		if (code === "AD") {
+			image = "img/ADI.svg";
+		} else {
+			image = `./img/${code}.svg`;
+		}
+	}
 	const back: string = "./img/back-of-card.svg";
 </script>
 

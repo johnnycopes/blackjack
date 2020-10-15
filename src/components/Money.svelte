@@ -3,6 +3,7 @@
 	import { EProgress } from "../models/enums/progress.enum";
 	import { EOutcome } from "../models/enums/outcome.enum";
 	import { wait } from "../functions/utility";
+	import Button from "./Button.svelte";
 
 	export let progress: EProgress;
 	export let outcome: EOutcome;
@@ -69,18 +70,18 @@
 </script>
 
 <div class="money">
-	<button
+	<Button
 		disabled={!canChangeBet || minBetReached}
-		on:click={() => bet = bet - 10}
+		on:clicked={() => bet = bet - 10}
 	>
 		-
-	</button>
-	<button
+	</Button>
+	<Button
 		disabled={!canChangeBet || maxBetReached}
-		on:click={() => bet = bet + 10}
+		on:clicked={() => bet = bet + 10}
 	>
 		+
-	</button>
+	</Button>
 	<div class="values">
 		<p>${bet} (current bet)</p>
 		<p>${total} (total money)</p>
@@ -102,8 +103,8 @@
 		align-items: center;
 	}
 
-	.money > * {
-		margin-right: 4px;
+	.money :global(.button) {
+		margin-right: 8px;
 	}
 
 	.change {
