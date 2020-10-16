@@ -25,6 +25,6 @@
 
 <style>
 	.card {
-		width: 192px;
+		width: var(--card-width);
 	}
 </style>

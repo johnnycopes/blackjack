@@ -1,9 +1,10 @@
 :root {
 	--font: 'Mukta', Helvetica, 'Trebuchet MS', Arial, sans-serif;
 	--red: #800e13;
-	--brown: #BA7619;
-	--white: #fcfee5;
-	--black: #060605;
+	--pink: #cd7e73;
+	--white: #eff3d6;
+	--black: #3b3c35;
+	--card-width: 160px;
 }
 
 *, *::before, *::after {
@@ -21,7 +22,7 @@ body {
 	background-image: url("./img/noise-overlay.png");
 	color: var(--white);
 	font-family: var(--font);
-	font-weight: 400;
+	font-weight: 500;
 	font-size: 20px;
 }
 
@@ -30,10 +31,10 @@ html, body, h1, h2, h3, h4, h5, h6, ul, ol, li, p {
 	padding: 0;
 }
 
-ul {
-	list-style: none;
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 400;
 }
 
-input:disabled {
-	color: #ccc;
+ul {
+	list-style: none;
 }

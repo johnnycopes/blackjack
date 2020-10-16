@@ -57,7 +57,7 @@
 
 	.cards {
 		display: flex;
-		width: 192px;
+		width: var(--card-width)
 	}
 
 	.total {

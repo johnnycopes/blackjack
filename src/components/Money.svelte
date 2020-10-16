@@ -108,7 +108,7 @@
 	}
 
 	.change {
-		font-weight: 700;
+		margin-left: 8px;
 	}
 
 	.gain {
@@ -116,6 +116,6 @@
 	}
 
 	.loss {
-		color: salmon;
+		color: orangered;
 	}
 </style>

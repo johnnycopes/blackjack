@@ -18,12 +18,14 @@
 	.button {
 		height: 64px;
 		padding: 0 24px;
-		border: 4px solid var(--brown);
+		border: 4px solid var(--pink);
+		border-radius: 8px;
 		background: var(--white);
 		color: var(--black);
 		font-family: var(--font);
 		outline: none;
 		font-size: 20px;
+		font-weight: 500;
 		cursor: pointer;
 	}
 
