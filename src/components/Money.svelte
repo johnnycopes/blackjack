@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import Chip from "./Chip.svelte";
+	import Chips from "./Chips.svelte";
 	import type { ChipValue } from "../models/types/chip-value.type";
 	import { EProgress } from "../models/enums/progress.enum";
 	import { EOutcome } from "../models/enums/outcome.enum";
@@ -72,25 +72,11 @@
 </script>
 
 <div class="money">
-	{#each chipValues as chipValue}
-	<Chip
-		value={chipValue}
-		disabled={!canChangeBet || maxBetReached}
-		on:clicked={() => bet = bet + chipValue}
+	<Chips
+		{bet}
+		{total}
+		disabled={!canChangeBet}
 	/>
-	{/each}
-	<!-- <Button
-		disabled={!canChangeBet || minBetReached}
-		on:clicked={() => bet = bet - 10}
-	>
-		-
-	</Button>
-	<Button
-		disabled={!canChangeBet || maxBetReached}
-		on:clicked={() => bet = bet + 10}
-	>
-		+
-	</Button> -->
 	<div class="values">
 		<p>${bet} (current bet)</p>
 		<p>${total} (total money)</p>
