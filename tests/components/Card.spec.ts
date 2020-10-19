@@ -1,12 +1,38 @@
 import { render } from "@testing-library/svelte";
 import Card from "../../src/components/Card.svelte";
 
-it("renders visible card", () => {
-	const result = render(Card, {
-		hidden: false,
-		code: "6S",
+describe("renders visible card", () => {
+	it("single digit number card", () => {
+		const result = render(Card, {
+			hidden: false,
+			code: "6S",
+		});
+		expect(result.getAllByAltText("6_spades"));
 	});
-	expect(result.getByAltText("6S"));
+
+	it("double-digit number card", () => {
+		const result = render(Card, {
+			hidden: false,
+			code: "0H",
+		});
+		expect(result.getAllByAltText("10_hearts"));
+	});
+
+	it("face card", () => {
+		const result = render(Card, {
+			hidden: false,
+			code: "QD",
+		});
+		expect(result.getAllByAltText("queen_diamonds"));
+	});
+
+	it("ace card", () => {
+		const result = render(Card, {
+			hidden: false,
+			code: "AC",
+		});
+		expect(result.getAllByAltText("ace_clubs"));
+	});
 });
 
 it("renders hidden card", () => {

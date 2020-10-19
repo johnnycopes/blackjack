@@ -18,8 +18,8 @@
 	.button {
 		height: 64px;
 		padding: 0 24px;
-		border: 4px solid var(--pink);
-		border-radius: 8px;
+		border: 1px solid var(--gray);
+		border-radius: 4px;
 		background: var(--white);
 		color: var(--black);
 		font-family: var(--font);
@@ -27,12 +27,18 @@
 		font-size: 20px;
 		font-weight: 500;
 		cursor: pointer;
+		transition: 75ms background ease-in-out;
+	}
+
+	.button:hover {
+		background: var(--gold);
+		border-color: var(--dark-gold);
 	}
 
 	.button:disabled {
 		background: lightgray;
+		border-color: darkgray;
 		color: gray;
-		border-color: gray;
 		cursor: default;
 	}
 </style>

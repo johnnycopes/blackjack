@@ -37,7 +37,7 @@
 	{/if}
 	<ul class="cards">
 		{#each cards as card, i}
-		<li style="transform: translateX({i * -75}%);">
+		<li style="transform: translateX({i * -70}%);">
 			<Card
 				code={card.code}
 				hidden={i === 0 && hasHoleCard}

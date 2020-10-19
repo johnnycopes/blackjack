@@ -1,26 +1,23 @@
 <script lang="ts">
 	import type { CardCode } from "../models/types/card-code.type";
+	import { getSuit, getValue } from "../functions/card";
 
 	export let code: CardCode;
 	export let hidden: boolean;
-	let image: string;
-	/*
-		Static assets get blocked by the browser if they have the word "AD",'
-		so the Ace of diamonds SVG file needs to have a different name
-	*/
-	$: {
-		if (code === "AD") {
-			image = "img/ADI.svg";
-		} else {
-			image = `./img/${code}.svg`;
-		}
+	$: imageName = getImageName(code);
+	$: imagePath = `./assets/cards/${imageName}.png`;
+	const back: string = "./assets/cards/backdesign_8.png";
+
+	function getImageName(cardCode: CardCode): string {
+		const value = getValue(cardCode).toLowerCase();
+		const suit = getSuit(cardCode).toLowerCase();
+		return `${value}_${suit}`;
 	}
-	const back: string = "./img/back-of-card.svg";
 </script>
 
 <img class="card"
-	src={hidden ? back : image}
-	alt={hidden ? "Back of card" : code}
+	src={hidden ? back : imagePath}
+	alt={hidden ? "Back of card" : imageName}
 >
 
 <style>

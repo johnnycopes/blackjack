@@ -1,8 +1,10 @@
 :root {
 	--font: 'Mukta', Helvetica, 'Trebuchet MS', Arial, sans-serif;
-	--red: #800e13;
-	--pink: #cd7e73;
-	--white: #eff3d6;
+	--green: #09541f;
+	--gold: #f9ce2c;
+	--dark-gold: #b79106;
+	--white: #fff;
+	--gray: #ccc;
 	--black: #3b3c35;
 	--card-width: 160px;
 }
@@ -18,8 +20,8 @@ html, body {
 
 body {
 	padding: 8px;
-	background-color: var(--red);
-	background-image: url("./img/noise-overlay.png");
+	background-color: var(--green);
+	background-image: url("./assets/noise-overlay.png");
 	color: var(--white);
 	font-family: var(--font);
 	font-weight: 500;
