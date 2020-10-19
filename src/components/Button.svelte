@@ -16,6 +16,7 @@
 
 <style>
 	.button {
+		position: relative;
 		height: 64px;
 		padding: 0 24px;
 		border: 1px solid var(--gray);
