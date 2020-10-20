@@ -15,7 +15,7 @@
 </button>
 
 <style>
-	.button {
+	:global(.button) {
 		position: relative;
 		height: 64px;
 		padding: 0 24px;
@@ -31,12 +31,12 @@
 		transition: 75ms background ease-in-out;
 	}
 
-	.button:hover {
+	:global(.button:hover) {
 		background: var(--gold);
 		border-color: var(--dark-gold);
 	}
 
-	.button:disabled {
+	:global(.button:disabled) {
 		background: lightgray;
 		border-color: darkgray;
 		color: gray;

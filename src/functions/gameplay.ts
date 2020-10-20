@@ -6,6 +6,7 @@ import type { ICard } from "../models/interfaces/card.interface";
 import { EOutcome } from "../models/enums/outcome.enum";
 import { API_URL } from "../models/constants";
 import { createCard } from "./card";
+import type { ChipValue } from "../models/types/chip-value.type";
 
 interface IDealtCards {
 	player: ICard[];
@@ -95,4 +96,14 @@ export function evaluateOutcome(playerTotal: number, dealerTotal: number): EOutc
 	} else {
 		return EOutcome.Push;
 	}
+}
+
+export function evaluateChipsToShow(money: number): ChipValue[] {
+	const chipValues: ChipValue[] = [1, 5, 10, 25, 50, 100];
+	return chipValues.reduce((accum, current) => {
+		if (money >= current) {
+			return [...accum, current];
+		}
+		return accum;
+	}, [] as ChipValue[]);
 }

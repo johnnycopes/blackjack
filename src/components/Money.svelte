@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 	import Chips from "./Chips.svelte";
-	import type { ChipValue } from "../models/types/chip-value.type";
 	import { EProgress } from "../models/enums/progress.enum";
 	import { EOutcome } from "../models/enums/outcome.enum";
 	import { wait } from "../functions/utility";
@@ -21,7 +20,6 @@
 	$: displayMonetaryOutcome = canChangeBet && totalDiff && outcome !== EOutcome.Push;
 	$: minBetReached = bet - 10 < 0;
 	$: maxBetReached = bet + 10 > total;
-	const chipValues: ChipValue[] = [1, 5, 10, 25, 50, 100];
 
 	// Emit whether or not valid bet has been placed
 	$: {
@@ -76,6 +74,7 @@
 		{bet}
 		{total}
 		disabled={!canChangeBet}
+		on:betChange={(e) => bet = e.detail}
 	/>
 	<div class="values">
 		<p>${bet} (current bet)</p>
@@ -95,11 +94,7 @@
 <style>
 	.money {
 		display: flex;
-		align-items: center;
-	}
-
-	.money :global(.button) {
-		margin-right: 36px;
+		flex-direction: column;
 	}
 
 	.change {
