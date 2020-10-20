@@ -18,8 +18,6 @@
 		progress === EProgress.BlackjackDealt ||
 		progress === EProgress.GameOver;
 	$: displayMonetaryOutcome = canChangeBet && totalDiff && outcome !== EOutcome.Push;
-	$: minBetReached = bet - 10 < 0;
-	$: maxBetReached = bet + 10 > total;
 
 	// Emit whether or not valid bet has been placed
 	$: {
@@ -76,10 +74,6 @@
 		disabled={!canChangeBet}
 		on:betChange={(e) => bet = e.detail}
 	/>
-	<div class="values">
-		<p>${bet} (current bet)</p>
-		<p>${total} (total money)</p>
-	</div>
 	{#if displayMonetaryOutcome}
 		<p class="change"
 			data-testid="change"
@@ -95,6 +89,11 @@
 	.money {
 		display: flex;
 		flex-direction: column;
+		justify-content: space-between;
+		position: absolute;
+		height: 100%;
+		left: 32px;
+		bottom: 0;
 	}
 
 	.change {

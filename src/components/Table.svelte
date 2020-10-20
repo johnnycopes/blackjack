@@ -75,8 +75,8 @@
 
 	.actions {
 		display: flex;
-		height: 64px;
-		justify-content: space-between;
+		justify-content: flex-end;
 		align-items: center;
+		height: 64px;
 	}
 </style>
