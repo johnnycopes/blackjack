@@ -3,10 +3,11 @@ import type { IDeckData } from "../models/api/deck-data.interface";
 import type { IDeck } from "../models/interfaces/deck.interface";
 import type { IHand } from "../models/interfaces/hand.interface";
 import type { ICard } from "../models/interfaces/card.interface";
+import type { ChipValue } from "../models/types/chip-value.type";
 import { EOutcome } from "../models/enums/outcome.enum";
 import { API_URL } from "../models/constants";
 import { createCard } from "./card";
-import type { ChipValue } from "../models/types/chip-value.type";
+import { wait } from "./utility";
 
 interface IDealtCards {
 	player: ICard[];
@@ -106,4 +107,12 @@ export function evaluateChipsToShow(money: number): ChipValue[] {
 		}
 		return accum;
 	}, [] as ChipValue[]);
+}
+
+export async function pause(inTestMode: boolean): Promise<void> {
+	if (inTestMode) {
+		await wait();
+	} else {
+		await wait(1000);
+	}
 }

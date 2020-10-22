@@ -10,9 +10,10 @@
 		dealCardsFromDeck,
 		drawCardFromDeck,
 		addCardsToHand,
+		pause
 	} from "../functions/gameplay";
-	import { wait } from "../functions/utility";
 
+	export let inTestMode: boolean = false;
 	let deck: IDeck | undefined;
 	let playerHand: IHand = createHand();
 	let dealerHand: IHand = createHand();
@@ -46,11 +47,11 @@
 
 	async function stand(): Promise<void> {
 		progress = EProgress.DealerTurn;
-		await wait(1000);
+		await pause(inTestMode);
 		while (dealerHand.total < 17) {
 			const newCard = await drawCardFromDeck(deck?.id);
 			dealerHand = addCardsToHand(dealerHand, [newCard]);
-			await wait(1000);
+			await pause(inTestMode);
 		}
 		progress = EProgress.GameOver;
 	}
