@@ -9,7 +9,7 @@
 	export let outcome: EOutcome;
 	const dispatcher = createEventDispatcher<{ betPlaced: boolean }>();
 	let bet: number = 0;
-	let total: number = 100;
+	let total: number = 500;
 	let prevTotal: number;
 	let totalDiff: number;
 	let hasUpdatedTotal: boolean;
@@ -92,8 +92,9 @@
 		justify-content: space-between;
 		position: absolute;
 		height: 100%;
-		left: 32px;
+		left: 0;
 		bottom: 0;
+		padding-left: 32px;
 	}
 
 	.change {

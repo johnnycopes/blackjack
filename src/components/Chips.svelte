@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { fade, slide, fly } from 'svelte/transition';
 	import { createEventDispatcher } from "svelte";
+	import { fly } from 'svelte/transition';
 	import Chip from "./Chip.svelte";
 	import type { ChipValue } from "../models/types/chip-value.type";
 	import { evaluateChipsToShow } from "../functions/gameplay";
@@ -11,8 +11,13 @@
 	const dispatcher = createEventDispatcher<{
 		betChange: number;
 	}>();
-	let betChips: ChipValue[] = [];
 	$: walletChips = evaluateChipsToShow(total - bet);
+	let betChips: ChipValue[] = [];
+	const chipYDistance: Map<ChipValue, number> = new Map();
+	const chipValues: ChipValue[] = [1, 5, 10, 25, 50, 100];
+	chipValues.forEach((value, i) => {
+		chipYDistance.set(value, 230 + (i * 84));
+	});
 
 	// Calculate total amount of bet chips and emit it whenever chips are added/removed
 	$: {
@@ -30,7 +35,11 @@
 	<div class="bet__chips">
 		{#each betChips as chip}
 		<div class="bet__chip"
-			transition:fly="{{ opacity: 1, y: 200, duration: 300 }}"
+			transition:fly="{{
+				opacity: 1,
+				y: chipYDistance.get(chip),
+				duration: 300
+			}}"
 		>
 			<Chip
 				value={chip}
@@ -92,6 +101,7 @@
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
+		z-index: 1;
 	}
 
 	.bet__chip:nth-child(1n) {
@@ -121,15 +131,11 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		margin-bottom: 48px;
+		margin-bottom: 24px;
 		min-height: 504px;
 	}
 
 	.wallet :global(.button) {
 		margin-bottom: 24px;
-	}
-
-	.wallet :global(.button):last-child {
-		margin: 0;
 	}
 </style>
