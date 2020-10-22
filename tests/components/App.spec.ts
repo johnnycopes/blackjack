@@ -127,7 +127,9 @@ describe("plays game", () => {
 			const mockStandData = drawFromFakeDeck(mockDeck, ["QC"]);
 			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
 			userEvent.click(standButton);
-			await wait(10);
+			await wait();
+			await wait();
+			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
 		});
 
@@ -137,7 +139,9 @@ describe("plays game", () => {
 			const mockStandData = drawFromFakeDeck(mockDeck, ["3C"]);
 			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
 			userEvent.click(standButton);
-			await wait(10);
+			await wait();
+			await wait();
+			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
 		});
 
@@ -147,7 +151,9 @@ describe("plays game", () => {
 			const mockStandData = drawFromFakeDeck(mockDeck, ["5C"]);
 			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
 			userEvent.click(standButton);
-			await wait(10);
+			await wait();
+			await wait();
+			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
 		});
 
@@ -157,7 +163,9 @@ describe("plays game", () => {
 			const mockStandData = drawFromFakeDeck(mockDeck, ["4C"]);
 			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
 			userEvent.click(standButton);
-			await wait(10);
+			await wait();
+			await wait();
+			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Push");
 		});
 	});
