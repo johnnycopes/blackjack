@@ -6,6 +6,7 @@ import type { ICard } from "../models/interfaces/card.interface";
 import { EOutcome } from "../models/enums/outcome.enum";
 import { API_URL } from "../models/constants";
 import { createCard } from "./card";
+import { wait } from "./utility";
 
 interface IDealtCards {
 	player: ICard[];
@@ -94,5 +95,13 @@ export function evaluateOutcome(playerTotal: number, dealerTotal: number): EOutc
 		return EOutcome.DealerWins;
 	} else {
 		return EOutcome.Push;
+	}
+}
+
+export async function pause(inTestMode: boolean): Promise<void> {
+	if (inTestMode) {
+		await wait();
+	} else {
+		await wait(1000);
 	}
 }
