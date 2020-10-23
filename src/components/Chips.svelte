@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import { fly } from 'svelte/transition';
+	import { fly } from "svelte/transition";
+	import { cubicOut } from "svelte/easing";
 	import Chip from "./Chip.svelte";
 	import type { ChipValue } from "../models/types/chip-value.type";
 	import { evaluateChipsToShow } from "../functions/gameplay";
@@ -13,11 +14,14 @@
 	}>();
 	$: walletChips = evaluateChipsToShow(total - bet);
 	let betChips: ChipValue[] = [];
-	const chipYDistance: Map<ChipValue, number> = new Map();
-	const chipValues: ChipValue[] = [1, 5, 10, 25, 50, 100];
-	chipValues.forEach((value, i) => {
-		chipYDistance.set(value, 230 + (i * 84));
-	});
+	const chipAnimations: Record<ChipValue, { x: number, y: number }> = {
+		1:   { x: -64, y: 450 },
+		5:   { x: 64,  y: 450 },
+		10:  { x: -64, y: 578 },
+		25:  { x: 64,  y: 578 },
+		50:  { x: -64, y: 706 },
+		100: { x: 64,  y: 706 },
+	};
 
 	// Calculate total amount of bet chips and emit it whenever chips are added/removed
 	$: {
@@ -27,18 +31,20 @@
 </script>
 
 <div class="bet">
-	{#if bet > 0}
-		<h4 class="amount">
+	<h4 class="amount">
+		{#if bet > 0}
 			${bet}
-		</h4>
-	{/if}
+		{/if}
+	</h4>
 	<div class="bet__chips">
 		{#each betChips as chip}
 		<div class="bet__chip"
 			transition:fly="{{
 				opacity: 1,
-				y: chipYDistance.get(chip),
-				duration: 300
+				x: chipAnimations[chip].x,
+				y: chipAnimations[chip].y,
+				easing: cubicOut,
+				duration: 350
 			}}"
 		>
 			<Chip
@@ -69,10 +75,6 @@
 </div>
 
 <style>
-	.bet,
-	.wallet {
-		width: 128px;
-	}
 
 	.bet :global(.button),
 	.wallet :global(.button) {
@@ -81,6 +83,7 @@
 
 	.amount {
 		font-size: 36px;
+		min-height: 60px;
 	}
 
 	.bet {
@@ -93,7 +96,6 @@
 		position: relative;
 		width: 128px;
 		height: 128px;
-		margin-top: 16px;
 	}
 
 	.bet__chip {
@@ -128,14 +130,10 @@
 	}
 
 	.wallet__chips {
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		grid-template-columns: repeat(2, 128px);
+		grid-template-rows: repeat(3, 128px);
+		justify-items: center;
 		align-items: center;
-		margin-bottom: 24px;
-		min-height: 504px;
-	}
-
-	.wallet :global(.button) {
-		margin-bottom: 24px;
 	}
 </style>
