@@ -6,27 +6,27 @@
 	import type { ChipValue } from "../models/types/chip-value.type";
 	import { evaluateChipsToShow } from "../functions/gameplay";
 
-	export let bet: number;
 	export let total: number;
 	export let disabled: boolean;
 	const dispatcher = createEventDispatcher<{
 		betChange: number;
 	}>();
-	$: walletChips = evaluateChipsToShow(total - bet);
+	let bet: number = 0;
 	let betChips: ChipValue[] = [];
 	const chipAnimations: Record<ChipValue, { x: number, y: number }> = {
-		1:   { x: -64, y: 450 },
-		5:   { x: 64,  y: 450 },
-		10:  { x: -64, y: 578 },
-		25:  { x: 64,  y: 578 },
-		50:  { x: -64, y: 706 },
-		100: { x: 64,  y: 706 },
+		1:   { x: -64, y: window.innerHeight - 504 },
+		5:   { x:  64, y: window.innerHeight - 504 },
+		10:  { x: -64, y: window.innerHeight - 376 },
+		25:  { x:  64, y: window.innerHeight - 376 },
+		50:  { x: -64, y: window.innerHeight - 248 },
+		100: { x:  64, y: window.innerHeight - 248 },
 	};
+	$: walletChips = evaluateChipsToShow(total - bet);
 
 	// Calculate total amount of bet chips and emit it whenever chips are added/removed
 	$: {
-		const betTotal = betChips.reduce((accum, current) => accum + current, 0);
-		dispatcher("betChange", betTotal)
+		bet = betChips.reduce((accum, current) => accum + current, 0);
+		dispatcher("betChange", bet);
 	}
 </script>
 
@@ -75,7 +75,6 @@
 </div>
 
 <style>
-
 	.bet :global(.button),
 	.wallet :global(.button) {
 		width: 64px;

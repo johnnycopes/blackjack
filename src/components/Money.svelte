@@ -69,7 +69,6 @@
 
 <div class="money">
 	<Chips
-		{bet}
 		{total}
 		disabled={!canChangeBet}
 		on:betChange={(e) => bet = e.detail}
