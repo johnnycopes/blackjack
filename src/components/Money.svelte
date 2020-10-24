@@ -1,40 +1,47 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import Chips from "./Chips.svelte";
+	import { fly } from "svelte/transition";
+	import { cubicOut } from "svelte/easing";
+	import Chip from "./Chip.svelte";
 	import { EProgress } from "../models/enums/progress.enum";
 	import { EOutcome } from "../models/enums/outcome.enum";
+	import type { ChipValue } from "../models/types/chip-value.type";
 	import { wait } from "../functions/utility";
+	import { evaluateChipsToShow } from "../functions/gameplay";
 
 	export let progress: EProgress;
 	export let outcome: EOutcome;
 	const dispatcher = createEventDispatcher<{ betPlaced: boolean }>();
 	let bet: number = 0;
 	let total: number = 500;
-	let prevTotal: number;
-	let totalDiff: number;
-	let hasUpdatedTotal: boolean;
+	let betChips: ChipValue[] = [];
+	let hasUpdatedTotal = false;
+	const chipAnimations: Record<ChipValue, { x: number, y: number }> = {
+		1:   { x: -64, y: window.innerHeight - 504 },
+		5:   { x:  64, y: window.innerHeight - 504 },
+		10:  { x: -64, y: window.innerHeight - 376 },
+		25:  { x:  64, y: window.innerHeight - 376 },
+		50:  { x: -64, y: window.innerHeight - 248 },
+		100: { x:  64, y: window.innerHeight - 248 },
+	};
 	$: canChangeBet =
 		progress === EProgress.NewGame ||
 		progress === EProgress.BlackjackDealt ||
 		progress === EProgress.GameOver;
-	$: displayMonetaryOutcome = canChangeBet && totalDiff && outcome !== EOutcome.Push;
+	$: walletChips = evaluateChipsToShow(total - bet);
 
-	// Emit whether or not valid bet has been placed
+	// Whenever chips are added/removed, calculate new bet value and emit
 	$: {
+		bet = getAmount(betChips);
 		dispatcher("betPlaced", bet > 0);
 	}
 
-	// Track the difference of 'total' between previous and current game
-	$: {
-		if (prevTotal) {
-			totalDiff = total - prevTotal;
-		}
-		prevTotal = total;
-	}
-
+	// TODO: make outcome a modal so that it gets reset to undefined before user can properly bet again after a game ends
+	// TODO: reinstate monetary change in the outcome message at end of game
 	// Update money on game outcome
 	$: {
 		if (outcome && !hasUpdatedTotal) {
+			let bet = getAmount(betChips);
 			if (outcome === EOutcome.PlayerBlackjack) {
 				total = total + (bet * 1.5);
 			} else if (
@@ -49,11 +56,26 @@
 			) {
 				total = total - bet;
 			}
-			bet = 0;
+			betChips = [];
 			hasUpdatedTotal = true;
 		} else if (!outcome) {
 			hasUpdatedTotal = false;
 		}
+	}
+
+	function chipAnimation(chip: ChipValue): unknown {
+		// If outcome exists, make chips animation fly offscreen towards the dealer
+		return {
+			opacity: 1,
+			x: outcome ? 0 : chipAnimations[chip].x,
+			y: outcome ? -500 : chipAnimations[chip].y,
+			easing: cubicOut,
+			duration: 350
+		};
+	}
+
+	function getAmount(chips: ChipValue[]): number {
+		return chips.reduce((accum, current) => accum + current, 0);
 	}
 
 	// Show bankruptcy modal if player runs out of money
@@ -68,20 +90,44 @@
 </script>
 
 <div class="money">
-	<Chips
-		{total}
-		disabled={!canChangeBet}
-		on:betChange={(e) => bet = e.detail}
-	/>
-	{#if displayMonetaryOutcome}
-		<p class="change"
-			data-testid="change"
-			class:gain={totalDiff > 0}
-			class:loss={totalDiff < 0}
-		>
-			{totalDiff > 0 ? "+" : "-"}${Math.abs(totalDiff)}
-		</p>
-	{/if}
+	<div class="bet">
+		<h4 class="amount">
+			{#if bet > 0}
+				${bet}
+			{/if}
+		</h4>
+		<div class="bet__chips">
+			{#each betChips as chip}
+			<div class="bet__chip"
+				in:fly={chipAnimation(chip)}
+				out:fly={chipAnimation(chip)}
+			>
+				<Chip
+					value={chip}
+					disabled={!canChangeBet}
+					on:clicked={() =>
+						betChips = [...betChips.slice(0, betChips.length - 1)]
+					}
+					/>
+			</div>
+			{/each}
+		</div>
+	</div>
+	
+	<div class="wallet">
+		<div class="wallet__chips">
+			{#each walletChips as chip}
+			<Chip
+				value={chip}
+				disabled={!canChangeBet}
+				on:clicked={() => betChips = [...betChips, chip]}
+			/>
+			{/each}
+		</div>
+		<h4 class="amount">
+			${total - bet}
+		</h4>
+	</div>
 </div>
 
 <style>
@@ -96,15 +142,64 @@
 		padding-left: 32px;
 	}
 
-	.change {
-		margin-left: 8px;
+	.bet :global(.button),
+	.wallet :global(.button) {
+		width: 64px;
 	}
 
-	.gain {
-		color: limegreen;
+	.amount {
+		font-size: 36px;
+		min-height: 60px;
 	}
 
-	.loss {
-		color: orangered;
+	.bet {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.bet__chips {
+		position: relative;
+		width: 128px;
+		height: 128px;
+	}
+
+	.bet__chip {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 1;
+	}
+
+	.bet__chip:nth-child(1n) {
+		transform: translate(-48%, -51%);
+	}
+
+	.bet__chip:nth-child(2n) {
+		transform: translate(-50%, -52%);
+	}
+
+	.bet__chip:nth-child(3n) {
+		transform: translate(-51%, -48%);
+	}
+
+	.bet__chip:nth-child(4n) {
+		transform: translate(-52%, -49%);
+	}
+
+	.wallet {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.wallet__chips {
+		display: grid;
+		grid-template-columns: repeat(2, 128px);
+		grid-template-rows: repeat(3, 128px);
+		justify-items: center;
+		align-items: center;
 	}
 </style>
