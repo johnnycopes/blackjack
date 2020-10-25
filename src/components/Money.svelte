@@ -24,10 +24,7 @@
 		50:  { x: -64, y: window.innerHeight - 248 },
 		100: { x:  64, y: window.innerHeight - 248 },
 	};
-	$: canChangeBet =
-		progress === EProgress.NewGame ||
-		progress === EProgress.BlackjackDealt ||
-		progress === EProgress.GameOver;
+	$: canBet = progress === EProgress.Betting;
 	$: walletChips = evaluateChipsToShow(total - bet);
 
 	// Whenever chips are added/removed, calculate new bet value and emit
@@ -35,9 +32,7 @@
 		bet = getAmount(betChips);
 		dispatcher("betPlaced", bet > 0);
 	}
-
-	// TODO: make outcome a modal so that it gets reset to undefined before user can properly bet again after a game ends
-	// TODO: reinstate monetary change in the outcome message at end of game
+	
 	// Update money on game outcome
 	$: {
 		if (outcome && !hasUpdatedTotal) {
@@ -63,15 +58,31 @@
 		}
 	}
 
-	function chipAnimation(chip: ChipValue): unknown {
-		// If outcome exists, make chips animation fly offscreen towards the dealer
+	function chipAnimation(chip: ChipValue): any {
+		const { x, y } = evaluateChipDirection(chip);
 		return {
 			opacity: 1,
-			x: outcome ? 0 : chipAnimations[chip].x,
-			y: outcome ? -500 : chipAnimations[chip].y,
+			x,
+			y,
 			easing: cubicOut,
 			duration: 350
 		};
+	}
+
+	function evaluateChipDirection(chip: ChipValue): { x: number, y: number } {
+		switch (outcome) {
+			case EOutcome.PlayerBlackjack:
+			case EOutcome.PlayerWins:
+			case EOutcome.DealerBusts:
+				return { x: 0, y: window.innerHeight };
+			case EOutcome.PlayerBusts:
+			case EOutcome.DealerBlackjack:
+			case EOutcome.DealerWins:
+				return { x: 0, y: -256 };
+			case EOutcome.Push:
+			case undefined:
+				return chipAnimations[chip];
+		}
 	}
 
 	function getAmount(chips: ChipValue[]): number {
@@ -104,7 +115,7 @@
 			>
 				<Chip
 					value={chip}
-					disabled={!canChangeBet}
+					disabled={!canBet}
 					on:clicked={() =>
 						betChips = [...betChips.slice(0, betChips.length - 1)]
 					}
@@ -119,7 +130,7 @@
 			{#each walletChips as chip}
 			<Chip
 				value={chip}
-				disabled={!canChangeBet}
+				disabled={!canBet}
 				on:clicked={() => betChips = [...betChips, chip]}
 			/>
 			{/each}

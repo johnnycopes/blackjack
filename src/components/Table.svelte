@@ -17,7 +17,7 @@
 
 	// Clear outcome variable on new games
 	$: {
-		if (progress === EProgress.NewGame && !!outcome) {
+		if (progress === EProgress.Betting && outcome) {
 			outcome = undefined;
 		}
 	}
@@ -37,7 +37,15 @@
 	}
 </script>
 
-<Outcome {outcome} />
+{#if progress === EProgress.Betting}
+	<h1 class="prompt">
+		Place your bets
+	</h1>
+{/if}
+<Outcome
+	{outcome}
+	on:acceptOutcome
+/>
 <div class="table">
 	<Hand
 		{...dealerHand}
@@ -65,6 +73,16 @@
 </div>
 
 <style>
+	.prompt {
+		position: absolute;
+		top: 128px;
+		left: 0;
+		width: 100%;
+		position: absolute;
+		text-align: center;
+		font-size: 64px;
+	}
+
 	.table {
 		flex: 1;
 		display: flex;

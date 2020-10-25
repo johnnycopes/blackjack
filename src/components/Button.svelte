@@ -2,9 +2,7 @@
 	import { createEventDispatcher } from "svelte";
 
 	export let disabled: boolean;
-	const dispatcher = createEventDispatcher<{
-		clicked: void;
-	}>();
+	const dispatcher = createEventDispatcher<{ clicked: void; }>();
 </script>
 
 <button class="button"
