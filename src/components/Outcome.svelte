@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 	import { fade } from "svelte/transition";
-	import { cubicOut } from "svelte/easing";
+	import { cubicIn } from "svelte/easing";
 	import { EOutcome } from "../models/enums/outcome.enum";
 
 	export let outcome: EOutcome;
@@ -30,7 +30,7 @@
 
 {#if outcome}
 	<div class="modal"
-		in:fade={{ duration: 350, easing: cubicOut }}
+		in:fade={{ duration: 350, easing: cubicIn }}
 		on:click={() => dispatcher("acceptOutcome")}
 	>
 		<h1 class="message"

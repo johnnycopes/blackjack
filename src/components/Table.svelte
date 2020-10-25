@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { fade } from "svelte/transition";
+	import { cubicIn } from "svelte/easing";
 	import Hand from "./Hand.svelte";
 	import Money from "./Money.svelte";
 	import Controls from "./Controls.svelte";
@@ -38,7 +40,9 @@
 </script>
 
 {#if progress === EProgress.Betting}
-	<h1 class="prompt">
+	<h1 class="prompt"
+		in:fade={{ duration: 175, easing: cubicIn }}
+	>
 		Place your bets
 	</h1>
 {/if}
@@ -56,31 +60,27 @@
 		hasHoleCard={false}
 	/>
 </div>
-<div class="actions">
-	<Money
+<Money
+	{progress}
+	{outcome}
+	on:betPlaced={(e) => hasPlacedBet = e.detail}
+/>
+{#if hasPlacedBet}
+	<Controls
 		{progress}
-		{outcome}
-		on:betPlaced={(e) => hasPlacedBet = e.detail}
+		on:deal
+		on:hit
+		on:stand
 	/>
-	{#if hasPlacedBet}
-		<Controls
-			{progress}
-			on:deal
-			on:hit
-			on:stand
-		/>
-	{/if}
-</div>
+{/if}
 
 <style>
 	.prompt {
 		position: absolute;
-		top: 128px;
-		left: 0;
-		width: 100%;
-		position: absolute;
-		text-align: center;
 		font-size: 64px;
+		width: 100%;
+		text-align: center;
+		top: 128px;
 	}
 
 	.table {
@@ -89,12 +89,6 @@
 		flex-direction: column;
 		justify-content: space-around;
 		align-items: center;
-	}
-
-	.actions {
-		display: flex;
-		justify-content: flex-end;
-		align-items: center;
-		height: 64px;
+		margin: 96px 0;
 	}
 </style>

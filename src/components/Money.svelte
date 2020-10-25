@@ -148,9 +148,7 @@
 		justify-content: space-between;
 		position: absolute;
 		height: 100%;
-		left: 0;
-		bottom: 0;
-		padding-left: 32px;
+		left: 32px;
 	}
 
 	.bet :global(.button),

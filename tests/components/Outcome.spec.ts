@@ -5,7 +5,7 @@ import Outcome from "../../src/components/Outcome.svelte";
 describe("renders message depending on outcome", () => {
 	it("no outcome", () => {
 		const result = render(Outcome, { outcome: undefined });
-		expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		expect(() => result.getByTestId("outcome")).toThrow();
 	});
 	
 	it("player gets blackjack", () => {

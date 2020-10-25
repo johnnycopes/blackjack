@@ -60,10 +60,16 @@
 <style>
 	.controls {
 		display: flex;
-		align-items: center;
+		position: absolute;
+		right: 64px;
+		bottom: 32px;
 	}
 
 	.controls :global(.button) {
 		margin-right: 8px;
+	}
+
+	.controls :global(.button):last-of-type {
+		margin-right: 0;
 	}
 </style>

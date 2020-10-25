@@ -77,10 +77,7 @@
 	.app {
 		display: flex;
 		flex-direction: column;
+		position: relative;
 		min-height: 100%;
-		max-width: 1024px;
-		width: 90%;
-		margin: 0 auto;
-		padding: 48px 0;
 	}
 </style>
