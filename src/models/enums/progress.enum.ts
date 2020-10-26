@@ -1,5 +1,6 @@
 export enum EProgress {
-	NewGame = 1,
+	Betting = 1,
+	NewGame,
 	BlackjackDealt,
 	PlayerTurn,
 	DealerTurn,

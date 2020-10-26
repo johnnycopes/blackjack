@@ -14,19 +14,23 @@
 	} from "../functions/gameplay";
 
 	export let inTestMode: boolean = false;
+	let progress: EProgress = EProgress.Betting;
 	let deck: IDeck | undefined;
 	let playerHand: IHand = createHand();
 	let dealerHand: IHand = createHand();
-	let progress: EProgress = EProgress.NewGame;
 
 	onMount(async () => {
 		deck = await fetchDeck();
 	});
 
-	async function deal(): Promise<void> {
-		progress = EProgress.NewGame;
+	function reset(): void {
+		progress = EProgress.Betting;
 		playerHand = createHand();
 		dealerHand = createHand();
+	}
+
+	async function deal(): Promise<void> {
+		progress = EProgress.NewGame;
 		const dealtCards = await dealCardsFromDeck(deck?.id);
 		dealerHand = addCardsToHand(dealerHand, dealtCards.dealer);
 		playerHand = addCardsToHand(playerHand, dealtCards.player);
@@ -62,6 +66,7 @@
 		{playerHand}
 		{dealerHand}
 		{progress}
+		on:acceptOutcome={reset}
 		on:deal={deal}
 		on:hit={hit}
 		on:stand={stand}
@@ -72,10 +77,7 @@
 	.app {
 		display: flex;
 		flex-direction: column;
+		position: relative;
 		min-height: 100%;
-		max-width: 1024px;
-		width: 90%;
-		margin: 0 auto;
-		padding: 48px 0;
 	}
 </style>

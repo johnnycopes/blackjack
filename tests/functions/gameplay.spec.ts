@@ -11,6 +11,7 @@ import {
 	addCardsToHand,
 	evaluateBlackjack,
 	evaluateOutcome,
+	evaluateChipsToShow,
 } from "../../src/functions/gameplay";
 import { createCard } from "../../src/functions/card";
 import { createFakeCard, createFakeCardData, createFakeDeckData } from "../../src/functions/debugging";
@@ -229,5 +230,37 @@ describe("evaluateOutcome", () => {
 	it("returns value if there's a push", () => {
 		const outcome = evaluateOutcome(21, 21);
 		expect(outcome).toEqual(EOutcome.Push);
+	});
+});
+
+describe("evaluateChipsToShow", () => {
+	it("value is $0", () => {
+		const chips = evaluateChipsToShow(0);
+		expect(chips).toEqual([]);
+	});
+
+	it("value is $6", () => {
+		const chips = evaluateChipsToShow(6);
+		expect(chips).toEqual([1, 5]);
+	});
+
+	it("value is $23", () => {
+		const chips = evaluateChipsToShow(23);
+		expect(chips).toEqual([1, 5, 10]);
+	});
+
+	it("value is $49", () => {
+		const chips = evaluateChipsToShow(49);
+		expect(chips).toEqual([1, 5, 10, 25]);
+	});
+
+	it("value is $87", () => {
+		const chips = evaluateChipsToShow(87);
+		expect(chips).toEqual([1, 5, 10, 25, 50]);
+	});
+
+	it("value is $103", () => {
+		const chips = evaluateChipsToShow(103);
+		expect(chips).toEqual([1, 5, 10, 25, 50, 100]);
 	});
 });

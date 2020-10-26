@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { fade } from "svelte/transition";
+	import { cubicIn } from "svelte/easing";
 	import Hand from "./Hand.svelte";
 	import Money from "./Money.svelte";
 	import Controls from "./Controls.svelte";
@@ -17,7 +19,7 @@
 
 	// Clear outcome variable on new games
 	$: {
-		if (progress === EProgress.NewGame && !!outcome) {
+		if (progress === EProgress.Betting && outcome) {
 			outcome = undefined;
 		}
 	}
@@ -37,7 +39,17 @@
 	}
 </script>
 
-<Outcome {outcome} />
+{#if progress === EProgress.Betting}
+	<h1 class="prompt"
+		in:fade={{ duration: 175, easing: cubicIn }}
+	>
+		Place your bets
+	</h1>
+{/if}
+<Outcome
+	{outcome}
+	on:acceptOutcome
+/>
 <div class="table">
 	<Hand
 		{...dealerHand}
@@ -48,35 +60,35 @@
 		hasHoleCard={false}
 	/>
 </div>
-<div class="actions">
-	<Money
+<Money
+	{progress}
+	{outcome}
+	on:betPlaced={(e) => hasPlacedBet = e.detail}
+/>
+{#if hasPlacedBet}
+	<Controls
 		{progress}
-		{outcome}
-		on:betPlaced={(e) => hasPlacedBet = e.detail}
+		on:deal
+		on:hit
+		on:stand
 	/>
-	{#if hasPlacedBet}
-		<Controls
-			{progress}
-			on:deal
-			on:hit
-			on:stand
-		/>
-	{/if}
-</div>
+{/if}
 
 <style>
+	.prompt {
+		position: absolute;
+		font-size: 64px;
+		width: 100%;
+		text-align: center;
+		top: 128px;
+	}
+
 	.table {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-around;
 		align-items: center;
-	}
-
-	.actions {
-		display: flex;
-		height: 64px;
-		justify-content: space-between;
-		align-items: center;
+		margin: 96px 0;
 	}
 </style>

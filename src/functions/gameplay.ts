@@ -3,6 +3,7 @@ import type { IDeckData } from "../models/api/deck-data.interface";
 import type { IDeck } from "../models/interfaces/deck.interface";
 import type { IHand } from "../models/interfaces/hand.interface";
 import type { ICard } from "../models/interfaces/card.interface";
+import type { ChipValue } from "../models/types/chip-value.type";
 import { EOutcome } from "../models/enums/outcome.enum";
 import { API_URL } from "../models/constants";
 import { createCard } from "./card";
@@ -96,6 +97,16 @@ export function evaluateOutcome(playerTotal: number, dealerTotal: number): EOutc
 	} else {
 		return EOutcome.Push;
 	}
+}
+
+export function evaluateChipsToShow(money: number): ChipValue[] {
+	const chipValues: ChipValue[] = [1, 5, 10, 25, 50, 100];
+	return chipValues.reduce((accum, current) => {
+		if (money >= current) {
+			return [...accum, current];
+		}
+		return accum;
+	}, [] as ChipValue[]);
 }
 
 export async function pause(inTestMode: boolean): Promise<void> {

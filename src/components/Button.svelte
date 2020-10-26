@@ -2,20 +2,20 @@
 	import { createEventDispatcher } from "svelte";
 
 	export let disabled: boolean;
-	const dispatcher = createEventDispatcher<{
-		clicked: void;
-	}>();
+	const dispatcher = createEventDispatcher<{ clicked: void; }>();
 </script>
 
 <button class="button"
 	{disabled}
+	type="button"
 	on:click={() => dispatcher("clicked")}
 >
 	<slot></slot>
 </button>
 
 <style>
-	.button {
+	:global(.button) {
+		position: relative;
 		height: 64px;
 		padding: 0 24px;
 		border: 1px solid var(--gray);
@@ -30,12 +30,12 @@
 		transition: 75ms background ease-in-out;
 	}
 
-	.button:hover {
+	:global(.button:hover) {
 		background: var(--gold);
 		border-color: var(--dark-gold);
 	}
 
-	.button:disabled {
+	:global(.button:disabled) {
 		background: lightgray;
 		border-color: darkgray;
 		color: gray;
