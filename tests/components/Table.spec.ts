@@ -6,26 +6,26 @@ import Table from "../../src/components/Table.svelte";
 
 let result: RenderResult;
 
-beforeEach(() => {
+beforeEach(async () => {
 	result = render(Table, {
 		playerHand: createFakeHand(),
 		dealerHand: createFakeHand(),
-		progress: EProgress.NewGame
+		progress: EProgress.Betting
 	});
-	const increaseBtn = result.getByText("+");
-	userEvent.click(increaseBtn);
+	const chip = result.getByRole("button", { name: "$100 chip" });
+	await userEvent.click(chip);
 });
 
 describe("before starting", () => {
 	it("renders table", () => {
-		expect(result.getByText("$10 (current bet)"));
-		expect(result.getByText("$100 (total money)"));
+		expect(result.getByTestId("bet")).toHaveTextContent("$100");
+		expect(result.getByTestId("wallet")).toHaveTextContent("$400");
 		expect(result.getByTestId("controls"));
 	});
 
 	it("hides controls when no bet is placed", async () => {
-		const decreaseBtn = result.getByText("-");
-		await userEvent.click(decreaseBtn);
+		const betChip = result.getAllByRole("button", { name: "$100 chip" })[0];
+		await userEvent.click(betChip);
 		expect(() => result.getByTestId("controls")).toThrow();
 	});
 });
@@ -46,7 +46,7 @@ describe("gameplay", () => {
 			dealerHand: createFakeHand("5C", "5H"),
 			progress: EProgress.PlayerTurn
 		});
-		expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		expect(() => result.getByTestId("outcome")).toThrow();
 	});
 
 	it("doesn't show outcome when it's dealer's turn", async () => {
@@ -55,7 +55,7 @@ describe("gameplay", () => {
 			dealerHand: createFakeHand("5C", "5H"),
 			progress: EProgress.DealerTurn
 		});
-		expect(result.getByTestId("outcome")).toBeEmptyDOMElement();
+		expect(() => result.getByTestId("outcome")).toThrow();
 	});
 
 	it("shows outcome when player busts", async () => {

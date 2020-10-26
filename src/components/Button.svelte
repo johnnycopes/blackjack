@@ -7,6 +7,7 @@
 
 <button class="button"
 	{disabled}
+	type="button"
 	on:click={() => dispatcher("clicked")}
 >
 	<slot></slot>

@@ -102,7 +102,9 @@
 
 <div class="money">
 	<div class="bet">
-		<h4 class="amount">
+		<h4 class="amount"
+			data-testid="bet"
+		>
 			{#if bet > 0}
 				${bet}
 			{/if}
@@ -135,7 +137,9 @@
 			/>
 			{/each}
 		</div>
-		<h4 class="amount">
+		<h4 class="amount"
+			data-testid="wallet"
+		>
 			${total - bet}
 		</h4>
 	</div>

@@ -17,21 +17,21 @@ describe("new game", () => {
 
 	it("can deal", () => {
 		result.component.$on("deal", mockFn);
-		const deal = result.getByText("Deal");
+		const deal = result.getByRole("button", { name: "Deal" });
 		userEvent.click(deal);
 		expect(mockFn).toHaveBeenCalled();
 	});
 	
 	it("can't hit", () => {
 		result.component.$on("hit", mockFn);
-		const hit = result.getByText("Hit");
+		const hit = result.getByRole("button", { name: "Hit" });
 		userEvent.click(hit);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 
 	it("can't stand", () => {
 		result.component.$on("stand", mockFn);
-		const stand = result.getByText("Stand");
+		const stand = result.getByRole("button", { name: "Stand" });
 		userEvent.click(stand);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
@@ -44,21 +44,21 @@ describe("blackjack dealt", () => {
 
 	it("can deal", () => {
 		result.component.$on("deal", mockFn);
-		const deal = result.getByText("Deal");
+		const deal = result.getByRole("button", { name: "Deal" });
 		userEvent.click(deal);
 		expect(mockFn).toHaveBeenCalled();
 	});
 	
 	it("can't hit", () => {
 		result.component.$on("hit", mockFn);
-		const hit = result.getByText("Hit");
+		const hit = result.getByRole("button", { name: "Hit" });
 		userEvent.click(hit);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 
 	it("can't stand", () => {
 		result.component.$on("stand", mockFn);
-		const stand = result.getByText("Stand");
+		const stand = result.getByRole("button", { name: "Stand" });
 		userEvent.click(stand);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
@@ -71,21 +71,21 @@ describe("player turn", () => {
 
 	it("can't deal", () => {
 		result.component.$on("deal", mockFn);
-		const deal = result.getByText("Deal");
+		const deal = result.getByRole("button", { name: "Deal" });
 		userEvent.click(deal);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 	
 	it("can hit", () => {
 		result.component.$on("hit", mockFn);
-		const hit = result.getByText("Hit");
+		const hit = result.getByRole("button", { name: "Hit" });
 		userEvent.click(hit);
 		expect(mockFn).toHaveBeenCalled();
 	});
 
 	it("can stand", () => {
 		result.component.$on("stand", mockFn);
-		const stand = result.getByText("Stand");
+		const stand = result.getByRole("button", { name: "Stand" });
 		userEvent.click(stand);
 		expect(mockFn).toHaveBeenCalled();
 	});
@@ -98,21 +98,21 @@ describe("dealer turn", () => {
 
 	it("can't deal", () => {
 		result.component.$on("deal", mockFn);
-		const deal = result.getByText("Deal");
+		const deal = result.getByRole("button", { name: "Deal" });
 		userEvent.click(deal);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 	
 	it("can't hit", () => {
 		result.component.$on("hit", mockFn);
-		const hit = result.getByText("Hit");
+		const hit = result.getByRole("button", { name: "Hit" });
 		userEvent.click(hit);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 
 	it("can't stand", () => {
 		result.component.$on("stand", mockFn);
-		const stand = result.getByText("Stand");
+		const stand = result.getByRole("button", { name: "Stand" });
 		userEvent.click(stand);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
