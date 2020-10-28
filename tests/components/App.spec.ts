@@ -70,6 +70,7 @@ describe("plays game", () => {
 			const mockHitData = drawFromFakeDeck(mockDeck, ["5C"]);
 			fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
 			userEvent.click(hitButton);
+			await wait();
 			userEvent.click(standButton);
 			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
@@ -81,6 +82,7 @@ describe("plays game", () => {
 			const mockHitData = drawFromFakeDeck(mockDeck, ["3C"]);
 			fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
 			userEvent.click(hitButton);
+			await wait();
 			userEvent.click(standButton);
 			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
@@ -92,6 +94,7 @@ describe("plays game", () => {
 			const mockHitData = drawFromFakeDeck(mockDeck, ["3C"]);
 			fetchMock.mockResponseOnce(JSON.stringify(mockHitData));
 			userEvent.click(hitButton);
+			await wait();
 			userEvent.click(standButton);
 			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Push");
@@ -128,8 +131,6 @@ describe("plays game", () => {
 			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
 			userEvent.click(standButton);
 			await wait();
-			await wait();
-			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
 		});
 
@@ -139,8 +140,6 @@ describe("plays game", () => {
 			const mockStandData = drawFromFakeDeck(mockDeck, ["3C"]);
 			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
 			userEvent.click(standButton);
-			await wait();
-			await wait();
 			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Player wins");
 		});
@@ -152,8 +151,6 @@ describe("plays game", () => {
 			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
 			userEvent.click(standButton);
 			await wait();
-			await wait();
-			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Dealer wins");
 		});
 
@@ -163,8 +160,6 @@ describe("plays game", () => {
 			const mockStandData = drawFromFakeDeck(mockDeck, ["4C"]);
 			fetchMock.mockResponseOnce(JSON.stringify(mockStandData));
 			userEvent.click(standButton);
-			await wait();
-			await wait();
 			await wait();
 			expect(result.getByTestId("outcome")).toHaveTextContent("Push");
 		});

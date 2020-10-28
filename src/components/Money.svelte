@@ -16,7 +16,7 @@
 	let total: number = 500;
 	let betChips: ChipValue[] = [];
 	let hasUpdatedTotal = false;
-	const chipAnimations: Record<ChipValue, { x: number, y: number }> = {
+	const defaultChipDeltas: Record<ChipValue, { x: number, y: number }> = {
 		1:   { x: -64, y: window.innerHeight - 504 },
 		5:   { x:  64, y: window.innerHeight - 504 },
 		10:  { x: -64, y: window.innerHeight - 376 },
@@ -59,7 +59,7 @@
 	}
 
 	function chipAnimation(chip: ChipValue): any {
-		const { x, y } = evaluateChipDirection(chip);
+		const { x, y } = evaluateChipDelta(chip);
 		return {
 			opacity: 1,
 			x,
@@ -69,7 +69,7 @@
 		};
 	}
 
-	function evaluateChipDirection(chip: ChipValue): { x: number, y: number } {
+	function evaluateChipDelta(chip: ChipValue): { x: number, y: number } {
 		switch (outcome) {
 			case EOutcome.PlayerBlackjack:
 			case EOutcome.PlayerWins:
@@ -81,7 +81,7 @@
 				return { x: 0, y: -256 };
 			case EOutcome.Push:
 			case undefined:
-				return chipAnimations[chip];
+				return defaultChipDeltas[chip];
 		}
 	}
 

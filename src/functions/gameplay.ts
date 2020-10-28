@@ -101,17 +101,12 @@ export function evaluateOutcome(playerTotal: number, dealerTotal: number): EOutc
 
 export function evaluateChipsToShow(money: number): ChipValue[] {
 	const chipValues: ChipValue[] = [1, 5, 10, 25, 50, 100];
-	return chipValues.reduce((accum, current) => {
-		if (money >= current) {
-			return [...accum, current];
-		}
-		return accum;
-	}, [] as ChipValue[]);
+	return chipValues.filter(chipValue => money >= chipValue);
 }
 
 export async function pause(inTestMode: boolean): Promise<void> {
 	if (inTestMode) {
-		await wait();
+		return;
 	} else {
 		await wait(1000);
 	}
