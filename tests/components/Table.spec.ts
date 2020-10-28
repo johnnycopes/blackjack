@@ -1,8 +1,8 @@
 import { render, RenderResult } from "@testing-library/svelte";
-import userEvent from "@testing-library/user-event";
 import { EProgress } from "../../src/models/enums/progress.enum";
 import { createFakeHand } from "../../src/functions/debugging";
 import Table from "../../src/components/Table.svelte";
+import { click } from "../testing";
 
 let result: RenderResult;
 
@@ -13,7 +13,7 @@ beforeEach(async () => {
 		progress: EProgress.Betting
 	});
 	const chip = result.getByRole("button", { name: "$100 chip" });
-	await userEvent.click(chip);
+	await click(chip);
 });
 
 describe("before starting", () => {
@@ -25,7 +25,7 @@ describe("before starting", () => {
 
 	it("hides controls when no bet is placed", async () => {
 		const betChip = result.getAllByRole("button", { name: "$100 chip" })[0];
-		await userEvent.click(betChip);
+		await click(betChip);
 		expect(() => result.getByTestId("controls")).toThrow();
 	});
 });

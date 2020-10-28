@@ -1,8 +1,8 @@
 import { render, RenderResult } from "@testing-library/svelte";
-import userEvent from "@testing-library/user-event";
 import { EProgress } from "../../src/models/enums/progress.enum";
 import { EOutcome } from "../../src/models/enums/outcome.enum";
 import Money from "../../src/components/Money.svelte";
+import { click } from "../testing";
 
 let result: RenderResult;
 let chip: HTMLElement;
@@ -17,7 +17,7 @@ beforeEach(async () => {
 
 describe("updates money depending on outcome", () => {
 	beforeEach(async () => {
-		await userEvent.click(chip);
+		await click(chip);
 	});
 
 	it("adds 1.5x the bet amount to total if player gets blackjack", async () => {

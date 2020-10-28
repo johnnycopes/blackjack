@@ -1,7 +1,7 @@
 import { render, RenderResult } from "@testing-library/svelte";
-import userEvent from '@testing-library/user-event'
 import { EProgress } from "../../src/models/enums/progress.enum";
 import Controls from "../../src/components/Controls.svelte";
+import { click } from "../testing";
 
 const mockFn = jest.fn();
 let result: RenderResult;
@@ -15,24 +15,24 @@ describe("new game", () => {
 		result = render(Controls, { progress: EProgress.NewGame });
 	});
 
-	it("can deal", () => {
+	it("can deal", async () => {
 		result.component.$on("deal", mockFn);
 		const deal = result.getByRole("button", { name: "Deal" });
-		userEvent.click(deal);
+		await click(deal);
 		expect(mockFn).toHaveBeenCalled();
 	});
 	
-	it("can't hit", () => {
+	it("can't hit", async () => {
 		result.component.$on("hit", mockFn);
 		const hit = result.getByRole("button", { name: "Hit" });
-		userEvent.click(hit);
+		await click(hit);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 
-	it("can't stand", () => {
+	it("can't stand", async () => {
 		result.component.$on("stand", mockFn);
 		const stand = result.getByRole("button", { name: "Stand" });
-		userEvent.click(stand);
+		await click(stand);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 });
@@ -42,24 +42,24 @@ describe("blackjack dealt", () => {
 		result = render(Controls, { progress: EProgress.BlackjackDealt });
 	});
 
-	it("can deal", () => {
+	it("can deal", async () => {
 		result.component.$on("deal", mockFn);
 		const deal = result.getByRole("button", { name: "Deal" });
-		userEvent.click(deal);
+		await click(deal);
 		expect(mockFn).toHaveBeenCalled();
 	});
 	
-	it("can't hit", () => {
+	it("can't hit", async () => {
 		result.component.$on("hit", mockFn);
 		const hit = result.getByRole("button", { name: "Hit" });
-		userEvent.click(hit);
+		await click(hit);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 
-	it("can't stand", () => {
+	it("can't stand", async () => {
 		result.component.$on("stand", mockFn);
 		const stand = result.getByRole("button", { name: "Stand" });
-		userEvent.click(stand);
+		await click(stand);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 });
@@ -69,24 +69,24 @@ describe("player turn", () => {
 		result = render(Controls, { progress: EProgress.PlayerTurn });
 	});
 
-	it("can't deal", () => {
+	it("can't deal", async () => {
 		result.component.$on("deal", mockFn);
 		const deal = result.getByRole("button", { name: "Deal" });
-		userEvent.click(deal);
+		await click(deal);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 	
-	it("can hit", () => {
+	it("can hit", async () => {
 		result.component.$on("hit", mockFn);
 		const hit = result.getByRole("button", { name: "Hit" });
-		userEvent.click(hit);
+		await click(hit);
 		expect(mockFn).toHaveBeenCalled();
 	});
 
-	it("can stand", () => {
+	it("can stand", async () => {
 		result.component.$on("stand", mockFn);
 		const stand = result.getByRole("button", { name: "Stand" });
-		userEvent.click(stand);
+		await click(stand);
 		expect(mockFn).toHaveBeenCalled();
 	});
 });
@@ -96,24 +96,24 @@ describe("dealer turn", () => {
 		result = render(Controls, { progress: EProgress.DealerTurn });
 	});
 
-	it("can't deal", () => {
+	it("can't deal", async () => {
 		result.component.$on("deal", mockFn);
 		const deal = result.getByRole("button", { name: "Deal" });
-		userEvent.click(deal);
+		await click(deal);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 	
-	it("can't hit", () => {
+	it("can't hit", async () => {
 		result.component.$on("hit", mockFn);
 		const hit = result.getByRole("button", { name: "Hit" });
-		userEvent.click(hit);
+		await click(hit);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 
-	it("can't stand", () => {
+	it("can't stand", async () => {
 		result.component.$on("stand", mockFn);
 		const stand = result.getByRole("button", { name: "Stand" });
-		userEvent.click(stand);
+		await click(stand);
 		expect(mockFn).not.toHaveBeenCalled();
 	});
 });
