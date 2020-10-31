@@ -52,12 +52,10 @@
 />
 <div class="table">
 	<Hand
-		type="Dealer"
-		hasHoleCard={dealerHandHidden}
 		{...dealerHand}
+		hasHoleCard={dealerHandHidden}
 	/>
 	<Hand
-		type="Player"
 		{...playerHand}
 	/>
 </div>

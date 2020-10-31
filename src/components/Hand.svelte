@@ -4,11 +4,7 @@
 	import Card from "./Card.svelte";
 	import type { ICard } from "../models/interfaces/card.interface";
 	import { addCardsToHand, createHand } from "../functions/gameplay";
-	import { wait } from "../functions/utility";
 
-	type HandType = "Player" | "Dealer";
-
-	export let type: "Player" | "Dealer";
 	export let cards: ICard[];
 	export let total: number;
 	export let soft: boolean;
@@ -17,30 +13,22 @@
 	let showFallbackTotal: boolean;
 
 	$: {
-		(async () => {
-			await wait(500);
-			if (!hasHoleCard) {
-				visibleTotal = total;
-				showFallbackTotal = soft;
-			} else {
-				const visibleCards = cards.slice(1);
-				const visibleHand = createHand();
-				const { total, soft } = addCardsToHand(visibleHand, visibleCards);
-				visibleTotal = total;
-				showFallbackTotal = soft;
-			}
-		})();
+		if (!hasHoleCard) {
+			visibleTotal = total;
+			showFallbackTotal = soft;
+		} else {
+			const visibleCards = cards.slice(1);
+			const visibleHand = createHand();
+			const { total, soft } = addCardsToHand(visibleHand, ...visibleCards);
+			visibleTotal = total;
+			showFallbackTotal = soft;
+		}
 	}
 
-	function cardStyles (type: HandType, index: number): string {
-		let x = index * -70;
-		let y = index * 10;
-		let rotate = 0;
-		if (type === "Dealer") {
-			rotate = -8 + (index * 3);
-		} else if (type === "Player") {
-			rotate = 3 + (index * 3);
-		}
+	function cardStyles (index: number): string {
+		const x = index * -70;
+		const y = index * 10;
+		const rotate = -8 + (index * 3);
 		return `transform: translateX(${x}%) translateY(${y}%) rotate(${rotate}deg)`;
 	}
 </script>
@@ -64,7 +52,7 @@
 	</h3>
 	<ul class="cards">
 		{#each cards as card, i}
-		<li style={cardStyles(type, i)}
+		<li style={cardStyles(i)}
 			in:fly={{
 				opacity: 1,
 				x: window.innerWidth / 2,

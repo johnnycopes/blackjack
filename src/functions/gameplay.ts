@@ -62,7 +62,7 @@ export async function drawCardFromDeck(deckId: string | undefined): Promise<ICar
 	return createCard(data.cards[0]);
 }
 
-export function addCardsToHand(hand: IHand, newCards: ICard[]): IHand {
+export function addCardsToHand(hand: IHand, ...newCards: ICard[]): IHand {
 	const cards = [...hand.cards, ...newCards];
 	let numberOfAces = cards.filter(card => card.value === "ACE").length;
 	let total = cards.reduce((total, card) => total + card.point, 0);

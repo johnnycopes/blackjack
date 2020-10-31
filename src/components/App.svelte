@@ -32,8 +32,8 @@
 	async function deal(): Promise<void> {
 		progress = EProgress.NewGame;
 		const dealtCards = await dealCardsFromDeck(deck?.id);
-		dealerHand = addCardsToHand(dealerHand, dealtCards.dealer);
-		playerHand = addCardsToHand(playerHand, dealtCards.player);
+		dealerHand = addCardsToHand(dealerHand, ...dealtCards.dealer);
+		playerHand = addCardsToHand(playerHand, ...dealtCards.player);
 		if (playerHand.total === 21 || dealerHand.total === 21) {
 			progress = EProgress.BlackjackDealt;
 		} else {
@@ -43,7 +43,7 @@
 
 	async function hit(): Promise<void> {
 		const newCard = await drawCardFromDeck(deck?.id);
-		playerHand = addCardsToHand(playerHand, [newCard]);
+		playerHand = addCardsToHand(playerHand, newCard);
 		if (playerHand.total > 21) {
 			progress = EProgress.GameOver;
 		}
@@ -54,7 +54,7 @@
 		await pause(inTestMode);
 		while (dealerHand.total < 17) {
 			const newCard = await drawCardFromDeck(deck?.id);
-			dealerHand = addCardsToHand(dealerHand, [newCard]);
+			dealerHand = addCardsToHand(dealerHand, newCard);
 			await pause(inTestMode);
 		}
 		progress = EProgress.GameOver;
