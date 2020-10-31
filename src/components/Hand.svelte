@@ -12,7 +12,12 @@
 	let visibleTotal: number;
 	let showFallbackTotal: boolean;
 
+	// Update total when hole card is revealed
 	$: {
+		setTotal(hasHoleCard);
+	}
+
+	function setTotal(hasHoleCard: boolean): void {
 		if (!hasHoleCard) {
 			visibleTotal = total;
 			showFallbackTotal = soft;
@@ -53,13 +58,15 @@
 	<ul class="cards">
 		{#each cards as card, i}
 		<li style={cardStyles(i)}
-			in:fly={{
+			transition:fly={{
 				opacity: 1,
 				x: window.innerWidth / 2,
 				y: -window.innerHeight / 2,
 				easing: sineIn,
 				duration: 350
 			}}
+			on:introend={() => setTotal(hasHoleCard)}
+			on:outrostart={() => setTotal(hasHoleCard)}
 		>
 			<Card
 				code={card.code}
