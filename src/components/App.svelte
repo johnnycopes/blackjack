@@ -44,6 +44,7 @@
 		}
 
 		if (playerHand.total === 21 || dealerHand.total === 21) {
+			await pause(EDuration.Card);
 			progress = EProgress.BlackjackDealt;
 		} else {
 			progress = EProgress.PlayerTurn;
@@ -61,7 +62,7 @@
 
 	async function stand(): Promise<void> {
 		progress = EProgress.DealerTurn;
-		await pause(EDuration.DealerAction); // TODO: change this value to hole card reveal animation time once implemented
+		await pause(EDuration.Card);
 		while (dealerHand.total < 17) {
 			const newCard = await drawCardFromDeck(deck?.id);
 			dealerHand = addCardsToHand(dealerHand, newCard);
