@@ -1,4 +1,4 @@
-export enum EAnimationTime {
+export enum EDuration {
 	Text = 175,
 	Card = 350,
 	Chip = 350,

@@ -3,7 +3,7 @@
 	import { fade } from "svelte/transition";
 	import { cubicIn } from "svelte/easing";
 	import { EOutcome } from "../models/enums/outcome.enum";
-	import { EAnimationTime } from "../models/enums/animation-time.enum";
+	import { EDuration } from "../models/enums/duration.enum";
 
 	export let outcome: EOutcome;
 	const dispatcher = createEventDispatcher<{ acceptOutcome: void; }>();
@@ -32,7 +32,7 @@
 
 {#if outcome}
 	<div class="modal"
-		in:fade={{ duration: EAnimationTime.Modal, easing: cubicIn }}
+		in:fade={{ duration: EDuration.Modal, easing: cubicIn }}
 		on:introend={() => canCloseModal = true}
 		on:click={() => {
 			if (canCloseModal) {

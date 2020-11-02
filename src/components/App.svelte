@@ -2,7 +2,7 @@
 	import { onMount } from "svelte";
 	import Table from "./Table.svelte";
 	import { EProgress } from "../models/enums/progress.enum";
-	import { EAnimationTime } from "../models/enums/animation-time.enum";
+	import { EDuration } from "../models/enums/duration.enum";
 	import type { IDeck } from "../models/interfaces/deck.interface";
 	import type { IHand } from "../models/interfaces/hand.interface";
 	import {
@@ -38,9 +38,9 @@
 
 		for (let i = 0; i < 2; i++) {
 			dealerHand = addCardsToHand(dealerHand, dealer[i]);
-			await pause(EAnimationTime.Card);
+			await pause(EDuration.Card);
 			playerHand = addCardsToHand(playerHand, player[i]);
-			await pause(EAnimationTime.Card);
+			await pause(EDuration.Card);
 		}
 
 		if (playerHand.total === 21 || dealerHand.total === 21) {
@@ -53,7 +53,7 @@
 	async function hit(): Promise<void> {
 		const newCard = await drawCardFromDeck(deck?.id);
 		playerHand = addCardsToHand(playerHand, newCard);
-		await pause(EAnimationTime.Card);
+		await pause(EDuration.Card);
 		if (playerHand.total > 21) {
 			progress = EProgress.GameOver;
 		}
@@ -61,11 +61,11 @@
 
 	async function stand(): Promise<void> {
 		progress = EProgress.DealerTurn;
-		await pause(EAnimationTime.DealerAction); // TODO: change this value to hole card reveal animation time once implemented
+		await pause(EDuration.DealerAction); // TODO: change this value to hole card reveal animation time once implemented
 		while (dealerHand.total < 17) {
 			const newCard = await drawCardFromDeck(deck?.id);
 			dealerHand = addCardsToHand(dealerHand, newCard);
-			await pause(EAnimationTime.DealerAction);
+			await pause(EDuration.DealerAction);
 		}
 		progress = EProgress.GameOver;
 	}

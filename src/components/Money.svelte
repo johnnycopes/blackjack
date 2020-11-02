@@ -6,7 +6,7 @@
 	import type { ChipValue } from "../models/types/chip-value.type";
 	import { EProgress } from "../models/enums/progress.enum";
 	import { EOutcome } from "../models/enums/outcome.enum";
-	import { EAnimationTime } from "../models/enums/animation-time.enum";
+	import { EDuration } from "../models/enums/duration.enum";
 	import { evaluateChipsToShow, pause } from "../functions/gameplay";
 
 	export let progress: EProgress;
@@ -65,7 +65,7 @@
 			x,
 			y,
 			easing: cubicOut,
-			duration: EAnimationTime.Chip
+			duration: EDuration.Chip
 		};
 	}
 
