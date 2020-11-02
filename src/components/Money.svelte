@@ -3,11 +3,11 @@
 	import { fly } from "svelte/transition";
 	import { cubicOut } from "svelte/easing";
 	import Chip from "./Chip.svelte";
+	import type { ChipValue } from "../models/types/chip-value.type";
 	import { EProgress } from "../models/enums/progress.enum";
 	import { EOutcome } from "../models/enums/outcome.enum";
-	import type { ChipValue } from "../models/types/chip-value.type";
-	import { wait } from "../functions/utility";
-	import { evaluateChipsToShow } from "../functions/gameplay";
+	import { EDuration } from "../models/enums/duration.enum";
+	import { evaluateChipsToShow, pause } from "../functions/gameplay";
 
 	export let progress: EProgress;
 	export let outcome: EOutcome;
@@ -65,7 +65,7 @@
 			x,
 			y,
 			easing: cubicOut,
-			duration: 350
+			duration: EDuration.Chip
 		};
 	}
 
@@ -93,7 +93,7 @@
 	$: {
 		if (!total) {
 			(async () => {
-				await wait(1000);
+				await pause();
 				alert("You're out of money :(\nRefresh the page to play again.");
 			})();
 		}

@@ -124,7 +124,7 @@ describe("addCardsToHand", () => {
 	const cardAce = createFakeCard("AS");
 
 	describe("dealt hand has no aces", () => {
-		const dealtHand = addCardsToHand(hand, [card3, cardKing]);
+		const dealtHand = addCardsToHand(hand, card3, cardKing);
 		it("adds 3 and king to empty hand", () => {
 			expect(dealtHand).toEqual({
 				cards: [card3, cardKing],
@@ -134,8 +134,8 @@ describe("addCardsToHand", () => {
 		});
 	
 		it("adds 8 to existing hand", () => {
-			const dealtHand = addCardsToHand(hand, [card3, cardKing]);
-			const updatedHand = addCardsToHand(dealtHand, [card8]);
+			const dealtHand = addCardsToHand(hand, card3, cardKing);
+			const updatedHand = addCardsToHand(dealtHand, card8);
 			expect(updatedHand).toEqual({
 				cards: [card3, cardKing, card8],
 				total: 21,
@@ -144,8 +144,8 @@ describe("addCardsToHand", () => {
 		});
 	
 		it("adds ace to existing hand", () => {
-			const dealtHand = addCardsToHand(hand, [card3, cardKing]);
-			const updatedHand = addCardsToHand(dealtHand, [cardAce]);
+			const dealtHand = addCardsToHand(hand, card3, cardKing);
+			const updatedHand = addCardsToHand(dealtHand, cardAce);
 			expect(updatedHand).toEqual({
 				cards: [card3, cardKing, cardAce],
 				total: 14,
@@ -155,7 +155,7 @@ describe("addCardsToHand", () => {
 	});
 
 	describe("dealt hand has an ace", () => {
-		const dealtHand = addCardsToHand(hand, [card8, cardAce]);
+		const dealtHand = addCardsToHand(hand, card8, cardAce);
 		it("adds 3 and ace to empty hand", () => {
 			expect(dealtHand).toEqual({
 				cards: [card8, cardAce],
@@ -165,7 +165,7 @@ describe("addCardsToHand", () => {
 		});
 	
 		it("adds king to existing hand", () => {
-			const updatedHand = addCardsToHand(dealtHand, [cardKing]);
+			const updatedHand = addCardsToHand(dealtHand, cardKing);
 			expect(updatedHand).toEqual({
 				cards: [card8, cardAce, cardKing],
 				total: 19,
@@ -174,7 +174,7 @@ describe("addCardsToHand", () => {
 		});
 
 		it("adds ace to existing hand", () => {
-			const updatedHand = addCardsToHand(dealtHand, [cardAce]);
+			const updatedHand = addCardsToHand(dealtHand, cardAce);
 			expect(updatedHand).toEqual({
 				cards: [card8, cardAce, cardAce],
 				total: 20,

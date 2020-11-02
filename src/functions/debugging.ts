@@ -34,7 +34,7 @@ export function createFakeCard(cardCode: CardCode): ICard {
 export function createFakeHand(...cardCodes: CardCode[]): IHand {
 	const fakeHand = createHand();
 	const fakeCards = cardCodes.map(cardCode => createFakeCard(cardCode));
-	const updatedFakeHand = addCardsToHand(fakeHand, fakeCards);
+	const updatedFakeHand = addCardsToHand(fakeHand, ...fakeCards);
 	return updatedFakeHand;
 }
 

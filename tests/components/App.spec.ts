@@ -26,7 +26,7 @@ describe("plays game", () => {
 		mockDeck = createFakeDeck(mockDeckData);
 		fetchMock.resetMocks();
 		fetchMock.mockResponseOnce(JSON.stringify(mockDeckData));
-		result = render(App, { inTestMode: true });
+		result = render(App, { testMode: true });
 		const chip = result.getByRole("button", { name: "$100 chip" });
 		await click(chip);
 		dealButton = result.getByRole("button", { name: "Deal" });

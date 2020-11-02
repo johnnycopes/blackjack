@@ -8,11 +8,15 @@ import { EOutcome } from "../models/enums/outcome.enum";
 import { API_URL } from "../models/constants";
 import { createCard } from "./card";
 import { wait } from "./utility";
+import { test_mode } from "../stores/stores";
 
 interface IDealtCards {
 	player: ICard[];
 	dealer: ICard[];
 }
+
+let testMode: boolean;
+test_mode.subscribe(value => testMode = value);
 
 export function createHand(): IHand {
 	return {
@@ -62,7 +66,7 @@ export async function drawCardFromDeck(deckId: string | undefined): Promise<ICar
 	return createCard(data.cards[0]);
 }
 
-export function addCardsToHand(hand: IHand, newCards: ICard[]): IHand {
+export function addCardsToHand(hand: IHand, ...newCards: ICard[]): IHand {
 	const cards = [...hand.cards, ...newCards];
 	let numberOfAces = cards.filter(card => card.value === "ACE").length;
 	let total = cards.reduce((total, card) => total + card.point, 0);
@@ -104,10 +108,10 @@ export function evaluateChipsToShow(money: number): ChipValue[] {
 	return chipValues.filter(chipValue => money >= chipValue);
 }
 
-export async function pause(inTestMode: boolean): Promise<void> {
-	if (inTestMode) {
+export async function pause(ms: number): Promise<void> {
+	if (testMode) {
 		return;
 	} else {
-		await wait(1000);
+		await wait(ms);
 	}
 }

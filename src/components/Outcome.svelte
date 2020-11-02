@@ -3,9 +3,11 @@
 	import { fade } from "svelte/transition";
 	import { cubicIn } from "svelte/easing";
 	import { EOutcome } from "../models/enums/outcome.enum";
+	import { EDuration } from "../models/enums/duration.enum";
 
 	export let outcome: EOutcome;
 	const dispatcher = createEventDispatcher<{ acceptOutcome: void; }>();
+	let canCloseModal: boolean = false;
 	$: message = getMessage(outcome);
 	
 	// TODO: display monetary change along with the outcome message
@@ -30,8 +32,14 @@
 
 {#if outcome}
 	<div class="modal"
-		in:fade={{ duration: 350, easing: cubicIn }}
-		on:click={() => dispatcher("acceptOutcome")}
+		in:fade={{ duration: EDuration.Modal, easing: cubicIn }}
+		on:introend={() => canCloseModal = true}
+		on:click={() => {
+			if (canCloseModal) {
+				dispatcher("acceptOutcome");
+				canCloseModal = false;
+			}
+		}}
 	>
 		<h1 class="message"
 			data-testid="outcome"
