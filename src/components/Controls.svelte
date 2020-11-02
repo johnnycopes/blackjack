@@ -16,15 +16,16 @@
 	// Game progress
 	$: {
 		switch (progress) {
-			case EProgress.PlayerTurn:
-				canDeal = false;
-				canHit = true;
-				canStand = true;
-				break;
+			case EProgress.NewGame:
 			case EProgress.DealerTurn:
 				canDeal = false;
 				canHit = false;
 				canStand = false;
+				break;
+			case EProgress.PlayerTurn:
+				canDeal = false;
+				canHit = true;
+				canStand = true;
 				break;
 			default:
 				canDeal = true;

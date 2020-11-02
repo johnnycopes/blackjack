@@ -7,6 +7,7 @@
 
 	export let outcome: EOutcome;
 	const dispatcher = createEventDispatcher<{ acceptOutcome: void; }>();
+	let canCloseModal: boolean = false;
 	$: message = getMessage(outcome);
 	
 	// TODO: display monetary change along with the outcome message
@@ -32,7 +33,13 @@
 {#if outcome}
 	<div class="modal"
 		in:fade={{ duration: EAnimationTime.Modal, easing: cubicIn }}
-		on:click={() => dispatcher("acceptOutcome")}
+		on:introend={() => canCloseModal = true}
+		on:click={() => {
+			if (canCloseModal) {
+				dispatcher("acceptOutcome");
+				canCloseModal = false;
+			}
+		}}
 	>
 		<h1 class="message"
 			data-testid="outcome"

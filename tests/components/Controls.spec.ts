@@ -15,11 +15,11 @@ describe("new game", () => {
 		result = render(Controls, { progress: EProgress.NewGame });
 	});
 
-	it("can deal", async () => {
+	it("can't deal", async () => {
 		result.component.$on("deal", mockFn);
 		const deal = result.getByRole("button", { name: "Deal" });
 		await click(deal);
-		expect(mockFn).toHaveBeenCalled();
+		expect(mockFn).not.toHaveBeenCalled();
 	});
 	
 	it("can't hit", async () => {

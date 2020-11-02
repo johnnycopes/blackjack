@@ -42,7 +42,11 @@
 
 {#if progress === EProgress.Betting}
 	<h1 class="prompt"
-		in:fade={{ duration: EAnimationTime.Text, easing: cubicIn }}
+		in:fade={{
+			duration: EAnimationTime.Text,
+			delay: EAnimationTime.Text,
+			easing: cubicIn 
+		}}
 	>
 		Place your bets
 	</h1>

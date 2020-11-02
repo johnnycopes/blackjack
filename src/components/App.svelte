@@ -13,7 +13,7 @@
 		addCardsToHand,
 		pause
 	} from "../functions/gameplay";
-import { test_mode } from "../stores/stores";
+	import { test_mode } from "../stores/stores";
 
 	export let testMode: boolean = false;
 	let progress: EProgress = EProgress.Betting;
