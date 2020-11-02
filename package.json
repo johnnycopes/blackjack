@@ -2,7 +2,8 @@
   "name": "cool-blackjack",
   "version": "1.0.0",
   "scripts": {
-    "build": "rollup -c",
+		"build": "rollup -c",
+		"deploy": "npm run build && cd public && surge --domain blackjack-wip.surge.sh",
     "dev": "rollup -c -w",
     "dev-win": "start cmd /k \"npm run dev\"",
     "lint-styles": "stylelint \"public/build/global.css\" \"src/components/**/*.svelte\"",
