@@ -2,6 +2,7 @@
 	import { onMount } from "svelte";
 	import Table from "./Table.svelte";
 	import { EProgress } from "../models/enums/progress.enum";
+	import { EAnimationTime } from "../models/enums/animation-time.enum";
 	import type { IDeck } from "../models/interfaces/deck.interface";
 	import type { IHand } from "../models/interfaces/hand.interface";
 	import {
@@ -37,9 +38,9 @@ import { test_mode } from "../stores/stores";
 
 		for (let i = 0; i < 2; i++) {
 			dealerHand = addCardsToHand(dealerHand, dealer[i]);
-			await pause(350);
+			await pause(EAnimationTime.Card);
 			playerHand = addCardsToHand(playerHand, player[i]);
-			await pause(350);
+			await pause(EAnimationTime.Card);
 		}
 
 		if (playerHand.total === 21 || dealerHand.total === 21) {
@@ -52,7 +53,7 @@ import { test_mode } from "../stores/stores";
 	async function hit(): Promise<void> {
 		const newCard = await drawCardFromDeck(deck?.id);
 		playerHand = addCardsToHand(playerHand, newCard);
-		await pause(350);
+		await pause(EAnimationTime.Card);
 		if (playerHand.total > 21) {
 			progress = EProgress.GameOver;
 		}

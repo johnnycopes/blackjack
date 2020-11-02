@@ -3,6 +3,7 @@
 	import { cubicInOut, sineIn } from "svelte/easing";
 	import Card from "./Card.svelte";
 	import type { ICard } from "../models/interfaces/card.interface";
+	import { EAnimationTime } from "../models/enums/animation-time.enum";
 	import { addCardsToHand, createHand } from "../functions/gameplay";
 
 	export let cards: ICard[];
@@ -45,7 +46,7 @@
 				data-testid="total"
 				in:fade={{
 					easing: cubicInOut,
-					duration: 175
+					duration: EAnimationTime.Text
 				}}
 			>
 				{visibleTotal}
@@ -63,7 +64,7 @@
 				x: window.innerWidth / 2,
 				y: -window.innerHeight / 2,
 				easing: sineIn,
-				duration: 350
+				duration: EAnimationTime.Card
 			}}
 			on:introend={() => setTotal(hasHoleCard)}
 			on:outrostart={() => setTotal(hasHoleCard)}

@@ -3,6 +3,7 @@
 	import { fade } from "svelte/transition";
 	import { cubicIn } from "svelte/easing";
 	import { EOutcome } from "../models/enums/outcome.enum";
+	import { EAnimationTime } from "../models/enums/animation-time.enum";
 
 	export let outcome: EOutcome;
 	const dispatcher = createEventDispatcher<{ acceptOutcome: void; }>();
@@ -30,7 +31,7 @@
 
 {#if outcome}
 	<div class="modal"
-		in:fade={{ duration: 350, easing: cubicIn }}
+		in:fade={{ duration: EAnimationTime.Modal, easing: cubicIn }}
 		on:click={() => dispatcher("acceptOutcome")}
 	>
 		<h1 class="message"

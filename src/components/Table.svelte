@@ -8,6 +8,7 @@
 	import type { IHand } from "../models/interfaces/hand.interface";
 	import type { EOutcome } from "../models/enums/outcome.enum";
 	import { EProgress } from "../models/enums/progress.enum";
+	import { EAnimationTime } from "../models/enums/animation-time.enum";
 	import { evaluateOutcome, evaluateBlackjack } from "../functions/gameplay";
 
 	export let playerHand: IHand;
@@ -41,7 +42,7 @@
 
 {#if progress === EProgress.Betting}
 	<h1 class="prompt"
-		in:fade={{ duration: 175, easing: cubicIn }}
+		in:fade={{ duration: EAnimationTime.Text, easing: cubicIn }}
 	>
 		Place your bets
 	</h1>
