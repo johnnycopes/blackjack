@@ -61,11 +61,11 @@
 
 	async function stand(): Promise<void> {
 		progress = EProgress.DealerTurn;
-		await pause();
+		await pause(EAnimationTime.DealerAction); // TODO: change this value to hole card reveal animation time once implemented
 		while (dealerHand.total < 17) {
 			const newCard = await drawCardFromDeck(deck?.id);
 			dealerHand = addCardsToHand(dealerHand, newCard);
-			await pause();
+			await pause(EAnimationTime.DealerAction);
 		}
 		progress = EProgress.GameOver;
 	}

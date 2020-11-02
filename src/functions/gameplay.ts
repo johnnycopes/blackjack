@@ -108,7 +108,7 @@ export function evaluateChipsToShow(money: number): ChipValue[] {
 	return chipValues.filter(chipValue => money >= chipValue);
 }
 
-export async function pause(ms: number = 1000): Promise<void> {
+export async function pause(ms: number): Promise<void> {
 	if (testMode) {
 		return;
 	} else {
