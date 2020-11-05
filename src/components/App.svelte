@@ -5,6 +5,7 @@
 	import { EDuration } from "../models/enums/duration.enum";
 	import type { IDeck } from "../models/interfaces/deck.interface";
 	import type { IHand } from "../models/interfaces/hand.interface";
+	import { test_mode } from "../stores/stores";
 	import {
 		createHand,
 		fetchDeck,
@@ -13,16 +14,18 @@
 		addCardsToHand,
 		pause
 	} from "../functions/gameplay";
-	import { test_mode } from "../stores/stores";
+	import { preloadAssets } from "../functions/preload";
 
 	export let testMode: boolean = false;
 	let progress: EProgress = EProgress.Betting;
 	let deck: IDeck | undefined;
 	let playerHand: IHand = createHand();
 	let dealerHand: IHand = createHand();
+	$: ready = !!deck;
 
 	onMount(async () => {
 		test_mode.update(() => testMode);
+		await preloadAssets();
 		deck = await fetchDeck();
 	});
 
@@ -72,6 +75,7 @@
 	}
 </script>
 
+{#if ready}
 <main class="app">
 	<Table
 		{playerHand}
@@ -83,6 +87,7 @@
 		on:stand={stand}
 	/>
 </main>
+{/if}
 
 <style>
 	.app {

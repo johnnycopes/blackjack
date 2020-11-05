@@ -25,13 +25,4 @@
 		transform: translate(-50%, -50%);
 		width: 128px;
 	}
-
-	:global(.button) {
-		background: transparent;
-		border: 0;
-	}
-
-	:global(.button):hover {
-		background: transparent;
-	}
 </style>

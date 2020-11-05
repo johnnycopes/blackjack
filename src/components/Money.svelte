@@ -121,7 +121,7 @@
 					on:clicked={() =>
 						betChips = [...betChips.slice(0, betChips.length - 1)]
 					}
-					/>
+				/>
 			</div>
 			{/each}
 		</div>
@@ -158,6 +158,8 @@
 	.bet :global(.button),
 	.wallet :global(.button) {
 		width: 64px;
+		background: transparent;
+		border: 0;
 	}
 
 	.amount {
