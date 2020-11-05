@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import Table from "./Table.svelte";
+	import Game from "./Game.svelte";
+	import Loader from "./Loader.svelte";
 	import { EProgress } from "../models/enums/progress.enum";
 	import { EDuration } from "../models/enums/duration.enum";
 	import type { IDeck } from "../models/interfaces/deck.interface";
@@ -12,16 +13,16 @@
 		dealCardsFromDeck,
 		drawCardFromDeck,
 		addCardsToHand,
+		preloadAssets,
 		pause
 	} from "../functions/gameplay";
-	import { preloadAssets } from "../functions/preload";
 
 	export let testMode: boolean = false;
 	let progress: EProgress = EProgress.Betting;
 	let deck: IDeck | undefined;
 	let playerHand: IHand = createHand();
 	let dealerHand: IHand = createHand();
-	$: ready = !!deck;
+	$: ready =  testMode || !!deck;
 
 	onMount(async () => {
 		test_mode.update(() => testMode);
@@ -76,24 +77,35 @@
 </script>
 
 {#if ready}
-<main class="app">
-	<Table
-		{playerHand}
-		{dealerHand}
-		{progress}
-		on:acceptOutcome={reset}
-		on:deal={deal}
-		on:hit={hit}
-		on:stand={stand}
-	/>
-</main>
+	<main class="game">
+		<Game
+			{playerHand}
+			{dealerHand}
+			{progress}
+			on:acceptOutcome={reset}
+			on:deal={deal}
+			on:hit={hit}
+			on:stand={stand}
+		/>
+	</main>
+{:else}
+	<div class="loader">
+		<Loader />
+	</div>
 {/if}
 
 <style>
-	.app {
+	.game {
 		display: flex;
 		flex-direction: column;
 		position: relative;
 		min-height: 100%;
+	}
+
+	.loader {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
 	}
 </style>
