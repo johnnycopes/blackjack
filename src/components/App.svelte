@@ -2,11 +2,12 @@
 	import { onMount } from "svelte";
 	import Game from "./Game.svelte";
 	import Loader from "./Loader.svelte";
+	import { EAppMode } from "../models/enums/app-mode.enum";
 	import { EProgress } from "../models/enums/progress.enum";
 	import { EDuration } from "../models/enums/duration.enum";
 	import type { IDeck } from "../models/interfaces/deck.interface";
 	import type { IHand } from "../models/interfaces/hand.interface";
-	import { test_mode, cached_images } from "../stores/stores";
+	import { app_mode, cached_images } from "../stores/stores";
 	import {
 		createHand,
 		fetchDeck,
@@ -17,15 +18,15 @@
 		pause
 	} from "../functions/gameplay";
 
-	export let testMode: boolean = false;
+	export let mode: EAppMode;
 	let progress: EProgress = EProgress.Betting;
 	let deck: IDeck | undefined;
 	let playerHand: IHand = createHand();
 	let dealerHand: IHand = createHand();
-	$: ready =  testMode || !!deck;
+	$: ready =  mode === EAppMode.Test || !!deck;
 
 	onMount(async () => {
-		test_mode.update(() => testMode);
+		app_mode.update(() => mode);
 		const [deckResponse, imagesResponse] = await Promise.all([
 			fetchDeck(),
 			preloadAssets()

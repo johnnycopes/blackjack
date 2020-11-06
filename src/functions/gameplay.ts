@@ -6,19 +6,20 @@ import type { ICard } from "../models/interfaces/card.interface";
 import type { Suit } from "../models/types/suit.type";
 import type { CardValue } from "../models/types/card-value";
 import type { ChipValue } from "../models/types/chip-value.type";
+import { EAppMode } from "../models/enums/app-mode.enum";
 import { EOutcome } from "../models/enums/outcome.enum";
 import { API_URL } from "../models/constants";
 import { createCard } from "./card";
 import { preloadImage, wait } from "./utility";
-import { test_mode } from "../stores/stores";
+import { app_mode } from "../stores/stores";
 
 interface IDealtCards {
 	player: ICard[];
 	dealer: ICard[];
 }
 
-let testMode: boolean;
-test_mode.subscribe(value => testMode = value);
+let appMode: EAppMode;
+app_mode.subscribe(value => appMode = value);
 
 export function createHand(): IHand {
 	return {
@@ -111,43 +112,52 @@ export function evaluateChipsToShow(money: number): ChipValue[] {
 }
 
 export async function preloadAssets(): Promise<Map<string, string>> {
+	if (appMode === EAppMode.Test) {
+		return new Map();
+	}
+
 	const cachedImages = new Map<string, string>();
-	if (!testMode) {
-		const cardValues: CardValue[] = ["ACE", "KING", "QUEEN", "JACK", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
-		const cardSuits: Suit[] = ["SPADES", "DIAMONDS", "CLUBS", "HEARTS"];
-		const gameChips: ChipValue[] = [1, 5, 10, 25, 50, 100];
-		const imageSrcs: { name: string; src: string }[] = [
-			{ name: "BACKGROUND", src: "./assets/noise-overlay.png" },
-			{ name: "CARD_BACK", src: "./assets/cards/backdesign_8.png" },
-		];
-	
-		for (const value of cardValues) {
-			for (const suit of cardSuits) {
-				const name = `${value}_${suit}`;
-				const src = `./assets/cards/${value.toLowerCase()}_${suit.toLowerCase()}.png`;
-				imageSrcs.push({ name, src });
-			}
-		}
-	
-		for (const chipValue of gameChips) {
-			const name = `CHIP_${chipValue}`;
-			const src = `./assets/chips/chip_${chipValue}.png`;
+	const cardValues: CardValue[] = ["ACE", "KING", "QUEEN", "JACK", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
+	const cardSuits: Suit[] = ["SPADES", "DIAMONDS", "CLUBS", "HEARTS"];
+	const gameChips: ChipValue[] = [1, 5, 10, 25, 50, 100];
+	const imageSrcs: { name: string; src: string }[] = [
+		{ name: "BACKGROUND", src: "./assets/noise-overlay.png" },
+		{ name: "CARD_BACK", src: "./assets/cards/backdesign_8.png" },
+	];
+
+	for (const value of cardValues) {
+		for (const suit of cardSuits) {
+			const name = `${value}_${suit}`;
+			const src = `./assets/cards/${value.toLowerCase()}_${suit.toLowerCase()}.png`;
 			imageSrcs.push({ name, src });
 		}
-	
+	}
+
+	for (const chipValue of gameChips) {
+		const name = `CHIP_${chipValue}`;
+		const src = `./assets/chips/chip_${chipValue}.png`;
+		imageSrcs.push({ name, src });
+	}
+
+	if (appMode === EAppMode.Dev) {
+		for (const image of imageSrcs) {
+			const { name, src } = image;
+			cachedImages.set(name, src);
+		}
+	} else if (appMode === EAppMode.Prod) {
 		const imageBlobURLs = await Promise.all(imageSrcs.map(image => preloadImage(image.src)));
-		
 		for (let i = 0; i < imageSrcs.length; i++) {
 			const name = imageSrcs[i].name;
 			const blobURL = imageBlobURLs[i];
 			cachedImages.set(name, blobURL);
 		}
 	}
+
 	return cachedImages;
 }
 
 export async function pause(ms: number): Promise<void> {
-	if (testMode) {
+	if (appMode === EAppMode.Test) {
 		return;
 	} else {
 		await wait(ms);
