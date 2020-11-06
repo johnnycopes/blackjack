@@ -109,9 +109,9 @@ export function evaluateChipsToShow(money: number): ChipValue[] {
 }
 
 export async function preloadAssets(): Promise<void> {
-	const { images } = appConfig;
+	const { imageStrategy } = appConfig;
 
-	if (images === EImageStrategy.None) {
+	if (imageStrategy === EImageStrategy.None) {
 		return;
 	}
 
@@ -137,12 +137,12 @@ export async function preloadAssets(): Promise<void> {
 		imageSrcs.push({ name, src });
 	}
 
-	if (images === EImageStrategy.OnDemand) {
+	if (imageStrategy === EImageStrategy.OnDemand) {
 		for (const image of imageSrcs) {
 			const { name, src } = image;
 			IMAGES.set(name, src);
 		}
-	} else if (images === EImageStrategy.Preload) {
+	} else if (imageStrategy === EImageStrategy.Preload) {
 		const imageBlobURLs = await Promise.all(imageSrcs.map(image => preloadImage(image.src)));
 		for (let i = 0; i < imageSrcs.length; i++) {
 			const name = imageSrcs[i].name;
@@ -153,7 +153,7 @@ export async function preloadAssets(): Promise<void> {
 }
 
 export async function pause(ms: number): Promise<void> {
-	if (!appConfig.animations) {
+	if (!appConfig.waitForAnimations) {
 		return;
 	} else {
 		await wait(ms);
