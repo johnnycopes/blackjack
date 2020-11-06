@@ -8,7 +8,6 @@
 	import type { IDeck } from "../models/interfaces/deck.interface";
 	import type { IHand } from "../models/interfaces/hand.interface";
 	import { appConfig } from "../config/app-config";
-	import { cached_images } from "../stores/stores";
 	import {
 		createHand,
 		fetchDeck,
@@ -26,12 +25,11 @@
 	$: ready = appConfig.mode === EAppMode.Test || !!deck;
 
 	onMount(async () => {
-		const [deckResponse, imagesResponse] = await Promise.all([
+		const [deckResponse] = await Promise.all([
 			fetchDeck(),
 			preloadAssets()
 		]);
 		deck = deckResponse;
-		cached_images.update(() => imagesResponse);
 	});
 
 	function reset(): void {

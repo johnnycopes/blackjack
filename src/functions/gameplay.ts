@@ -18,8 +18,6 @@ interface IDealtCards {
 	dealer: ICard[];
 }
 
-let appMode: EAppMode = appConfig.mode;
-
 export function createHand(): IHand {
 	return {
 		cards: [],
@@ -110,12 +108,13 @@ export function evaluateChipsToShow(money: number): ChipValue[] {
 	return chipValues.filter(chipValue => money >= chipValue);
 }
 
-export async function preloadAssets(): Promise<Map<string, string>> {
-	if (appMode === EAppMode.Test) {
-		return new Map();
+export async function preloadAssets(): Promise<void> {
+	const { mode, images } = appConfig;
+
+	if (mode === EAppMode.Test) {
+		return;
 	}
 
-	const cachedImages = new Map<string, string>();
 	const cardValues: CardValue[] = ["ACE", "KING", "QUEEN", "JACK", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
 	const cardSuits: Suit[] = ["SPADES", "DIAMONDS", "CLUBS", "HEARTS"];
 	const gameChips: ChipValue[] = [1, 5, 10, 25, 50, 100];
@@ -138,25 +137,23 @@ export async function preloadAssets(): Promise<Map<string, string>> {
 		imageSrcs.push({ name, src });
 	}
 
-	if (appMode === EAppMode.Dev) {
+	if (mode === EAppMode.Dev) {
 		for (const image of imageSrcs) {
 			const { name, src } = image;
-			cachedImages.set(name, src);
+			images.set(name, src);
 		}
-	} else if (appMode === EAppMode.Prod) {
+	} else if (mode === EAppMode.Prod) {
 		const imageBlobURLs = await Promise.all(imageSrcs.map(image => preloadImage(image.src)));
 		for (let i = 0; i < imageSrcs.length; i++) {
 			const name = imageSrcs[i].name;
 			const blobURL = imageBlobURLs[i];
-			cachedImages.set(name, blobURL);
+			images.set(name, blobURL);
 		}
 	}
-
-	return cachedImages;
 }
 
 export async function pause(ms: number): Promise<void> {
-	if (appMode === EAppMode.Test) {
+	if (!appConfig.animations) {
 		return;
 	} else {
 		await wait(ms);

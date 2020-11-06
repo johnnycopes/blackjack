@@ -1,16 +1,17 @@
 <script lang="ts">
 	import type { CardCode } from "../models/types/card-code.type";
 	import { EDuration } from "../models/enums/duration.enum";
-	import { cached_images } from "../stores/stores";
+	import { appConfig } from "../config/app-config";
 	import { getSuit, getValue } from "../functions/card";
 
 	export let code: CardCode;
 	export let hidden: boolean;
+	const images = appConfig.images;
+	const backSrc = images.get("CARD_BACK");
 	let cardAlt: string;
 	$: name = getName(code);
-	$: cardSrc = $cached_images.get(name);
+	$: cardSrc = images.get(name);
 	$: cardAlt = getAltText(name);
-	const backSrc = $cached_images.get("CARD_BACK");
 
 	function getName(cardCode: CardCode): string {
 		const value = getValue(cardCode);
