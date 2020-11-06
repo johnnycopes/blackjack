@@ -1,9 +1,9 @@
 import App from "./components/App.svelte";
-import { EAppMode } from "./models/enums/app-mode.enum";
+import { appConfig } from "./config/app-config";
 
 const app = new App({
 	target: document.body,
-	props: { mode: EAppMode.Prod }
+	props: { mode: appConfig.mode }
 });
 
 export default app;

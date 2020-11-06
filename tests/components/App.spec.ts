@@ -3,7 +3,7 @@ import fetchMock from "jest-fetch-mock";
 import type { IDeckData } from "../../src/models/api/deck-data.interface";
 import type { IDeck } from "../../src/models/interfaces/deck.interface";
 import type { CardCode } from "../../src/models/types/card-code.type";
-import { EAppMode } from "../../src/models/enums/app-mode.enum";
+import { appConfig } from "../../src/config/app-config";
 import { createFakeDeck, createFakeDeckData, drawFromFakeDeck } from "../../src/functions/debugging";
 import { click } from "../testing";
 import App from "../../src/components/App.svelte";
@@ -27,7 +27,7 @@ describe("plays game", () => {
 		mockDeck = createFakeDeck(mockDeckData);
 		fetchMock.resetMocks();
 		fetchMock.mockResponseOnce(JSON.stringify(mockDeckData));
-		result = render(App, { mode: EAppMode.Test });
+		result = render(App, { mode: appConfig.mode });
 		const chip = result.getByRole("button", { name: "$100 chip" });
 		await click(chip);
 		dealButton = result.getByRole("button", { name: "Deal" });

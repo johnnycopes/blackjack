@@ -2,3 +2,4 @@
 /public/build/
 /coverage/
 .DS_Store
+/src/config/app-config.ts
