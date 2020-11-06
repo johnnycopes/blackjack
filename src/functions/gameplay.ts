@@ -6,9 +6,9 @@ import type { ICard } from "../models/interfaces/card.interface";
 import type { Suit } from "../models/types/suit.type";
 import type { CardValue } from "../models/types/card-value";
 import type { ChipValue } from "../models/types/chip-value.type";
-import { EAppMode } from "../models/enums/app-mode.enum";
 import { EOutcome } from "../models/enums/outcome.enum";
-import { API_URL } from "../models/constants";
+import { EImageStrategy } from "../models/enums/image-strategy.enum";
+import { API_URL, IMAGES } from "../models/constants";
 import { appConfig } from "../config/app-config";
 import { createCard } from "./card";
 import { preloadImage, wait } from "./utility";
@@ -109,9 +109,9 @@ export function evaluateChipsToShow(money: number): ChipValue[] {
 }
 
 export async function preloadAssets(): Promise<void> {
-	const { mode, images } = appConfig;
+	const { images } = appConfig;
 
-	if (mode === EAppMode.Test) {
+	if (images === EImageStrategy.None) {
 		return;
 	}
 
@@ -137,17 +137,17 @@ export async function preloadAssets(): Promise<void> {
 		imageSrcs.push({ name, src });
 	}
 
-	if (mode === EAppMode.Dev) {
+	if (images === EImageStrategy.OnDemand) {
 		for (const image of imageSrcs) {
 			const { name, src } = image;
-			images.set(name, src);
+			IMAGES.set(name, src);
 		}
-	} else if (mode === EAppMode.Prod) {
+	} else if (images === EImageStrategy.Preload) {
 		const imageBlobURLs = await Promise.all(imageSrcs.map(image => preloadImage(image.src)));
 		for (let i = 0; i < imageSrcs.length; i++) {
 			const name = imageSrcs[i].name;
 			const blobURL = imageBlobURLs[i];
-			images.set(name, blobURL);
+			IMAGES.set(name, blobURL);
 		}
 	}
 }

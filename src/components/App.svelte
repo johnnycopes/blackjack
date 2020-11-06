@@ -2,11 +2,11 @@
 	import { onMount } from "svelte";
 	import Game from "./Game.svelte";
 	import Loader from "./Loader.svelte";
-	import { EAppMode } from "../models/enums/app-mode.enum";
-	import { EProgress } from "../models/enums/progress.enum";
-	import { EDuration } from "../models/enums/duration.enum";
 	import type { IDeck } from "../models/interfaces/deck.interface";
 	import type { IHand } from "../models/interfaces/hand.interface";
+	import { EProgress } from "../models/enums/progress.enum";
+	import { EDuration } from "../models/enums/duration.enum";
+	import { EImageStrategy } from "../models/enums/image-strategy.enum";
 	import { appConfig } from "../config/app-config";
 	import {
 		createHand,
@@ -22,7 +22,7 @@
 	let deck: IDeck | undefined;
 	let playerHand: IHand = createHand();
 	let dealerHand: IHand = createHand();
-	$: ready = appConfig.mode === EAppMode.Test || !!deck;
+	$: ready = appConfig.images === EImageStrategy.None || !!deck;
 
 	onMount(async () => {
 		const [deckResponse] = await Promise.all([

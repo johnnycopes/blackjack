@@ -1,8 +1,7 @@
 import type { IAppConfig } from "../models/interfaces/app-config.interface";
-import { EAppMode } from "../models/enums/app-mode.enum";
+import { EImageStrategy } from "../models/enums/image-strategy.enum";
 
 export const appConfig: IAppConfig = {
-	mode: EAppMode.Prod,
-	images: new Map(),
+	images: EImageStrategy.Preload,
 	animations: true,
 };

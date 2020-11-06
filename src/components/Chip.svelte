@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Button from "./Button.svelte";
 	import type { ChipValue } from "../models/types/chip-value.type";
-	import { appConfig } from "../config/app-config";
+	import { IMAGES } from "../models/constants";
 
 	export let disabled: boolean;
 	export let value: ChipValue;
-	const images = appConfig.images;
+	const images = IMAGES;
 	$: src = images.get(`CHIP_${value}`);
 </script>
 

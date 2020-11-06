@@ -1,7 +1,6 @@
-import type { EAppMode } from "../enums/app-mode.enum";
+import type { EImageStrategy } from "../enums/image-strategy.enum";
 
 export interface IAppConfig {
-	mode: EAppMode;
-	images: Map<string, string>;
+	images: EImageStrategy;
 	animations: boolean;
 }
