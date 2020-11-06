@@ -4,11 +4,8 @@ export async function wait(ms: number = 0): Promise<void> {
 	});
 }
 
-export function preloadImage(src: string): Promise<void> {
-	return new Promise(resolve => {
-		const image = new Image();
-		image.addEventListener("load", () => resolve());
-		image.addEventListener("error", () => resolve());
-		image.setAttribute("src", src);
-	})
+export async function preloadImage(src: string): Promise<string> {
+	const response = await fetch(src);
+	const blob = await response.blob();
+	return URL.createObjectURL(blob);
 }

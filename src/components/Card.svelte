@@ -1,18 +1,28 @@
 <script lang="ts">
 	import type { CardCode } from "../models/types/card-code.type";
 	import { EDuration } from "../models/enums/duration.enum";
+	import { cachedImages } from "../functions/gameplay";
 	import { getSuit, getValue } from "../functions/card";
 
 	export let code: CardCode;
 	export let hidden: boolean;
-	$: imageName = getImageName(code);
-	$: imagePath = `./assets/cards/${imageName}.png`;
-	const back: string = "./assets/cards/backdesign_8.png";
+	let cardAlt: string;
+	$: name = getName(code);
+	$: cardSrc = cachedImages.get(name);
+	$: cardAlt = getAltText(name);
+	const backSrc = cachedImages.get("CARD_BACK");
 
-	function getImageName(cardCode: CardCode): string {
-		const value = getValue(cardCode).toLowerCase();
-		const suit = getSuit(cardCode).toLowerCase();
+	function getName(cardCode: CardCode): string {
+		const value = getValue(cardCode);
+		const suit = getSuit(cardCode);
 		return `${value}_${suit}`;
+	}
+
+	function getAltText(name: string) {
+		const [number, suit] = name
+			.split("_")
+			.map(value => value[0] + value.substring(1).toLowerCase());
+		return `${number} of ${suit}`;
 	}
 </script>
 
@@ -23,11 +33,11 @@
 		style="transition-duration: {EDuration.Card}ms"
 	>
 		<img class="front"
-			src={imagePath}
-			alt={imageName}
+			src={cardSrc}
+			alt={cardAlt}
 		>
 		<img class="back"
-			src={back}
+			src={backSrc}
 			alt="Back of card"
 		/>
 	</div>
