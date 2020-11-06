@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Button from "./Button.svelte";
 	import type { ChipValue } from "../models/types/chip-value.type";
-	import { cachedImages } from "../functions/gameplay";
+	import { cached_images } from "../stores/stores";
 
 	export let disabled: boolean;
 	export let value: ChipValue;
-	$: src = cachedImages.get(`CHIP_${value}`);
+	$: src = $cached_images.get(`CHIP_${value}`);
 </script>
 
 <Button

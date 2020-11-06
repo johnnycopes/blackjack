@@ -17,7 +17,6 @@ interface IDealtCards {
 	dealer: ICard[];
 }
 
-export let cachedImages: Map<string, string> = new Map();
 let testMode: boolean;
 test_mode.subscribe(value => testMode = value);
 
@@ -111,40 +110,40 @@ export function evaluateChipsToShow(money: number): ChipValue[] {
 	return chipValues.filter(chipValue => money >= chipValue);
 }
 
-export async function preloadAssets(): Promise<void> {
-	if (testMode) {
-		return;
-	}
-	const cardValues: CardValue[] = ["ACE", "KING", "QUEEN", "JACK", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
-	const cardSuits: Suit[] = ["SPADES", "DIAMONDS", "CLUBS", "HEARTS"];
-	const gameChips: ChipValue[] = [1, 5, 10, 25, 50, 100];
-	const imageSrcs: { name: string; src: string }[] = [
-		{ name: "BACKGROUND", src: "./assets/noise-overlay.png" },
-		{ name: "CARD_BACK", src: "./assets/cards/backdesign_8.png" },
-	];
-
-	for (const value of cardValues) {
-		for (const suit of cardSuits) {
-			const name = `${value}_${suit}`;
-			const src = `./assets/cards/${value.toLowerCase()}_${suit.toLowerCase()}.png`;
+export async function preloadAssets(): Promise<Map<string, string>> {
+	const cachedImages = new Map<string, string>();
+	if (!testMode) {
+		const cardValues: CardValue[] = ["ACE", "KING", "QUEEN", "JACK", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
+		const cardSuits: Suit[] = ["SPADES", "DIAMONDS", "CLUBS", "HEARTS"];
+		const gameChips: ChipValue[] = [1, 5, 10, 25, 50, 100];
+		const imageSrcs: { name: string; src: string }[] = [
+			{ name: "BACKGROUND", src: "./assets/noise-overlay.png" },
+			{ name: "CARD_BACK", src: "./assets/cards/backdesign_8.png" },
+		];
+	
+		for (const value of cardValues) {
+			for (const suit of cardSuits) {
+				const name = `${value}_${suit}`;
+				const src = `./assets/cards/${value.toLowerCase()}_${suit.toLowerCase()}.png`;
+				imageSrcs.push({ name, src });
+			}
+		}
+	
+		for (const chipValue of gameChips) {
+			const name = `CHIP_${chipValue}`;
+			const src = `./assets/chips/chip_${chipValue}.png`;
 			imageSrcs.push({ name, src });
 		}
-	}
-
-	for (const chipValue of gameChips) {
-		const name = `CHIP_${chipValue}`;
-		const src = `./assets/chips/chip_${chipValue}.png`;
-		imageSrcs.push({ name, src });
-	}
-
-	const imageBlobURLs = await Promise.all(imageSrcs.map(image => preloadImage(image.src)));
 	
-	for (let i = 0; i < imageSrcs.length; i++) {
-		const name = imageSrcs[i].name;
-		const blobURL = imageBlobURLs[i];
-		cachedImages.set(name, blobURL);
+		const imageBlobURLs = await Promise.all(imageSrcs.map(image => preloadImage(image.src)));
+		
+		for (let i = 0; i < imageSrcs.length; i++) {
+			const name = imageSrcs[i].name;
+			const blobURL = imageBlobURLs[i];
+			cachedImages.set(name, blobURL);
+		}
 	}
-	console.log(cachedImages);
+	return cachedImages;
 }
 
 export async function pause(ms: number): Promise<void> {

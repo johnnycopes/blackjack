@@ -6,7 +6,7 @@
 	import { EDuration } from "../models/enums/duration.enum";
 	import type { IDeck } from "../models/interfaces/deck.interface";
 	import type { IHand } from "../models/interfaces/hand.interface";
-	import { test_mode } from "../stores/stores";
+	import { test_mode, cached_images } from "../stores/stores";
 	import {
 		createHand,
 		fetchDeck,
@@ -26,8 +26,12 @@
 
 	onMount(async () => {
 		test_mode.update(() => testMode);
-		await preloadAssets();
-		deck = await fetchDeck();
+		const [deckResponse, imagesResponse] = await Promise.all([
+			fetchDeck(),
+			preloadAssets()
+		]);
+		deck = deckResponse;
+		cached_images.update(() => imagesResponse);
 	});
 
 	function reset(): void {

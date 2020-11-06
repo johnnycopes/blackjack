@@ -1,16 +1,16 @@
 <script lang="ts">
 	import type { CardCode } from "../models/types/card-code.type";
 	import { EDuration } from "../models/enums/duration.enum";
-	import { cachedImages } from "../functions/gameplay";
+	import { cached_images } from "../stores/stores";
 	import { getSuit, getValue } from "../functions/card";
 
 	export let code: CardCode;
 	export let hidden: boolean;
 	let cardAlt: string;
 	$: name = getName(code);
-	$: cardSrc = cachedImages.get(name);
+	$: cardSrc = $cached_images.get(name);
 	$: cardAlt = getAltText(name);
-	const backSrc = cachedImages.get("CARD_BACK");
+	const backSrc = $cached_images.get("CARD_BACK");
 
 	function getName(cardCode: CardCode): string {
 		const value = getValue(cardCode);
@@ -42,7 +42,6 @@
 		/>
 	</div>
 </div>
-
 
 <style>
 	.card {
