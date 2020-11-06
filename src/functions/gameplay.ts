@@ -9,17 +9,16 @@ import type { ChipValue } from "../models/types/chip-value.type";
 import { EAppMode } from "../models/enums/app-mode.enum";
 import { EOutcome } from "../models/enums/outcome.enum";
 import { API_URL } from "../models/constants";
+import { appConfig } from "../config/app-config";
 import { createCard } from "./card";
 import { preloadImage, wait } from "./utility";
-import { app_mode } from "../stores/stores";
 
 interface IDealtCards {
 	player: ICard[];
 	dealer: ICard[];
 }
 
-let appMode: EAppMode;
-app_mode.subscribe(value => appMode = value);
+let appMode: EAppMode = appConfig.mode;
 
 export function createHand(): IHand {
 	return {

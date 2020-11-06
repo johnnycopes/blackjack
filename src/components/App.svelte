@@ -7,7 +7,8 @@
 	import { EDuration } from "../models/enums/duration.enum";
 	import type { IDeck } from "../models/interfaces/deck.interface";
 	import type { IHand } from "../models/interfaces/hand.interface";
-	import { app_mode, cached_images } from "../stores/stores";
+	import { appConfig } from "../config/app-config";
+	import { cached_images } from "../stores/stores";
 	import {
 		createHand,
 		fetchDeck,
@@ -18,15 +19,13 @@
 		pause
 	} from "../functions/gameplay";
 
-	export let mode: EAppMode;
 	let progress: EProgress = EProgress.Betting;
 	let deck: IDeck | undefined;
 	let playerHand: IHand = createHand();
 	let dealerHand: IHand = createHand();
-	$: ready =  mode === EAppMode.Test || !!deck;
+	$: ready = appConfig.mode === EAppMode.Test || !!deck;
 
 	onMount(async () => {
-		app_mode.update(() => mode);
 		const [deckResponse, imagesResponse] = await Promise.all([
 			fetchDeck(),
 			preloadAssets()
