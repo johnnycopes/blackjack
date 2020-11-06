@@ -1,10 +1,12 @@
 <script lang="ts">
 	import Button from "./Button.svelte";
 	import type { ChipValue } from "../models/types/chip-value.type";
+	import { IMAGES } from "../models/constants";
 
 	export let disabled: boolean;
 	export let value: ChipValue;
-	$: path = `./assets/chips/chip_${value}.png`;
+	const images = IMAGES;
+	$: src = images.get(`CHIP_${value}`);
 </script>
 
 <Button
@@ -12,7 +14,7 @@
 	on:clicked
 >
 	<img class="chip"
-		src={path}
+		{src}
 		alt="${value} chip"
 	/>
 </Button>

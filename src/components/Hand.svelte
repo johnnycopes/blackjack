@@ -58,22 +58,22 @@
 	</h3>
 	<ul class="cards">
 		{#each cards as card, i}
-		<li style={cardStyles(i)}
-			transition:fly={{
-				opacity: 1,
-				x: window.innerWidth / 2,
-				y: -window.innerHeight / 2,
-				easing: sineIn,
-				duration: EDuration.Card
-			}}
-			on:introend={() => setTotal(hasHoleCard)}
-			on:outrostart={() => setTotal(hasHoleCard)}
-		>
-			<Card
-				code={card.code}
-				hidden={i === 0 && hasHoleCard}
-			/>
-		</li>
+			<li style={cardStyles(i)}
+				transition:fly={{
+					opacity: 1,
+					x: window.innerWidth / 2,
+					y: -window.innerHeight / 2,
+					easing: sineIn,
+					duration: EDuration.Card
+				}}
+				on:introend={() => setTotal(hasHoleCard)}
+				on:outrostart={() => setTotal(hasHoleCard)}
+			>
+				<Card
+					code={card.code}
+					hidden={i === 0 && hasHoleCard}
+				/>
+			</li>
 		{/each}
 	</ul>
 </div>

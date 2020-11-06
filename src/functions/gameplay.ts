@@ -3,20 +3,20 @@ import type { IDeckData } from "../models/api/deck-data.interface";
 import type { IDeck } from "../models/interfaces/deck.interface";
 import type { IHand } from "../models/interfaces/hand.interface";
 import type { ICard } from "../models/interfaces/card.interface";
+import type { Suit } from "../models/types/suit.type";
+import type { CardValue } from "../models/types/card-value";
 import type { ChipValue } from "../models/types/chip-value.type";
 import { EOutcome } from "../models/enums/outcome.enum";
-import { API_URL } from "../models/constants";
+import { EImageStrategy } from "../models/enums/image-strategy.enum";
+import { API_URL, IMAGES } from "../models/constants";
+import { appConfig } from "../config/app-config";
 import { createCard } from "./card";
-import { wait } from "./utility";
-import { test_mode } from "../stores/stores";
+import { preloadImage, wait } from "./utility";
 
 interface IDealtCards {
 	player: ICard[];
 	dealer: ICard[];
 }
-
-let testMode: boolean;
-test_mode.subscribe(value => testMode = value);
 
 export function createHand(): IHand {
 	return {
@@ -108,8 +108,52 @@ export function evaluateChipsToShow(money: number): ChipValue[] {
 	return chipValues.filter(chipValue => money >= chipValue);
 }
 
+export async function preloadAssets(): Promise<void> {
+	const { imageStrategy } = appConfig;
+
+	if (imageStrategy === EImageStrategy.None) {
+		return;
+	}
+
+	const cardValues: CardValue[] = ["ACE", "KING", "QUEEN", "JACK", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
+	const cardSuits: Suit[] = ["SPADES", "DIAMONDS", "CLUBS", "HEARTS"];
+	const gameChips: ChipValue[] = [1, 5, 10, 25, 50, 100];
+	const imageSrcs: { name: string; src: string }[] = [
+		{ name: "BACKGROUND", src: "./assets/noise-overlay.png" },
+		{ name: "CARD_BACK", src: "./assets/cards/backdesign_8.png" },
+	];
+
+	for (const value of cardValues) {
+		for (const suit of cardSuits) {
+			const name = `${value}_${suit}`;
+			const src = `./assets/cards/${value.toLowerCase()}_${suit.toLowerCase()}.png`;
+			imageSrcs.push({ name, src });
+		}
+	}
+
+	for (const chipValue of gameChips) {
+		const name = `CHIP_${chipValue}`;
+		const src = `./assets/chips/chip_${chipValue}.png`;
+		imageSrcs.push({ name, src });
+	}
+
+	if (imageStrategy === EImageStrategy.OnDemand) {
+		for (const image of imageSrcs) {
+			const { name, src } = image;
+			IMAGES.set(name, src);
+		}
+	} else if (imageStrategy === EImageStrategy.Preload) {
+		const imageBlobURLs = await Promise.all(imageSrcs.map(image => preloadImage(image.src)));
+		for (let i = 0; i < imageSrcs.length; i++) {
+			const name = imageSrcs[i].name;
+			const blobURL = imageBlobURLs[i];
+			IMAGES.set(name, blobURL);
+		}
+	}
+}
+
 export async function pause(ms: number): Promise<void> {
-	if (testMode) {
+	if (!appConfig.waitForAnimations) {
 		return;
 	} else {
 		await wait(ms);

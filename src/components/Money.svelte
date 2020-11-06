@@ -111,18 +111,18 @@
 		</h4>
 		<div class="bet__chips">
 			{#each betChips as chip}
-			<div class="bet__chip"
-				in:fly={chipAnimation(chip)}
-				out:fly={chipAnimation(chip)}
-			>
-				<Chip
-					value={chip}
-					disabled={!canBet}
-					on:clicked={() =>
-						betChips = [...betChips.slice(0, betChips.length - 1)]
-					}
+				<div class="bet__chip"
+					in:fly={chipAnimation(chip)}
+					out:fly={chipAnimation(chip)}
+				>
+					<Chip
+						value={chip}
+						disabled={!canBet}
+						on:clicked={() =>
+							betChips = [...betChips.slice(0, betChips.length - 1)]
+						}
 					/>
-			</div>
+				</div>
 			{/each}
 		</div>
 	</div>
@@ -130,11 +130,11 @@
 	<div class="wallet">
 		<div class="wallet__chips">
 			{#each walletChips as chip}
-			<Chip
-				value={chip}
-				disabled={!canBet}
-				on:clicked={() => betChips = [...betChips, chip]}
-			/>
+				<Chip
+					value={chip}
+					disabled={!canBet}
+					on:clicked={() => betChips = [...betChips, chip]}
+				/>
 			{/each}
 		</div>
 		<h4 class="amount"
@@ -158,6 +158,8 @@
 	.bet :global(.button),
 	.wallet :global(.button) {
 		width: 64px;
+		background: transparent;
+		border: 0;
 	}
 
 	.amount {

@@ -1,29 +1,34 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import Table from "./Table.svelte";
-	import { EProgress } from "../models/enums/progress.enum";
-	import { EDuration } from "../models/enums/duration.enum";
+	import Game from "./Game.svelte";
+	import Loader from "./Loader.svelte";
 	import type { IDeck } from "../models/interfaces/deck.interface";
 	import type { IHand } from "../models/interfaces/hand.interface";
+	import { EProgress } from "../models/enums/progress.enum";
+	import { EDuration } from "../models/enums/duration.enum";
+	import { appConfig } from "../config/app-config";
 	import {
 		createHand,
 		fetchDeck,
 		dealCardsFromDeck,
 		drawCardFromDeck,
 		addCardsToHand,
+		preloadAssets,
 		pause
 	} from "../functions/gameplay";
-	import { test_mode } from "../stores/stores";
 
-	export let testMode: boolean = false;
 	let progress: EProgress = EProgress.Betting;
 	let deck: IDeck | undefined;
 	let playerHand: IHand = createHand();
 	let dealerHand: IHand = createHand();
+	$: ready = !appConfig.waitForAnimations || !!deck;
 
 	onMount(async () => {
-		test_mode.update(() => testMode);
-		deck = await fetchDeck();
+		const [deckResponse] = await Promise.all([
+			fetchDeck(),
+			preloadAssets()
+		]);
+		deck = deckResponse;
 	});
 
 	function reset(): void {
@@ -72,23 +77,36 @@
 	}
 </script>
 
-<main class="app">
-	<Table
-		{playerHand}
-		{dealerHand}
-		{progress}
-		on:acceptOutcome={reset}
-		on:deal={deal}
-		on:hit={hit}
-		on:stand={stand}
-	/>
-</main>
+{#if ready}
+	<main class="game">
+		<Game
+			{playerHand}
+			{dealerHand}
+			{progress}
+			on:acceptOutcome={reset}
+			on:deal={deal}
+			on:hit={hit}
+			on:stand={stand}
+		/>
+	</main>
+{:else}
+	<div class="loader">
+		<Loader />
+	</div>
+{/if}
 
 <style>
-	.app {
+	.game {
 		display: flex;
 		flex-direction: column;
 		position: relative;
 		min-height: 100%;
+	}
+
+	.loader {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
 	}
 </style>

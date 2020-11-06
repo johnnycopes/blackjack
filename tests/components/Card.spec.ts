@@ -7,7 +7,7 @@ describe("renders visible card", () => {
 			hidden: false,
 			code: "6S",
 		});
-		expect(result.getAllByAltText("6_spades"));
+		expect(result.getAllByAltText("6 of Spades"));
 	});
 
 	it("double-digit number card", () => {
@@ -15,7 +15,7 @@ describe("renders visible card", () => {
 			hidden: false,
 			code: "0H",
 		});
-		expect(result.getAllByAltText("10_hearts"));
+		expect(result.getAllByAltText("10 of Hearts"));
 	});
 
 	it("face card", () => {
@@ -23,7 +23,7 @@ describe("renders visible card", () => {
 			hidden: false,
 			code: "QD",
 		});
-		expect(result.getAllByAltText("queen_diamonds"));
+		expect(result.getAllByAltText("Queen of Diamonds"));
 	});
 
 	it("ace card", () => {
@@ -31,7 +31,7 @@ describe("renders visible card", () => {
 			hidden: false,
 			code: "AC",
 		});
-		expect(result.getAllByAltText("ace_clubs"));
+		expect(result.getAllByAltText("Ace of Clubs"));
 	});
 });
 

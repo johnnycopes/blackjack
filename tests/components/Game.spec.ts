@@ -1,13 +1,13 @@
 import { render, RenderResult } from "@testing-library/svelte";
 import { EProgress } from "../../src/models/enums/progress.enum";
 import { createFakeHand } from "../../src/functions/debugging";
-import Table from "../../src/components/Table.svelte";
+import Game from "../../src/components/Game.svelte";
 import { click } from "../testing";
 
 let result: RenderResult;
 
 beforeEach(async () => {
-	result = render(Table, {
+	result = render(Game, {
 		playerHand: createFakeHand(),
 		dealerHand: createFakeHand(),
 		progress: EProgress.Betting
@@ -17,7 +17,7 @@ beforeEach(async () => {
 });
 
 describe("before starting", () => {
-	it("renders table", () => {
+	it("renders game", () => {
 		expect(result.getByTestId("bet")).toHaveTextContent("$100");
 		expect(result.getByTestId("wallet")).toHaveTextContent("$400");
 		expect(result.getByTestId("controls"));
