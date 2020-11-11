@@ -1,6 +1,6 @@
-import type { EImageStrategy } from "../enums/image-strategy.enum";
+import type { ImageStrategy } from "../types/image-strategy.type";
 
 export interface IAppConfig {
-	imageStrategy: EImageStrategy;
+	imageStrategy: ImageStrategy;
 	waitForAnimations: boolean;
 }

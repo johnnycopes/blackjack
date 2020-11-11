@@ -7,13 +7,14 @@
 	import { EProgress } from "../models/enums/progress.enum";
 	import { EDuration } from "../models/enums/duration.enum";
 	import { appConfig } from "../config/app-config";
+	import { images } from "../stores";
 	import {
 		createHand,
 		fetchDeck,
 		dealCardsFromDeck,
 		drawCardFromDeck,
 		addCardsToHand,
-		preloadAssets,
+		preloadImages,
 		pause
 	} from "../functions/gameplay";
 
@@ -24,11 +25,12 @@
 	$: ready = !appConfig.waitForAnimations || !!deck;
 
 	onMount(async () => {
-		const [deckResponse] = await Promise.all([
+		const [deckResponse, imagesResponse] = await Promise.all([
 			fetchDeck(),
-			preloadAssets()
+			preloadImages()
 		]);
 		deck = deckResponse;
+		images.set(imagesResponse);
 	});
 
 	function reset(): void {

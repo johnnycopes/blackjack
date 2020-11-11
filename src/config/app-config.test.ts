@@ -1,7 +1,7 @@
 import type { IAppConfig } from "../models/interfaces/app-config.interface";
-import { EImageStrategy } from "../models/enums/image-strategy.enum";
+import { imageStrategyNone } from "../functions/images";
 
 export const appConfig: IAppConfig = {
-	imageStrategy: EImageStrategy.None,
+	imageStrategy: imageStrategyNone,
 	waitForAnimations: false,
 };

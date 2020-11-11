@@ -7,11 +7,10 @@ import type { Suit } from "../models/types/suit.type";
 import type { CardValue } from "../models/types/card-value";
 import type { ChipValue } from "../models/types/chip-value.type";
 import { EOutcome } from "../models/enums/outcome.enum";
-import { EImageStrategy } from "../models/enums/image-strategy.enum";
-import { API_URL, IMAGES } from "../models/constants";
+import { API_URL } from "../models/constants";
 import { appConfig } from "../config/app-config";
 import { createCard } from "./card";
-import { preloadImage, wait } from "./utility";
+import { wait } from "./utility";
 
 interface IDealtCards {
 	player: ICard[];
@@ -108,13 +107,8 @@ export function evaluateChipsToShow(money: number): ChipValue[] {
 	return chipValues.filter(chipValue => money >= chipValue);
 }
 
-export async function preloadAssets(): Promise<void> {
+export async function preloadImages(): Promise<Map<string, string>> {
 	const { imageStrategy } = appConfig;
-
-	if (imageStrategy === EImageStrategy.None) {
-		return;
-	}
-
 	const cardValues: CardValue[] = ["ACE", "KING", "QUEEN", "JACK", "10", "9", "8", "7", "6", "5", "4", "3", "2"];
 	const cardSuits: Suit[] = ["SPADES", "DIAMONDS", "CLUBS", "HEARTS"];
 	const gameChips: ChipValue[] = [1, 5, 10, 25, 50, 100];
@@ -137,19 +131,7 @@ export async function preloadAssets(): Promise<void> {
 		imageSrcs.push({ name, src });
 	}
 
-	if (imageStrategy === EImageStrategy.OnDemand) {
-		for (const image of imageSrcs) {
-			const { name, src } = image;
-			IMAGES.set(name, src);
-		}
-	} else if (imageStrategy === EImageStrategy.Preload) {
-		const imageBlobURLs = await Promise.all(imageSrcs.map(image => preloadImage(image.src)));
-		for (let i = 0; i < imageSrcs.length; i++) {
-			const name = imageSrcs[i].name;
-			const blobURL = imageBlobURLs[i];
-			IMAGES.set(name, blobURL);
-		}
-	}
+	return imageStrategy(imageSrcs);
 }
 
 export async function pause(ms: number): Promise<void> {
