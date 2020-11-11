@@ -1,11 +1,6 @@
+import type { IImage } from "../models/interfaces/image.interface";
+import type { ImageStrategy } from "../models/types/image-strategy.type";
 import { preloadImage } from "./utility";
-
-interface IImage {
-	name: string;
-	src: string;
-}
-
-export type ImageStrategy = (images: IImage[]) => Promise<Map<string, string>>;
 
 export const imageStrategyNone: ImageStrategy = async () => new Map<string, string>();
 
@@ -15,7 +10,7 @@ export const imageStrategyOnDemand: ImageStrategy = async (images: IImage[]): Pr
 		const { name, src } = image;
 		imagesMap.set(name, src);
 	}
-	return imagesMap
+	return imagesMap;
 }
 
 export const imageStrategyPreload: ImageStrategy = async (images: IImage[]): Promise<Map<string, string>> => {

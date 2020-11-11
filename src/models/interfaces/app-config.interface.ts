@@ -1,4 +1,4 @@
-import type { ImageStrategy } from "../../functions/images";
+import type { ImageStrategy } from "../types/image-strategy.type";
 
 export interface IAppConfig {
 	imageStrategy: ImageStrategy;
